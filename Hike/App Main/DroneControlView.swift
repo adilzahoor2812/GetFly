@@ -51,7 +51,11 @@ struct DroneControlView: View {
                 viewModel.stopPolling()
             }
             .overlay(alignment: .bottom) {
-                toastOverlay
+                if let message = viewModel.lastSuccessMessage {
+                    toast(message, color: .green)
+                } else if let error = viewModel.lastError {
+                    toast(error, color: .red)
+                }
             }
         }
     }
@@ -94,17 +98,6 @@ struct DroneControlView: View {
         }
         .padding()
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12))
-    }
-
-    @ViewBuilder
-    private var toastOverlay: some View {
-        if let message = viewModel.lastSuccessMessage {
-            toast(message, color: .green)
-                .onAppear { scheduleToastClear() }
-        } else if let error = viewModel.lastError {
-            toast(error, color: .red)
-                .onAppear { scheduleToastClear() }
-        }
     }
 
     private var flightControls: some View {
@@ -176,14 +169,6 @@ struct DroneControlView: View {
             }
             .buttonStyle(.bordered)
             .disabled(viewModel.isBusy || !viewModel.isConnected)
-        }
-    }
-
-    private func scheduleToastClear() {
-        Task {
-            try? await Task.sleep(for: .seconds(3))
-            viewModel.lastSuccessMessage = nil
-            viewModel.lastError = nil
         }
     }
 
