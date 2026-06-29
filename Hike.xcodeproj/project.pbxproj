@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0010012C70000100A10001 /* Coordinate3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010002C70000100A10001 /* Coordinate3D.swift */; };
+		DC0010032C70000100A10001 /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010022C70000100A10001 /* Waypoint.swift */; };
+		DC0010052C70000100A10001 /* DroneCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010042C70000100A10001 /* DroneCommand.swift */; };
+		DC0010072C70000100A10001 /* DroneStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010062C70000100A10001 /* DroneStatus.swift */; };
+		DC0010092C70000100A10001 /* DroneConnectionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010082C70000100A10001 /* DroneConnectionSettings.swift */; };
+		DC00100B2C70000100A10001 /* ESP32Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC00100A2C70000100A10001 /* ESP32Client.swift */; };
+		DC00100D2C70000100A10001 /* DroneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC00100C2C70000100A10001 /* DroneViewModel.swift */; };
+		DC00100F2C70000100A10001 /* FlightMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC00100E2C70000100A10001 /* FlightMapView.swift */; };
+		DC0010112C70000100A10001 /* CoordinateInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010102C70000100A10001 /* CoordinateInputView.swift */; };
+		DC0010132C70000100A10001 /* WaypointMissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010122C70000100A10001 /* WaypointMissionView.swift */; };
+		DC0010152C70000100A10001 /* ConnectionSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010142C70000100A10001 /* ConnectionSettingsView.swift */; };
+		DC0010172C70000100A10001 /* DroneControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010162C70000100A10001 /* DroneControlView.swift */; };
 		DB1452792C52D2AE00D80A8C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB1452782C52D2AE00D80A8C /* Assets.xcassets */; };
 		DB14527C2C52D2AE00D80A8C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB14527B2C52D2AE00D80A8C /* Preview Assets.xcassets */; };
 		DB14527E2C52D2AE00D80A8C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB14527D2C52D2AE00D80A8C /* Persistence.swift */; };
@@ -25,6 +37,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC0010002C70000100A10001 /* Coordinate3D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate3D.swift; sourceTree = "<group>"; };
+		DC0010022C70000100A10001 /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
+		DC0010042C70000100A10001 /* DroneCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DroneCommand.swift; sourceTree = "<group>"; };
+		DC0010062C70000100A10001 /* DroneStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DroneStatus.swift; sourceTree = "<group>"; };
+		DC0010082C70000100A10001 /* DroneConnectionSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DroneConnectionSettings.swift; sourceTree = "<group>"; };
+		DC00100A2C70000100A10001 /* ESP32Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESP32Client.swift; sourceTree = "<group>"; };
+		DC00100C2C70000100A10001 /* DroneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DroneViewModel.swift; sourceTree = "<group>"; };
+		DC00100E2C70000100A10001 /* FlightMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightMapView.swift; sourceTree = "<group>"; };
+		DC0010102C70000100A10001 /* CoordinateInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateInputView.swift; sourceTree = "<group>"; };
+		DC0010122C70000100A10001 /* WaypointMissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointMissionView.swift; sourceTree = "<group>"; };
+		DC0010142C70000100A10001 /* ConnectionSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSettingsView.swift; sourceTree = "<group>"; };
+		DC0010162C70000100A10001 /* DroneControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DroneControlView.swift; sourceTree = "<group>"; };
 		DB1452712C52D2AD00D80A8C /* Hike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB1452782C52D2AE00D80A8C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DB14527B2C52D2AE00D80A8C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -70,9 +94,40 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DC0010182C70000100A10001 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DC0010002C70000100A10001 /* Coordinate3D.swift */,
+				DC0010022C70000100A10001 /* Waypoint.swift */,
+				DC0010042C70000100A10001 /* DroneCommand.swift */,
+				DC0010062C70000100A10001 /* DroneStatus.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DC0010192C70000100A10001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DC0010082C70000100A10001 /* DroneConnectionSettings.swift */,
+				DC00100A2C70000100A10001 /* ESP32Client.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		DC00101A2C70000100A10001 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				DC00100C2C70000100A10001 /* DroneViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		DB1452732C52D2AD00D80A8C /* Hike */ = {
 			isa = PBXGroup;
 			children = (
+				DC0010182C70000100A10001 /* Model */,
+				DC0010192C70000100A10001 /* Services */,
+				DC00101A2C70000100A10001 /* ViewModel */,
 				DB1452942C52DC3000D80A8C /* Utility */,
 				DB14528A2C52D64D00D80A8C /* Component */,
 				DB14528D2C52D65800D80A8C /* App Main */,
@@ -110,6 +165,11 @@
 			children = (
 				DB14528B2C52D65800D80A8C /* ContentView.swift */,
 				DB14528C2C52D65800D80A8C /* HikeApp.swift */,
+				DC0010162C70000100A10001 /* DroneControlView.swift */,
+				DC00100E2C70000100A10001 /* FlightMapView.swift */,
+				DC0010102C70000100A10001 /* CoordinateInputView.swift */,
+				DC0010122C70000100A10001 /* WaypointMissionView.swift */,
+				DC0010142C70000100A10001 /* ConnectionSettingsView.swift */,
 				DBA011102C5447B0003623A0 /* SettingsView.swift */,
 			);
 			path = "App Main";
@@ -194,6 +254,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0010012C70000100A10001 /* Coordinate3D.swift in Sources */,
+				DC0010032C70000100A10001 /* Waypoint.swift in Sources */,
+				DC0010052C70000100A10001 /* DroneCommand.swift in Sources */,
+				DC0010072C70000100A10001 /* DroneStatus.swift in Sources */,
+				DC0010092C70000100A10001 /* DroneConnectionSettings.swift in Sources */,
+				DC00100B2C70000100A10001 /* ESP32Client.swift in Sources */,
+				DC00100D2C70000100A10001 /* DroneViewModel.swift in Sources */,
+				DC00100F2C70000100A10001 /* FlightMapView.swift in Sources */,
+				DC0010112C70000100A10001 /* CoordinateInputView.swift in Sources */,
+				DC0010132C70000100A10001 /* WaypointMissionView.swift in Sources */,
+				DC0010152C70000100A10001 /* ConnectionSettingsView.swift in Sources */,
+				DC0010172C70000100A10001 /* DroneControlView.swift in Sources */,
 				DBA0110B2C53E9DC003623A0 /* GradientButtonStyle.swift in Sources */,
 				DB14527E2C52D2AE00D80A8C /* Persistence.swift in Sources */,
 				DB1452812C52D2AE00D80A8C /* Hike.xcdatamodeld in Sources */,
@@ -345,6 +417,7 @@
 				DEVELOPMENT_TEAM = 49QJL3FTQK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app connects to your ESP32 quadcopter controller over the local Wi-Fi network.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -377,6 +450,7 @@
 				DEVELOPMENT_TEAM = 49QJL3FTQK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app connects to your ESP32 quadcopter controller over the local Wi-Fi network.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
