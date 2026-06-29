@@ -87,6 +87,10 @@ Hike/
 firmware/         - ESP32 Arduino reference server
 ```
 
+## TestFlight
+
+To distribute the app to testers via TestFlight, see **[TESTFLIGHT.md](TESTFLIGHT.md)** for step-by-step instructions (Xcode archive upload or fastlane).
+
 ## Notes
 
 - The included ESP32 sketch is a **reference server** — wire the TODO sections into your real motor/PID/autopilot code.

@@ -1,0 +1,5 @@
+app_identifier("codebuzz.Hike")
+team_id("49QJL3FTQK")
+
+# Optional: set your Apple ID here or pass via environment variable
+# apple_id("your@email.com")

@@ -1,0 +1,22 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload a release to TestFlight"
+  lane :beta do
+    build_app(
+      scheme: "Hike",
+      project: "Hike.xcodeproj",
+      export_method: "app-store",
+      export_options: "./ExportOptions.plist"
+    )
+
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Increment build number only (run before archiving if re-uploading same version)"
+  lane :bump_build do
+    increment_build_number(xcodeproj: "Hike.xcodeproj")
+  end
+end
