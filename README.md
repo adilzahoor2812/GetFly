@@ -6,7 +6,7 @@ SwiftUI iOS app to control an autonomous quadcopter over Wi‑Fi using an ESP32 
 
 - Live drone status (position, battery, flight mode)
 - Set target coordinates (X, Y, Z in meters)
-- Tap the 2D flight map to pick coordinates
+- Tap the OpenStreetMap to pick coordinates (relative to your home point)
 - Build and run multi-waypoint missions
 - Flight controls: Arm, Disarm, Take Off, Land, Hover, Return Home, Emergency Stop
 - Configurable ESP32 IP address and port
@@ -67,6 +67,17 @@ Response:
 ```json
 { "success": true, "message": "Command accepted" }
 ```
+
+## OpenStreetMap
+
+The flight map uses **OpenStreetMap** tiles via MapKit. Set your **home point** in Settings:
+
+1. Open **Settings** (gear icon)
+2. Set home latitude/longitude, or tap **Use My Current Location**
+3. Local X/Y (meters) are calculated east/north from home
+4. Tap the map to set target coordinates
+
+Map data © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors.
 
 ## Coordinate system
 

@@ -3,21 +3,27 @@
 //  Hike
 //
 
+import CoreLocation
 import SwiftUI
 
 struct CoordinateInputView: View {
     @Binding var coordinate: Coordinate3D
+    let homeCoordinate: CLLocationCoordinate2D
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Target Coordinates (meters)")
+            Text("Target Coordinates")
                 .font(.headline)
 
-            axisField(title: "X (Forward)", value: $coordinate.x, range: -5...5)
-            axisField(title: "Y (Left/Right)", value: $coordinate.y, range: -5...5)
-            axisField(title: "Z (Altitude)", value: $coordinate.z, range: 0.5...5)
+            axisField(title: "X (East)", value: $coordinate.x, range: -500...500)
+            axisField(title: "Y (North)", value: $coordinate.y, range: -500...500)
+            axisField(title: "Z (Altitude)", value: $coordinate.z, range: 0.5...120)
 
             Text(coordinate.formatted)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Text(coordinate.geoFormatted(home: homeCoordinate))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -41,6 +47,9 @@ struct CoordinateInputView: View {
 }
 
 #Preview {
-    CoordinateInputView(coordinate: .constant(Coordinate3D(x: 1, y: 2, z: 1.5)))
-        .padding()
+    CoordinateInputView(
+        coordinate: .constant(Coordinate3D(x: 1, y: 2, z: 1.5)),
+        homeCoordinate: CLLocationCoordinate2D(latitude: 33.6844, longitude: 73.0479)
+    )
+    .padding()
 }

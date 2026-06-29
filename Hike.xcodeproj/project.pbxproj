@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0010212C70000200A10001 /* CoordinateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010222C70000200A10001 /* CoordinateConverter.swift */; };
+		DC0010232C70000200A10001 /* OpenStreetMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010202C70000200A10001 /* OpenStreetMapView.swift */; };
+		DC0010252C70000200A10001 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010242C70000200A10001 /* LocationManager.swift */; };
 		DC0010012C70000100A10001 /* Coordinate3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010002C70000100A10001 /* Coordinate3D.swift */; };
 		DC0010032C70000100A10001 /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010022C70000100A10001 /* Waypoint.swift */; };
 		DC0010052C70000100A10001 /* DroneCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010042C70000100A10001 /* DroneCommand.swift */; };
@@ -37,6 +40,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC0010222C70000200A10001 /* CoordinateConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateConverter.swift; sourceTree = "<group>"; };
+		DC0010202C70000200A10001 /* OpenStreetMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenStreetMapView.swift; sourceTree = "<group>"; };
+		DC0010242C70000200A10001 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		DC0010002C70000100A10001 /* Coordinate3D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate3D.swift; sourceTree = "<group>"; };
 		DC0010022C70000100A10001 /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
 		DC0010042C70000100A10001 /* DroneCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DroneCommand.swift; sourceTree = "<group>"; };
@@ -110,6 +116,7 @@
 			children = (
 				DC0010082C70000100A10001 /* DroneConnectionSettings.swift */,
 				DC00100A2C70000100A10001 /* ESP32Client.swift */,
+				DC0010242C70000200A10001 /* LocationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -167,6 +174,7 @@
 				DB14528C2C52D65800D80A8C /* HikeApp.swift */,
 				DC0010162C70000100A10001 /* DroneControlView.swift */,
 				DC00100E2C70000100A10001 /* FlightMapView.swift */,
+				DC0010202C70000200A10001 /* OpenStreetMapView.swift */,
 				DC0010102C70000100A10001 /* CoordinateInputView.swift */,
 				DC0010122C70000100A10001 /* WaypointMissionView.swift */,
 				DC0010142C70000100A10001 /* ConnectionSettingsView.swift */,
@@ -180,6 +188,7 @@
 			children = (
 				DB1452952C52DC5A00D80A8C /* ColorExtension.swift */,
 				DBA0110A2C53E9DC003623A0 /* GradientButtonStyle.swift */,
+				DC0010222C70000200A10001 /* CoordinateConverter.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -254,6 +263,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0010212C70000200A10001 /* CoordinateConverter.swift in Sources */,
+				DC0010232C70000200A10001 /* OpenStreetMapView.swift in Sources */,
+				DC0010252C70000200A10001 /* LocationManager.swift in Sources */,
 				DC0010012C70000100A10001 /* Coordinate3D.swift in Sources */,
 				DC0010032C70000100A10001 /* Waypoint.swift in Sources */,
 				DC0010052C70000100A10001 /* DroneCommand.swift in Sources */,
@@ -418,6 +430,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app connects to your ESP32 quadcopter controller over the local Wi-Fi network.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location is used to set the OpenStreetMap home point for drone navigation.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -451,6 +464,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app connects to your ESP32 quadcopter controller over the local Wi-Fi network.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location is used to set the OpenStreetMap home point for drone navigation.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

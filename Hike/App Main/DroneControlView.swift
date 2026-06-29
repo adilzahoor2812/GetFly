@@ -15,13 +15,17 @@ struct DroneControlView: View {
                 VStack(spacing: 16) {
                     statusCard
                     FlightMapView(
+                        homeCoordinate: viewModel.settings.homeCoordinate,
                         dronePosition: viewModel.status.position,
                         targetPosition: viewModel.targetCoordinate,
                         waypoints: viewModel.waypoints
                     ) { coordinate in
                         viewModel.targetCoordinate = coordinate
                     }
-                    CoordinateInputView(coordinate: $viewModel.targetCoordinate)
+                    CoordinateInputView(
+                        coordinate: $viewModel.targetCoordinate,
+                        homeCoordinate: viewModel.settings.homeCoordinate
+                    )
                     flightControls
                     WaypointMissionView(viewModel: viewModel)
                 }

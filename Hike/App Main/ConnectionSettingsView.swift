@@ -8,6 +8,7 @@ import SwiftUI
 struct ConnectionSettingsView: View {
     @ObservedObject var settings: DroneConnectionSettings
     @ObservedObject var viewModel: DroneViewModel
+    @StateObject private var locationManager = LocationManager()
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -34,6 +35,38 @@ struct ConnectionSettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
+                Section("OpenStreetMap Home Point") {
+                    Text("Set the map home location. Local X/Y coordinates are calculated relative to this point.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    TextField("Home Latitude", value: $settings.homeLatitude, format: .number)
+                        .keyboardType(.decimalPad)
+
+                    TextField("Home Longitude", value: $settings.homeLongitude, format: .number)
+                        .keyboardType(.decimalPad)
+
+                    Button("Use My Current Location") {
+                        locationManager.requestLocation()
+                    }
+
+                    if let coordinate = locationManager.currentCoordinate {
+                        Text("Detected: \(coordinate.latitude, format: .number.precision(.fractionLength(5))), \(coordinate.longitude, format: .number.precision(.fractionLength(5)))")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Button("Set As Home") {
+                            settings.setHome(to: coordinate)
+                        }
+                    }
+
+                    if let error = locationManager.lastError {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+
                 Section("Default ESP32 AP") {
                     Text("When the ESP32 runs as a Wi‑Fi access point, the default address is usually 192.168.4.1 on port 80.")
                         .font(.caption)
@@ -46,7 +79,7 @@ struct ConnectionSettingsView: View {
                     }
                 }
             }
-            .navigationTitle("Connection")
+            .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") { dismiss() }

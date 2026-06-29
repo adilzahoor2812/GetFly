@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1" />
+  <title>Quadcopter Control Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: #f2f2f7;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      border: 10px solid #1c1c1e;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .status-bar {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 12px;
+    }
+    .nav h1 { font-size: 28px; font-weight: 700; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.7);
+      backdrop-filter: blur(10px);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #34c759; }
+    .dot.offline { background: #ff3b30; }
+    .gear { font-size: 20px; opacity: .8; }
+    .content {
+      flex: 1;
+      overflow: hidden;
+      padding: 0 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+    .card h2 { font-size: 17px; margin-bottom: 10px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,149,0,.15);
+      color: #ff9500;
+    }
+    .pill.green { background: rgba(52,199,89,.15); color: #34c759; }
+    .pill.gray { background: rgba(142,142,147,.15); color: #8e8e93; }
+    .caption { font-size: 12px; color: #8e8e93; margin-top: 8px; }
+    .map {
+      aspect-ratio: 1;
+      background: #ececef;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .grid-line {
+      position: absolute;
+      background: rgba(0,0,0,.06);
+    }
+    .marker {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      transform: translate(-50%, -50%);
+      transition: all .6s ease;
+    }
+    .marker.drone { background: #34c759; left: 50%; top: 50%; }
+    .marker.target { background: #ff9500; left: 68%; top: 38%; }
+    .marker.wp { background: #007aff; }
+    .path {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .slider-row { margin-bottom: 10px; }
+    .slider-row label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .slider-row input { width: 100%; accent-color: #007aff; }
+    .grid-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .btn {
+      border: 1px solid #007aff;
+      color: #007aff;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .btn.primary {
+      background: #007aff;
+      color: #fff;
+      border-color: #007aff;
+    }
+    .btn.full { grid-column: span 2; margin-top: 4px; }
+    .btn.danger { color: #ff3b30; border-color: #ff3b30; }
+    .toast {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(52,199,89,.95);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      opacity: 0;
+      transition: all .35s ease;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .tap-ring {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid #007aff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .tap-ring.animate {
+      animation: tapPulse .8s ease-out forwards;
+    }
+    @keyframes tapPulse {
+      0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+    }
+    .finger {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: rgba(0,0,0,.25);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .finger.show { opacity: 1; transition: all .7s ease; }
+  </style>
+</head>
+<body>
+  <div class="phone" id="phone">
+    <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="nav">
+      <div class="badge"><span class="dot" id="connDot"></span><span id="connText">Online</span></div>
+      <h1>Quadcopter Control</h1>
+      <div class="gear">⚙️</div>
+    </div>
+    <div class="content">
+      <div class="card">
+        <h2>✈️ <span id="mode">Flying</span></h2>
+        <div class="row">
+          <span class="pill" id="armedPill">Armed</span>
+          <span class="pill green">Flying</span>
+          <span class="pill green" id="battery">87%</span>
+        </div>
+        <div class="caption" id="position">Position: X: 1.20  Y: 0.80  Z: 1.50 m</div>
+      </div>
+
+      <div class="map card" id="map">
+        <svg class="path" id="pathSvg"></svg>
+        <div class="marker drone" id="drone">D</div>
+        <div class="marker target" id="target">T</div>
+        <div class="tap-ring" id="tapRing"></div>
+        <div class="finger" id="finger"></div>
+      </div>
+
+      <div class="card">
+        <h2>Target Coordinates (meters)</h2>
+        <div class="slider-row"><label>X (Forward) <span id="xVal">2.0 m</span></label><input type="range" id="xSlider" min="-5" max="5" step="0.1" value="2" /></div>
+        <div class="slider-row"><label>Y (Left/Right) <span id="yVal">1.5 m</span></label><input type="range" id="ySlider" min="-5" max="5" step="0.1" value="1.5" /></div>
+        <div class="slider-row"><label>Z (Altitude) <span id="zVal">1.5 m</span></label><input type="range" id="zSlider" min="0.5" max="5" step="0.1" value="1.5" /></div>
+      </div>
+
+      <div class="card">
+        <h2>Flight Controls</h2>
+        <div class="grid-btns">
+          <button class="btn">Arm</button>
+          <button class="btn">Disarm</button>
+          <button class="btn primary">Take Off</button>
+          <button class="btn primary">Land</button>
+          <button class="btn full primary" id="gotoBtn">📍 Go To Target Coordinates</button>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast">Command sent — navigating to target</div>
+  </div>
+
+  <script>
+    const map = document.getElementById('map');
+    const drone = document.getElementById('drone');
+    const target = document.getElementById('target');
+    const pathSvg = document.getElementById('pathSvg');
+    const toast = document.getElementById('toast');
+    const tapRing = document.getElementById('tapRing');
+    const finger = document.getElementById('finger');
+    const xSlider = document.getElementById('xSlider');
+    const ySlider = document.getElementById('ySlider');
+    const position = document.getElementById('position');
+
+    function coordToPx(x, y) {
+      const rect = map.getBoundingClientRect();
+      const size = rect.width;
+      const center = size / 2;
+      const scale = size / 10;
+      return { x: center + x * scale, y: center - y * scale };
+    }
+
+    function setTarget(x, y) {
+      const p = coordToPx(x, y);
+      target.style.left = (p.x / map.offsetWidth * 100) + '%';
+      target.style.top = (p.y / map.offsetHeight * 100) + '%';
+      xSlider.value = x;
+      ySlider.value = y;
+      document.getElementById('xVal').textContent = x.toFixed(1) + ' m';
+      document.getElementById('yVal').textContent = y.toFixed(1) + ' m';
+    }
+
+    function setDrone(x, y) {
+      const p = coordToPx(x, y);
+      drone.style.left = (p.x / map.offsetWidth * 100) + '%';
+      drone.style.top = (p.y / map.offsetHeight * 100) + '%';
+      position.textContent = `Position: X: ${x.toFixed(2)}  Y: ${y.toFixed(2)}  Z: 1.50 m`;
+    }
+
+    function drawPath(points) {
+      if (points.length < 2) return;
+      const pts = points.map(([x,y]) => coordToPx(x,y));
+      let d = `M ${pts[0].x} ${pts[0].y}`;
+      for (let i = 1; i < pts.length; i++) d += ` L ${pts[i].x} ${pts[i].y}`;
+      pathSvg.innerHTML = `<path d="${d}" fill="none" stroke="#007aff" stroke-width="2" stroke-dasharray="6 4" opacity=".6"/>`;
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    function tapAt(x, y) {
+      const p = coordToPx(x, y);
+      const pctX = p.x / map.offsetWidth * 100;
+      const pctY = p.y / map.offsetHeight * 100;
+      finger.style.left = pctX + '%';
+      finger.style.top = pctY + '%';
+      finger.classList.add('show');
+      tapRing.style.left = pctX + '%';
+      tapRing.style.top = pctY + '%';
+      tapRing.classList.remove('animate');
+      void tapRing.offsetWidth;
+      tapRing.classList.add('animate');
+      setTimeout(() => finger.classList.remove('show'), 700);
+    }
+
+    const timeline = [
+      { t: 0, fn: () => { setDrone(0,0); setTarget(2,1.5); } },
+      { t: 1200, fn: () => { tapAt(2, 1.5); setTarget(2, 1.5); showToast('Target set on map'); } },
+      { t: 2800, fn: () => { showToast('Go To Target — command sent'); } },
+      { t: 3200, fn: () => {
+          let step = 0;
+          const pts = [[0,0],[0.6,0.4],[1.2,0.8],[1.8,1.2],[2,1.5]];
+          const anim = setInterval(() => {
+            if (step >= pts.length) { clearInterval(anim); return; }
+            setDrone(...pts[step]);
+            drawPath(pts.slice(0, step+1));
+            step++;
+          }, 350);
+        }
+      },
+      { t: 5500, fn: () => { showToast('Arrived at target coordinates'); } },
+      { t: 6800, fn: () => { tapAt(-1.5, 2); setTarget(-1.5, 2); } },
+      { t: 8200, fn: () => { showToast('Mission waypoint added'); } },
+    ];
+
+    timeline.forEach(({t, fn}) => setTimeout(fn, t));
+    window.demoDuration = 9500;
+  </script>
+</body>
+</html>
