@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1" />
+  <title>GetFly Demo — Live Map & Mission</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: #0a0a0a;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; padding: 16px;
+    }
+    .phone {
+      width: 390px; height: 844px;
+      background: linear-gradient(180deg, #f2f6ff 0%, #eef1f6 100%);
+      border-radius: 44px; overflow: hidden;
+      border: 10px solid #1c1c1e;
+      box-shadow: 0 40px 100px rgba(0,0,0,.5);
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    .status-bar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 14px; font-weight: 600; }
+    .content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+    .tab-content { flex: 1; overflow: hidden; padding: 12px 14px; display: none; flex-direction: column; gap: 10px; }
+    .tab-content.active { display: flex; }
+    .hero {
+      background: linear-gradient(135deg, #142654, #2563b8, #3898fa);
+      color: #fff; border-radius: 20px; padding: 16px;
+      box-shadow: 0 12px 30px rgba(37,99,184,.35);
+    }
+    .hero h1 { font-size: 26px; font-weight: 800; }
+    .hero p { font-size: 13px; opacity: .85; margin-top: 2px; }
+    .chips { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .chip { font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,.18); }
+    .chip.live { background: rgba(52,199,89,.35); }
+    .banner {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(52,199,89,.12); border-radius: 14px; padding: 10px 12px;
+      font-size: 12px; font-weight: 600; color: #1a7f42;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #34c759; }
+    .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .metric {
+      background: #fff; border-radius: 14px; padding: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    }
+    .metric .val { font-size: 18px; font-weight: 800; color: #2563b8; }
+    .metric .lbl { font-size: 10px; color: #888; margin-top: 2px; }
+    .card {
+      background: #fff; border-radius: 18px; padding: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+      flex: 1; display: flex; flex-direction: column; min-height: 0;
+    }
+    .card-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .card-title .icon {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: linear-gradient(135deg, #3898fa, #2563b8);
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px;
+    }
+    .map-wrap {
+      flex: 1; min-height: 0; border-radius: 14px; overflow: hidden;
+      background: #dce8f5; position: relative; border: 1.5px solid rgba(37,99,184,.15);
+    }
+    .map-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .map-road { position: absolute; background: rgba(255,255,255,.7); border-radius: 2px; }
+    .trail { position: absolute; inset: 0; pointer-events: none; }
+    .trail svg { width: 100%; height: 100%; }
+    .marker {
+      position: absolute; transform: translate(-50%, -50%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; color: #fff;
+      transition: left 0.08s linear, top 0.08s linear;
+      z-index: 5;
+    }
+    .marker.drone {
+      width: 32px; height: 32px; font-size: 16px;
+      background: #34c759; border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(52,199,89,.25);
+      animation: pulse 1s ease-in-out infinite;
+    }
+    .marker.home { width: 24px; height: 24px; background: #af52de; border-radius: 50%; }
+    .marker.target { width: 24px; height: 24px; background: #ff9500; border-radius: 50%; }
+    .marker.wp { width: 22px; height: 22px; background: #007aff; border-radius: 50%; }
+    .marker.wp.active { background: #ffcc00; color: #333; box-shadow: 0 0 0 5px rgba(255,204,0,.3); }
+    .map-badge {
+      position: absolute; top: 8px; left: 8px; right: 8px;
+      display: flex; justify-content: space-between; pointer-events: none; z-index: 10;
+    }
+    .map-badge span {
+      font-size: 10px; font-weight: 700; padding: 5px 8px;
+      background: rgba(255,255,255,.85); backdrop-filter: blur(8px);
+      border-radius: 999px; color: #1a7f42;
+    }
+    .progress {
+      background: rgba(37,99,184,.08); border-radius: 12px; padding: 10px 12px;
+    }
+    .progress-bar { height: 6px; background: #dde7f5; border-radius: 999px; margin-top: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #2563b8, #3898fa); border-radius: 999px; width: 0%; transition: width .4s ease; }
+    .wp-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; border-radius: 12px; background: #f5f7fb; margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .wp-row.active { background: rgba(255,149,0,.1); border: 1px solid rgba(255,149,0,.3); }
+    .wp-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, #3898fa, #2563b8);
+      color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 12px;
+    }
+    .wp-row.active .wp-num { background: linear-gradient(135deg, #ff9500, #ffcc00); }
+    .tabs {
+      display: flex; background: rgba(255,255,255,.95);
+      border-top: 1px solid rgba(0,0,0,.08);
+      padding: 6px 4px 20px;
+    }
+    .tab {
+      flex: 1; text-align: center; font-size: 9px; font-weight: 600; color: #999;
+      padding: 4px 2px; cursor: default;
+    }
+    .tab.active { color: #2563b8; }
+    .tab .ico { font-size: 20px; display: block; margin-bottom: 2px; }
+    .caption-overlay {
+      position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,.75); color: #fff; padding: 8px 16px;
+      border-radius: 999px; font-size: 12px; font-weight: 600;
+      white-space: nowrap; opacity: 0; transition: opacity .3s; z-index: 100;
+      pointer-events: none;
+    }
+    .caption-overlay.show { opacity: 1; }
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%,-50%) scale(1); }
+      50% { transform: translate(-50%,-50%) scale(1.12); }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="content">
+      <!-- MISSION TAB (main demo) -->
+      <div class="tab-content" id="tab-mission">
+        <div class="card-title"><div class="icon">🗺</div><div><div>Live Mission Map</div><div style="font-size:11px;color:#888;font-weight:400">Watch drone move to waypoints</div></div></div>
+        <div class="card" style="flex:1.2">
+          <div class="map-wrap" id="map">
+            <div class="map-grid"></div>
+            <div class="map-road" style="width:60%;height:8px;top:45%;left:20%"></div>
+            <div class="map-road" style="width:8px;height:50%;top:25%;left:48%"></div>
+            <div class="trail"><svg id="trailSvg"></svg></div>
+            <div class="marker home" id="home" style="left:50%;top:50%">H</div>
+            <div class="marker wp" id="wp1" style="left:62%;top:38%">1</div>
+            <div class="marker wp" id="wp2" style="left:72%;top:52%">2</div>
+            <div class="marker wp" id="wp3" style="left:58%;top:65%">3</div>
+            <div class="marker target" id="target" style="left:72%;top:52%">T</div>
+            <div class="marker drone" id="drone" style="left:50%;top:50%">✈</div>
+            <div class="map-badge">
+              <span id="navLabel">🟢 Connected to ESP32</span>
+              <span>© OSM</span>
+            </div>
+          </div>
+        </div>
+        <div class="progress">
+          <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700">
+            <span id="progressLabel">Ready</span><span id="progressCount">0/3</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="wp-row" id="row1"><div class="wp-num">1</div><div><b>Waypoint 1</b><br><span style="color:#888">X:1.0 Y:0.0 Z:1.5m</span></div></div>
+        <div class="wp-row" id="row2"><div class="wp-num">2</div><div><b>Waypoint 2</b><br><span style="color:#888">X:2.0 Y:1.5 Z:1.5m</span></div></div>
+        <div class="wp-row" id="row3"><div class="wp-num">3</div><div><b>Waypoint 3</b><br><span style="color:#888">X:1.2 Y:2.0 Z:1.5m</span></div></div>
+      </div>
+      <!-- NAVIGATE TAB -->
+      <div class="tab-content" id="tab-navigate">
+        <div class="card-title"><div class="icon">📍</div><div><div>Navigate — Wide Map</div><div style="font-size:11px;color:#888;font-weight:400">520pt expanded full-width view</div></div></div>
+        <div class="card" style="flex:1">
+          <div class="map-wrap" style="min-height:340px">
+            <div class="map-grid"></div>
+            <div class="marker home" style="left:50%;top:55%">H</div>
+            <div class="marker target" style="left:68%;top:35%">T</div>
+            <div class="marker drone" style="left:58%;top:45%">✈</div>
+            <div class="map-badge"><span>Tap map to set target</span><span>Wider zoom</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- DASHBOARD TAB -->
+      <div class="tab-content active" id="tab-dashboard">
+        <div class="hero">
+          <h1>GetFly</h1>
+          <p>Autonomous Quadcopter</p>
+          <div class="chips"><span class="chip live">● Flying</span><span class="chip">Armed</span><span class="chip">Mission</span></div>
+        </div>
+        <div class="banner"><div class="dot"></div>Connected to ESP32 — Live telemetry</div>
+        <div class="metrics">
+          <div class="metric"><div class="val" id="altVal">1.5 m</div><div class="lbl">Altitude</div></div>
+          <div class="metric"><div class="val">87%</div><div class="lbl">Battery</div></div>
+          <div class="metric"><div class="val" id="xVal">0.0 m</div><div class="lbl">Position X</div></div>
+          <div class="metric"><div class="val" id="yVal">0.0 m</div><div class="lbl">Position Y</div></div>
+        </div>
+        <div class="card" style="flex:1">
+          <div class="card-title"><div class="icon">🗺</div><div>Live Map Preview</div></div>
+          <div class="map-wrap" style="min-height:140px">
+            <div class="map-grid"></div>
+            <div class="marker drone" id="miniDrone" style="left:50%;top:50%">✈</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tabs">
+      <div class="tab active" id="tabBtn-dashboard"><span class="ico">📊</span>Dashboard</div>
+      <div class="tab" id="tabBtn-navigate"><span class="ico">🗺</span>Navigate</div>
+      <div class="tab" id="tabBtn-mission"><span class="ico">🔀</span>Mission</div>
+      <div class="tab" id="tabBtn-controls"><span class="ico">🎛</span>Controls</div>
+    </div>
+    <div class="caption-overlay" id="caption"></div>
+  </div>
+
+  <script>
+    const drone = document.getElementById('drone');
+    const trailSvg = document.getElementById('trailSvg');
+    const navLabel = document.getElementById('navLabel');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressCount = document.getElementById('progressCount');
+    const progressFill = document.getElementById('progressFill');
+    const caption = document.getElementById('caption');
+    const altVal = document.getElementById('altVal');
+    const xVal = document.getElementById('xVal');
+    const yVal = document.getElementById('yVal');
+    const miniDrone = document.getElementById('miniDrone');
+
+    const waypoints = [
+      { id: 'wp1', row: 'row1', left: 62, top: 38, x: 1.0, y: 0.0 },
+      { id: 'wp2', row: 'row2', left: 72, top: 52, x: 2.0, y: 1.5 },
+      { id: 'wp3', row: 'row3', left: 58, top: 65, x: 1.2, y: 2.0 },
+    ];
+
+    let trailPoints = [{ x: 50, y: 50 }];
+
+    function showTab(name) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      document.getElementById('tabBtn-' + name).classList.add('active');
+    }
+
+    function showCaption(text, ms = 2200) {
+      caption.textContent = text;
+      caption.classList.add('show');
+      setTimeout(() => caption.classList.remove('show'), ms);
+    }
+
+    function drawTrail() {
+      if (trailPoints.length < 2) return;
+      let d = `M ${trailPoints[0].x}% ${trailPoints[0].y}%`;
+      for (let i = 1; i < trailPoints.length; i++) {
+        d += ` L ${trailPoints[i].x}% ${trailPoints[i].y}%`;
+      }
+      trailSvg.innerHTML = `<path d="${d}" fill="none" stroke="#34c759" stroke-width="3" stroke-linecap="round"/>`;
+    }
+
+    function setActiveWP(index) {
+      waypoints.forEach((wp, i) => {
+        document.getElementById(wp.id).classList.toggle('active', i === index);
+        document.getElementById(wp.row).classList.toggle('active', i === index);
+      });
+      progressCount.textContent = `${index}/${waypoints.length}`;
+      progressFill.style.width = `${(index / waypoints.length) * 100}%`;
+    }
+
+    function moveDrone(left, top, x, y, duration = 1800) {
+      return new Promise(resolve => {
+        const startL = parseFloat(drone.style.left);
+        const startT = parseFloat(drone.style.top);
+        const steps = 40;
+        let step = 0;
+        const iv = setInterval(() => {
+          step++;
+          const t = step / steps;
+          const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+          const l = startL + (left - startL) * ease;
+          const tp = startT + (top - startT) * ease;
+          drone.style.left = l + '%';
+          drone.style.top = tp + '%';
+          miniDrone.style.left = l + '%';
+          miniDrone.style.top = tp + '%';
+          altVal.textContent = '1.5 m';
+          xVal.textContent = (x * ease).toFixed(1) + ' m';
+          yVal.textContent = (y * ease).toFixed(1) + ' m';
+          if (step % 3 === 0) {
+            trailPoints.push({ x: l, y: tp });
+            drawTrail();
+          }
+          if (step >= steps) { clearInterval(iv); resolve(); }
+        }, duration / steps);
+      });
+    }
+
+    const timeline = [
+      { t: 0, fn: () => { showTab('dashboard'); showCaption('✨ New Dashboard with live telemetry'); } },
+      { t: 2500, fn: () => { showTab('navigate'); showCaption('🗺 Wider OpenStreetMap — 520pt expanded view'); } },
+      { t: 5000, fn: () => {
+          showTab('mission');
+          showCaption('🚀 Mission tab — live drone tracking');
+          navLabel.textContent = '✈ Flying to waypoint 1';
+          progressLabel.textContent = 'Mission started';
+          setActiveWP(0);
+        }
+      },
+      { t: 6200, fn: async () => {
+          progressLabel.textContent = 'Flying to waypoint 1 of 3';
+          await moveDrone(62, 38, 1.0, 0.0);
+        }
+      },
+      { t: 8500, fn: async () => {
+          setActiveWP(1);
+          navLabel.textContent = '✈ Flying to waypoint 2';
+          progressLabel.textContent = 'Flying to waypoint 2 of 3';
+          await moveDrone(72, 52, 2.0, 1.5);
+        }
+      },
+      { t: 10800, fn: async () => {
+          setActiveWP(2);
+          navLabel.textContent = '✈ Flying to waypoint 3';
+          progressLabel.textContent = 'Flying to waypoint 3 of 3';
+          await moveDrone(58, 65, 1.2, 2.0);
+        }
+      },
+      { t: 13000, fn: () => {
+          setActiveWP(3);
+          progressCount.textContent = '3/3';
+          progressFill.style.width = '100%';
+          progressLabel.textContent = 'Mission complete ✓';
+          navLabel.textContent = '🟢 Mission complete';
+          showCaption('✅ Drone animated along waypoints with flight trail');
+        }
+      },
+    ];
+
+    timeline.forEach(({ t, fn }) => setTimeout(fn, t));
+    window.demoDuration = 15500;
+  </script>
+</body>
+</html>
