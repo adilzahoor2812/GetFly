@@ -1,6 +1,6 @@
 //
 //  FlightMapView.swift
-//  Hike
+//  GetFly
 //
 
 import CoreLocation
@@ -25,29 +25,35 @@ struct FlightMapView: View {
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                    .stroke(GetFlyTheme.accent.opacity(0.15), lineWidth: 1.5)
             )
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 8) {
-                    legendItem(color: .green, text: "Drone")
-                    legendItem(color: .orange, text: "Target")
-                    legendItem(color: .blue, text: "Waypoints")
+                    legendItem(color: GetFlyTheme.success, text: "Drone")
+                    legendItem(color: GetFlyTheme.warning, text: "Target")
+                    legendItem(color: GetFlyTheme.accent, text: "Route")
                 }
-                .font(.caption2)
-                .padding(8)
+                .font(.caption2.weight(.medium))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
                 .background(.ultraThinMaterial, in: Capsule())
 
                 Spacer()
 
-                Text("© OpenStreetMap contributors")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.ultraThinMaterial, in: Capsule())
+                HStack {
+                    Label("Tap to set target", systemImage: "hand.tap.fill")
+                        .font(.caption2.weight(.medium))
+                    Spacer()
+                    Text("© OpenStreetMap")
+                        .font(.caption2)
+                }
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(.ultraThinMaterial, in: Capsule())
             }
-            .padding(8)
+            .padding(10)
         }
         .aspectRatio(1, contentMode: .fit)
     }

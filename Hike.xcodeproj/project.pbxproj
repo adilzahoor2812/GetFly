@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0010272C70000300A10001 /* GetFlyTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010262C70000300A10001 /* GetFlyTheme.swift */; };
+		DC0010292C70000300A10001 /* GetFlyComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010282C70000300A10001 /* GetFlyComponents.swift */; };
 		DC0010212C70000200A10001 /* CoordinateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010222C70000200A10001 /* CoordinateConverter.swift */; };
 		DC0010232C70000200A10001 /* OpenStreetMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010202C70000200A10001 /* OpenStreetMapView.swift */; };
 		DC0010252C70000200A10001 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0010242C70000200A10001 /* LocationManager.swift */; };
@@ -40,6 +42,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC0010262C70000300A10001 /* GetFlyTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFlyTheme.swift; sourceTree = "<group>"; };
+		DC0010282C70000300A10001 /* GetFlyComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFlyComponents.swift; sourceTree = "<group>"; };
 		DC0010222C70000200A10001 /* CoordinateConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateConverter.swift; sourceTree = "<group>"; };
 		DC0010202C70000200A10001 /* OpenStreetMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenStreetMapView.swift; sourceTree = "<group>"; };
 		DC0010242C70000200A10001 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -160,6 +164,7 @@
 				DB1452902C52D67100D80A8C /* CardView.swift */,
 				DB1452922C52D8DA00D80A8C /* CustomBG.swift */,
 				DB1452972C52EB7400D80A8C /* CustomButton.swift */,
+				DC0010282C70000300A10001 /* GetFlyComponents.swift */,
 				DBA0110C2C540174003623A0 /* AnimatedCircleView.swift */,
 				DBA0110E2C540A2B003623A0 /* MotionAnimationView.swift */,
 				DB28B9AC2C61072600AAE8B4 /* CustomListRowView.swift */,
@@ -188,6 +193,7 @@
 			children = (
 				DB1452952C52DC5A00D80A8C /* ColorExtension.swift */,
 				DBA0110A2C53E9DC003623A0 /* GradientButtonStyle.swift */,
+				DC0010262C70000300A10001 /* GetFlyTheme.swift */,
 				DC0010222C70000200A10001 /* CoordinateConverter.swift */,
 			);
 			path = Utility;
@@ -263,6 +269,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0010272C70000300A10001 /* GetFlyTheme.swift in Sources */,
+				DC0010292C70000300A10001 /* GetFlyComponents.swift in Sources */,
 				DC0010212C70000200A10001 /* CoordinateConverter.swift in Sources */,
 				DC0010232C70000200A10001 /* OpenStreetMapView.swift in Sources */,
 				DC0010252C70000200A10001 /* LocationManager.swift in Sources */,

@@ -73,14 +73,14 @@ bundle exec fastlane bump_build
 
 1. Flash the ESP32 with firmware from `firmware/esp32_quadcopter_server/`.
 2. On the iPhone, join the ESP32 Wi‑Fi network (`Quadcopter-ESP32` by default).
-3. Open Hike → **Settings** → confirm address `192.168.4.1:80`.
+3. Open GetFly → **Settings** → confirm address `192.168.4.1:80`.
 4. When prompted, allow **Local Network** access (required for ESP32 HTTP).
 
 ## Version and build numbers
 
 | Setting | Current value | Where to change |
 |---------|---------------|-----------------|
-| Marketing version | 1.0 | Xcode → Hike target → General → Version |
+| Marketing version | 1.0 | Xcode → GetFly target → General → Version |
 | Build number | 1 | Xcode → General → Build, or `fastlane bump_build` |
 
 **Important:** Each TestFlight upload needs a **unique build number**. Increment `CURRENT_PROJECT_VERSION` before every upload if the marketing version stays at 1.0.
@@ -94,14 +94,14 @@ The project currently targets **iOS 18.0+**. Testers need an iPhone or iPad runn
 | Issue | Fix |
 |-------|-----|
 | Archive button is grayed out | Select **Any iOS Device (arm64)**, not a simulator. |
-| Signing errors | Confirm team membership and that bundle ID `codebuzz.Hike` exists in your developer account. |
+| Signing errors | Confirm team membership and that bundle ID `codebuzz.GetFly` exists in your developer account. |
 | Build stuck "Processing" | Wait up to 30 minutes; check email for processing errors. |
 | Cannot reach ESP32 on TestFlight build | Ensure Local Network permission was granted; verify iPhone is on ESP32 Wi‑Fi. |
 | Export compliance prompt | The project sets `ITSAppUsesNonExemptEncryption = NO` (standard HTTPS only, no custom crypto). |
 
 ## What was added for TestFlight
 
-- Shared Xcode scheme: `Hike.xcodeproj/xcshareddata/xcschemes/Hike.xcscheme`
+- Shared Xcode scheme: `Hike.xcodeproj/xcshareddata/xcschemes/GetFly.xcscheme`
 - Local network ATS exception (HTTP to ESP32 on LAN)
 - Export compliance flag (skips repeated encryption questionnaires)
 - `fastlane/` + `ExportOptions.plist` for automated uploads
