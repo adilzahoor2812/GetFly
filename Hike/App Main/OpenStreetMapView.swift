@@ -149,19 +149,15 @@ struct OpenStreetMapView: UIViewRepresentable {
             case .home:
                 view.markerTintColor = .systemPurple
                 view.glyphText = "H"
-                view.title = "Home"
             case .drone:
                 view.markerTintColor = .systemGreen
                 view.glyphText = "D"
-                view.title = "Drone"
             case .target:
                 view.markerTintColor = .systemOrange
                 view.glyphText = "T"
-                view.title = "Target"
             case .waypoint:
                 view.markerTintColor = .systemBlue
                 view.glyphText = "W"
-                view.title = "Waypoint"
             }
 
             return view
@@ -208,6 +204,15 @@ private final class MapAnnotation: NSObject, MKAnnotation {
 
     let kind: Kind
     dynamic var coordinate: CLLocationCoordinate2D
+
+    var title: String? {
+        switch kind {
+        case .home: "Home"
+        case .drone: "Drone"
+        case .target: "Target"
+        case .waypoint: "Waypoint"
+        }
+    }
 
     init(kind: Kind, coordinate: CLLocationCoordinate2D) {
         self.kind = kind
