@@ -168,25 +168,6 @@ struct GetFlyFlightControlTile: View {
     }
 }
 
-struct GetFlyToast: View {
-    let message: String
-    let isSuccess: Bool
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: isSuccess ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-            Text(message)
-                .font(.subheadline.weight(.medium))
-        }
-        .foregroundStyle(.white)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background((isSuccess ? GetFlyTheme.success : GetFlyTheme.danger).opacity(0.95), in: Capsule())
-        .shadow(color: .black.opacity(0.12), radius: 8, y: 4)
-        .padding(.bottom, 8)
-    }
-}
-
 struct GetFlyMissionProgressBar: View {
     let completed: Int
     let total: Int

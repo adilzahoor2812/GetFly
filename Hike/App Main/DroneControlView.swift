@@ -5,200 +5,17 @@
 
 import SwiftUI
 
-private enum GetFlyTab: String, CaseIterable {
-    case dashboard = "Dashboard"
-    case navigate = "Navigate"
-    case mission = "Mission"
-    case controls = "Controls"
-
-    var icon: String {
-        switch self {
-        case .dashboard: return "gauge.with.dots.needle.67percent"
-        case .navigate: return "map.fill"
-        case .mission: return "point.topleft.down.curvedto.point.bottomright.up"
-        case .controls: return "slider.horizontal.3"
-        }
-    }
-}
-
 struct DroneControlView: View {
     @StateObject private var viewModel = DroneViewModel()
     @State private var showSettings = false
-    @State private var selectedTab: GetFlyTab = .dashboard
+    @State private var panelMode: MissionPanelMode = .plan
+    @State private var panelDetent: PanelDetent = .medium
+    @State private var mapPulse = false
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            dashboardTab
-                .tabItem { Label(GetFlyTab.dashboard.rawValue, systemImage: GetFlyTab.dashboard.icon) }
-                .tag(GetFlyTab.dashboard)
-
-            navigateTab
-                .tabItem { Label(GetFlyTab.navigate.rawValue, systemImage: GetFlyTab.navigate.icon) }
-                .tag(GetFlyTab.navigate)
-
-            missionTab
-                .tabItem { Label(GetFlyTab.mission.rawValue, systemImage: GetFlyTab.mission.icon) }
-                .tag(GetFlyTab.mission)
-
-            controlsTab
-                .tabItem { Label(GetFlyTab.controls.rawValue, systemImage: GetFlyTab.controls.icon) }
-                .tag(GetFlyTab.controls)
-        }
-        .tint(GetFlyTheme.accent)
-        .getFlyScreenBackground()
-        .sheet(isPresented: $showSettings) {
-            ConnectionSettingsView(settings: viewModel.settings, viewModel: viewModel)
-        }
-        .overlay(alignment: .bottom) {
-            toastOverlay
-        }
-        .onAppear { viewModel.startPolling() }
-        .onDisappear { viewModel.stopPolling() }
-        .onChange(of: viewModel.isNavigating) { _, navigating in
-            if navigating { selectedTab = .mission }
-        }
-    }
-
-    // MARK: - Dashboard
-
-    private var dashboardTab: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    heroHeader
-                    GetFlyConnectionBanner(
-                        isConnected: viewModel.isConnected,
-                        error: viewModel.connectionError
-                    )
-                    if viewModel.isFlying {
-                        GetFlyMissionProgressBar(
-                            completed: missionProgressCompleted,
-                            total: max(viewModel.waypoints.count, 1),
-                            label: viewModel.navigationLabel
-                        )
-                    }
-                    telemetryGrid
-                    mapSection(layout: .preview)
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 24)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar { settingsToolbar }
-        }
-    }
-
-    // MARK: - Navigate
-
-    private var navigateTab: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    GetFlySectionHeader(
-                        "Flight Path",
-                        subtitle: "Wide map view — tap anywhere to set target",
-                        icon: "location.viewfinder"
-                    )
-                    mapSection(layout: .expanded)
-                    CoordinateInputView(
-                        coordinate: $viewModel.targetCoordinate,
-                        homeCoordinate: viewModel.settings.homeCoordinate
-                    )
-                    GetFlyActionButton(
-                        title: "Go To Target",
-                        icon: "paperplane.fill",
-                        style: .primary,
-                        isDisabled: viewModel.isBusy || !viewModel.isConnected
-                    ) {
-                        Task { await viewModel.sendGoto() }
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 24)
-            }
-            .navigationTitle("Navigate")
-            .toolbar { settingsToolbar }
-        }
-    }
-
-    // MARK: - Mission
-
-    private var missionTab: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    GetFlySectionHeader(
-                        "Live Mission Map",
-                        subtitle: "Watch the drone move to each waypoint",
-                        icon: "arrow.triangle.swap"
-                    )
-                    mapSection(layout: .expanded)
-                    if viewModel.isNavigating && !viewModel.waypoints.isEmpty {
-                        GetFlyMissionProgressBar(
-                            completed: missionProgressCompleted,
-                            total: viewModel.waypoints.count,
-                            label: viewModel.navigationLabel
-                        )
-                    }
-                    WaypointMissionView(viewModel: viewModel)
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 24)
-            }
-            .navigationTitle("Mission")
-            .toolbar { settingsToolbar }
-        }
-    }
-
-    // MARK: - Controls
-
-    private var controlsTab: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    GetFlySectionHeader(
-                        "Flight Controls",
-                        subtitle: "Arm motors before takeoff",
-                        icon: "airplane.circle.fill"
-                    )
-                    mapSection(layout: .standard)
-                    flightControlsGrid
-                    GetFlyActionButton(
-                        title: "Emergency Stop",
-                        icon: "exclamationmark.octagon.fill",
-                        style: .danger,
-                        isDisabled: viewModel.isBusy || !viewModel.isConnected
-                    ) {
-                        Task { await viewModel.sendAction(.emergencyStop) }
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 24)
-            }
-            .navigationTitle("Controls")
-            .toolbar { settingsToolbar }
-        }
-    }
-
-    // MARK: - Shared
-
-    private var missionProgressCompleted: Int {
-        if let active = viewModel.activeWaypointIndex {
-            return active
-        }
-        return viewModel.isNavigating ? 0 : viewModel.waypoints.count
-    }
-
-    private func mapSection(layout: FlightMapLayout) -> some View {
-        GetFlyCard {
-            VStack(alignment: .leading, spacing: 12) {
-                if layout == .preview {
-                    GetFlySectionHeader(
-                        "Live Map",
-                        subtitle: "Open full map in Navigate tab",
-                        icon: "map"
-                    )
-                }
+        GeometryReader { geo in
+            ZStack {
+                // Full-screen map
                 FlightMapView(
                     homeCoordinate: viewModel.settings.homeCoordinate,
                     dronePosition: viewModel.displayPosition,
@@ -206,145 +23,168 @@ struct DroneControlView: View {
                     waypoints: viewModel.waypoints,
                     flightTrail: viewModel.flightTrail,
                     isFlying: viewModel.isFlying,
-                    followDrone: viewModel.isFlying && layout != .preview,
+                    followDrone: true,
                     activeWaypointIndex: viewModel.activeWaypointIndex,
-                    navigationLabel: viewModel.navigationLabel,
-                    layout: layout
+                    layout: .fullScreen
                 ) { coordinate in
-                    viewModel.targetCoordinate = coordinate
-                    selectedTab = .navigate
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
+                        viewModel.targetCoordinate = coordinate
+                        viewModel.addWaypoint(from: coordinate)
+                        panelMode = .plan
+                        panelDetent = .medium
+                    }
+                }
+                .ignoresSafeArea()
+
+                // Cinematic vignette
+                GetFlyTheme.mapVignette
+                    .ignoresSafeArea()
+                    .allowsHitTesting(false)
+
+                // Top HUD
+                VStack(spacing: 10) {
+                    topBar
+                    DroneHUDView(
+                        altitude: viewModel.displayPosition.z,
+                        battery: viewModel.status.batteryPercent,
+                        isConnected: viewModel.isConnected,
+                        isFlying: viewModel.isFlying,
+                        mode: viewModel.status.mode.displayName,
+                        navigationLabel: viewModel.navigationLabel
+                    )
+                    .padding(.horizontal, 14)
+
+                    if viewModel.isNavigating, !viewModel.waypoints.isEmpty {
+                        MissionProgressRing(
+                            progress: missionProgress,
+                            label: viewModel.navigationLabel
+                        )
+                        .padding(.horizontal, 14)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .top).combined(with: .opacity),
+                            removal: .opacity
+                        ))
+                    }
+
+                    Spacer()
+                }
+                .padding(.top, 8)
+
+                // Side FABs
+                HStack {
+                    VStack(spacing: 12) {
+                        DroneFAB(icon: "gearshape.fill", tint: GetFlyTheme.surfaceElevated) {
+                            showSettings = true
+                        }
+                        DroneFAB(icon: "plus.viewfinder", tint: GetFlyTheme.accent) {
+                            viewModel.addWaypoint()
+                            panelMode = .plan
+                            withAnimation { panelDetent = .medium }
+                        }
+                        DroneFAB(icon: "location.fill", tint: GetFlyTheme.success) {
+                            Task { await viewModel.sendGoto() }
+                            panelMode = .target
+                        }
+                    }
+                    .padding(.leading, 14)
+                    .padding(.top, geo.size.height * 0.32)
+
+                    Spacer()
+                }
+
+                // Map tap hint
+                if viewModel.waypoints.isEmpty && !viewModel.isFlying {
+                    VStack {
+                        Spacer()
+                        Label("Tap map to plan mission", systemImage: "hand.tap.fill")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .glassPanel(cornerRadius: 999)
+                            .opacity(mapPulse ? 1 : 0.55)
+                            .padding(.bottom, geo.size.height * panelDetent.rawValue + 20)
+                    }
+                    .allowsHitTesting(false)
+                }
+
+                // Bottom mission panel
+                MissionPlanningPanel(
+                    viewModel: viewModel,
+                    panelMode: $panelMode,
+                    detent: $panelDetent
+                )
+            }
+        }
+        .getFlyProBackground()
+        .preferredColorScheme(.dark)
+        .sheet(isPresented: $showSettings) {
+            ConnectionSettingsView(settings: viewModel.settings, viewModel: viewModel)
+                .preferredColorScheme(.dark)
+        }
+        .overlay(alignment: .bottom) { toastOverlay }
+        .onAppear {
+            viewModel.startPolling()
+            withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
+                mapPulse = true
+            }
+        }
+        .onDisappear { viewModel.stopPolling() }
+        .onChange(of: viewModel.isNavigating) { _, navigating in
+            if navigating {
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.8)) {
+                    panelMode = .plan
+                    panelDetent = .medium
                 }
             }
         }
+        .animation(.spring(response: 0.45, dampingFraction: 0.82), value: viewModel.isNavigating)
     }
 
-    private var heroHeader: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("GetFly")
-                        .font(.largeTitle.bold())
-                    Text("Autonomous Quadcopter")
-                        .font(.subheadline)
-                        .opacity(0.85)
-                }
-                Spacer()
-                if viewModel.isBusy {
-                    ProgressView().tint(.white)
-                } else {
-                    Image(systemName: "airplane")
-                        .font(.title)
-                        .symbolEffect(.pulse, isActive: viewModel.isFlying)
-                }
-            }
-
+    private var topBar: some View {
+        HStack {
             HStack(spacing: 8) {
-                statusChip(viewModel.status.mode.displayName, icon: "dot.radiowaves.right", active: viewModel.status.flying)
-                statusChip(viewModel.status.armed ? "Armed" : "Disarmed", icon: "power", active: viewModel.status.armed)
+                Image(systemName: "airplane.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(GetFlyTheme.accent)
+                    .symbolEffect(.pulse, isActive: viewModel.isFlying)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("GetFly")
+                        .font(.system(size: 18, weight: .heavy, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text("Mission Planner")
+                        .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(GetFlyTheme.textSecondary)
+                }
             }
-
-            if viewModel.isFlying {
-                Label(viewModel.navigationLabel, systemImage: "location.fill")
-                    .font(.caption.weight(.semibold))
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(.white.opacity(0.18), in: Capsule())
+            Spacer()
+            if viewModel.isBusy {
+                ProgressView()
+                    .tint(GetFlyTheme.accent)
             }
         }
-        .foregroundStyle(.white)
-        .padding(20)
-        .background(GetFlyTheme.heroGradient, in: RoundedRectangle(cornerRadius: GetFlyTheme.cardRadius))
-        .shadow(color: GetFlyTheme.accent.opacity(0.25), radius: 16, y: 8)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
     }
 
-    private var telemetryGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            GetFlyMetricTile(
-                title: "Altitude",
-                value: String(format: "%.1f m", viewModel.displayPosition.z),
-                icon: "arrow.up.and.down",
-                tint: GetFlyTheme.accent
-            )
-            GetFlyMetricTile(
-                title: "Battery",
-                value: "\(viewModel.status.batteryPercent)%",
-                icon: "battery.100",
-                tint: batteryColor(viewModel.status.batteryPercent)
-            )
-            GetFlyMetricTile(
-                title: "Position X",
-                value: String(format: "%.1f m", viewModel.displayPosition.x),
-                icon: "arrow.left.and.right",
-                tint: .purple
-            )
-            GetFlyMetricTile(
-                title: "Position Y",
-                value: String(format: "%.1f m", viewModel.displayPosition.y),
-                icon: "arrow.up.and.down.circle",
-                tint: .teal
-            )
-        }
-    }
-
-    private var flightControlsGrid: some View {
-        GetFlyCard {
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                flightTile(.arm, primary: false)
-                flightTile(.disarm, primary: false)
-                flightTile(.takeoff, primary: true)
-                flightTile(.land, primary: true)
-                flightTile(.hover, primary: false)
-                flightTile(.home, primary: false)
-            }
-        }
-    }
-
-    @ToolbarContentBuilder
-    private var settingsToolbar: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Button { showSettings = true } label: {
-                Image(systemName: "gearshape.fill")
-                    .symbolRenderingMode(.hierarchical)
-            }
-        }
+    private var missionProgress: Double {
+        let total = max(viewModel.waypoints.count, 1)
+        let completed = min(viewModel.activeWaypointIndex ?? 0, total)
+        return Double(completed) / Double(total)
     }
 
     @ViewBuilder
     private var toastOverlay: some View {
         if let message = viewModel.lastSuccessMessage {
             GetFlyToast(message: message, isSuccess: true)
+                .padding(.bottom, 120)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .onAppear { scheduleToastClear() }
         } else if let error = viewModel.lastError {
             GetFlyToast(message: error, isSuccess: false)
+                .padding(.bottom, 120)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .onAppear { scheduleToastClear() }
-        }
-    }
-
-    private func flightTile(_ action: DroneAction, primary: Bool) -> some View {
-        GetFlyFlightControlTile(
-            action: action,
-            isPrimary: primary,
-            isDisabled: viewModel.isBusy || !viewModel.isConnected
-        ) {
-            Task { await viewModel.sendAction(action) }
-        }
-    }
-
-    private func statusChip(_ text: String, icon: String, active: Bool) -> some View {
-        Label(text, systemImage: icon)
-            .font(.caption.weight(.semibold))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background(.white.opacity(active ? 0.25 : 0.12), in: Capsule())
-    }
-
-    private func batteryColor(_ percent: Int) -> Color {
-        switch percent {
-        case 0..<20: return GetFlyTheme.danger
-        case 20..<50: return GetFlyTheme.warning
-        default: return GetFlyTheme.success
         }
     }
 
