@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1" />
+  <title>GetFly Pro Mission Planner Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: #000;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; padding: 16px;
+    }
+    .phone {
+      width: 390px; height: 844px;
+      background: #000; border-radius: 44px; overflow: hidden;
+      border: 10px solid #1c1c1e;
+      box-shadow: 0 40px 100px rgba(0,0,0,.6);
+      position: relative;
+    }
+    .status-bar {
+      position: absolute; top: 0; left: 0; right: 0; height: 44px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; font-size: 14px; font-weight: 600; color: #fff; z-index: 50;
+    }
+    .map-layer {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, #1a2838 0%, #243447 35%, #2d4a3e 60%, #1e3344 100%);
+    }
+    .map-grid {
+      position: absolute; inset: 0; opacity: .35;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .map-road {
+      position: absolute; background: rgba(255,255,255,.12); border-radius: 3px;
+    }
+    .vignette {
+      position: absolute; inset: 0; pointer-events: none; z-index: 2;
+      background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.08) 25%, rgba(0,0,0,.08) 65%, rgba(0,0,0,.65) 100%);
+    }
+    .trail svg { width: 100%; height: 100%; }
+    .trail { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+    .marker {
+      position: absolute; transform: translate(-50%, -50%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; color: #fff; z-index: 4;
+      transition: left .08s linear, top .08s linear;
+    }
+    .marker.home { width: 22px; height: 22px; background: #bf5af2; border-radius: 50%; box-shadow: 0 0 12px rgba(191,90,242,.5); }
+    .marker.wp { width: 24px; height: 24px; background: linear-gradient(135deg, #0088cc, #00c0ff); border-radius: 50%; font-size: 11px; }
+    .marker.wp.active { background: linear-gradient(135deg, #ffd000, #ffcc00); color: #111; box-shadow: 0 0 14px rgba(255,204,0,.55); transform: translate(-50%,-50%) scale(1.08); }
+    .marker.wp.done { background: #33e68a; color: #111; }
+    .marker.drone {
+      width: 36px; height: 36px; font-size: 18px;
+      background: #33e68a; border-radius: 50%;
+      box-shadow: 0 0 0 8px rgba(51,230,138,.25), 0 0 20px rgba(51,230,138,.4);
+      animation: dronePulse 1.2s ease-in-out infinite;
+    }
+    @keyframes dronePulse {
+      0%, 100% { box-shadow: 0 0 0 8px rgba(51,230,138,.25), 0 0 20px rgba(51,230,138,.4); }
+      50% { box-shadow: 0 0 0 12px rgba(51,230,138,.15), 0 0 28px rgba(51,230,138,.55); }
+    }
+    .mission-line {
+      position: absolute; inset: 0; pointer-events: none; z-index: 3;
+    }
+    .glass {
+      background: rgba(10,15,26,.82);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,.35);
+    }
+    .top-bar {
+      position: absolute; top: 48px; left: 14px; right: 14px; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 8px; }
+    .brand-icon { font-size: 22px; color: #00c0ff; }
+    .brand h1 { font-size: 18px; font-weight: 800; color: #fff; }
+    .brand p { font-size: 10px; font-weight: 600; color: rgba(255,255,255,.62); font-family: ui-monospace, monospace; }
+    .hud {
+      position: absolute; top: 92px; left: 14px; right: 14px; z-index: 20;
+      border-radius: 16px; padding: 12px;
+    }
+    .hud-row { display: flex; gap: 10px; align-items: flex-start; }
+    .gauge { flex: 1; text-align: center; }
+    .gauge-ring {
+      width: 72px; height: 72px; margin: 0 auto 6px; position: relative;
+    }
+    .gauge-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .gauge-val { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .gauge-val b { font-size: 16px; color: #fff; }
+    .gauge-val span { font-size: 9px; color: rgba(255,255,255,.62); }
+    .gauge-lbl { font-size: 9px; font-weight: 700; color: rgba(255,255,255,.62); font-family: ui-monospace, monospace; }
+    .link-pill {
+      font-size: 10px; font-weight: 700; font-family: ui-monospace, monospace;
+      color: #fff; padding: 6px 10px; border-radius: 10px; margin-bottom: 8px;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .link-dot { width: 8px; height: 8px; border-radius: 50%; background: #33e68a; box-shadow: 0 0 8px #33e68a; }
+    .mode-row {
+      display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 0 4px;
+      font-family: ui-monospace, monospace;
+    }
+    .mode-row .lbl { font-size: 9px; font-weight: 700; color: rgba(255,255,255,.62); }
+    .mode-row .val { font-size: 12px; font-weight: 800; color: #00c0ff; }
+    .progress-ring {
+      position: absolute; top: 210px; left: 14px; right: 14px; z-index: 20;
+      border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 12px;
+      opacity: 0; transform: translateY(-12px); transition: all .45s cubic-bezier(.34,1.2,.64,1);
+    }
+    .progress-ring.show { opacity: 1; transform: translateY(0); }
+    .ring { width: 44px; height: 44px; position: relative; flex-shrink: 0; }
+    .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .fab-col {
+      position: absolute; left: 14px; top: 280px; z-index: 20;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .fab {
+      width: 48px; height: 48px; border-radius: 50%; border: none;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,.35);
+    }
+    .fab.gray { background: linear-gradient(135deg, #262a33, #3a3f4a); }
+    .fab.blue { background: linear-gradient(135deg, #0077cc, #00c0ff); }
+    .fab.green { background: linear-gradient(135deg, #0aa65e, #33e68a); }
+    .panel {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 30;
+      background: #121820;
+      border-radius: 28px 28px 0 0;
+      border-top: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 -12px 40px rgba(0,0,0,.45);
+      padding: 10px 16px 28px;
+      transition: height .5s cubic-bezier(.34,1.2,.64,1);
+      overflow: hidden;
+    }
+    .handle { width: 40px; height: 5px; background: rgba(255,255,255,.28); border-radius: 999px; margin: 4px auto 14px; }
+    .mode-tabs {
+      display: flex; gap: 4px; padding: 5px; background: rgba(255,255,255,.06);
+      border-radius: 999px; margin-bottom: 14px;
+    }
+    .mode-tab {
+      flex: 1; text-align: center; padding: 10px 8px; border-radius: 999px;
+      font-size: 12px; font-weight: 700; color: rgba(255,255,255,.62);
+      transition: all .38s cubic-bezier(.34,1.2,.64,1);
+    }
+    .mode-tab.active {
+      background: linear-gradient(135deg, #0088cc, #00c0ff);
+      color: #000; box-shadow: 0 4px 16px rgba(0,192,255,.45);
+    }
+    .panel-section { display: none; }
+    .panel-section.active { display: block; }
+    .wp-strip {
+      border-radius: 16px; padding: 12px; margin-bottom: 14px;
+    }
+    .wp-strip-head { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; font-weight: 700; color: #fff; }
+    .wp-strip-head span { color: #00c0ff; font-family: ui-monospace, monospace; font-size: 10px; }
+    .wp-scroll { display: flex; gap: 10px; overflow: hidden; }
+    .wp-add {
+      width: 64px; height: 72px; border-radius: 14px; flex-shrink: 0;
+      border: 1.5px dashed rgba(0,192,255,.35); background: rgba(0,192,255,.12);
+      color: #00c0ff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; gap: 6px;
+    }
+    .wp-chip {
+      width: 110px; height: 72px; border-radius: 14px; flex-shrink: 0;
+      padding: 10px; background: rgba(17,19,24,.9); border: 1px solid rgba(255,255,255,.08);
+    }
+    .wp-chip.active { background: rgba(255,204,0,.12); border: 2px solid #ffcc00; }
+    .wp-chip.done { border-color: #33e68a; }
+    .wp-chip-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .wp-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, #0088cc, #00c0ff);
+      display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;
+    }
+    .wp-chip.active .wp-num { background: linear-gradient(135deg, #ffd000, #ffcc00); color: #111; }
+    .wp-chip.done .wp-num { background: #33e68a; color: #111; }
+    .wp-coord { font-size: 10px; color: rgba(255,255,255,.62); font-family: ui-monospace, monospace; }
+    .wp-alt { font-size: 9px; color: #00c0ff; font-weight: 600; font-family: ui-monospace, monospace; margin-top: 2px; }
+    .cta {
+      width: 100%; border: none; border-radius: 16px; padding: 16px;
+      font-size: 16px; font-weight: 800; color: #fff;
+      background: linear-gradient(180deg, #0aa65e, #33e68a);
+      box-shadow: 0 8px 24px rgba(51,230,138,.35);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .cta.danger { background: linear-gradient(180deg, #cc3333, #ff5252); box-shadow: 0 8px 24px rgba(255,82,82,.35); }
+    .fly-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+    .fly-btn {
+      background: rgba(17,19,24,.6); border-radius: 14px; padding: 8px;
+      text-align: center; color: #fff;
+    }
+    .fly-btn .ico {
+      width: 46px; height: 46px; border-radius: 50%; margin: 0 auto 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .fly-btn.primary .ico { background: linear-gradient(135deg, #0088cc, #00c0ff); color: #000; box-shadow: 0 0 16px rgba(0,192,255,.4); }
+    .fly-btn .lbl { font-size: 10px; font-weight: 700; }
+    .slider-block {
+      border-radius: 16px; padding: 14px; margin-bottom: 14px;
+    }
+    .slider-row { margin-bottom: 12px; }
+    .slider-head { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: rgba(255,255,255,.62); font-family: ui-monospace, monospace; margin-bottom: 8px; }
+    .slider-head b { color: #00c0ff; font-size: 14px; }
+    .slider-track { height: 4px; background: rgba(255,255,255,.12); border-radius: 999px; position: relative; }
+    .slider-fill { height: 100%; background: #00c0ff; border-radius: 999px; width: 45%; }
+    .caption {
+      position: absolute; bottom: 320px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,.78); color: #fff; padding: 10px 18px;
+      border-radius: 999px; font-size: 12px; font-weight: 600;
+      white-space: nowrap; opacity: 0; transition: opacity .35s; z-index: 100;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .caption.show { opacity: 1; }
+    .tap-hint {
+      position: absolute; bottom: 340px; left: 50%; transform: translateX(-50%);
+      font-size: 12px; font-weight: 600; color: #fff; padding: 8px 14px;
+      border-radius: 999px; z-index: 15; opacity: .55;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span><span style="opacity:.9">📶 🔋</span></div>
+
+    <div class="map-layer">
+      <div class="map-grid"></div>
+      <div class="map-road" style="width:55%;height:10px;top:42%;left:18%"></div>
+      <div class="map-road" style="width:10px;height:45%;top:28%;left:46%"></div>
+      <div class="map-road" style="width:35%;height:8px;top:68%;left:30%;transform:rotate(-18deg)"></div>
+      <div class="mission-line"><svg id="missionSvg" width="100%" height="100%"></svg></div>
+      <div class="trail"><svg id="trailSvg"></svg></div>
+      <div class="marker home" id="home" style="left:48%;top:54%">H</div>
+      <div class="marker wp" id="wp1" style="left:60%;top:38%">1</div>
+      <div class="marker wp" id="wp2" style="left:70%;top:50%">2</div>
+      <div class="marker wp" id="wp3" style="left:58%;top:64%">3</div>
+      <div class="marker drone" id="drone" style="left:48%;top:54%">✈</div>
+    </div>
+    <div class="vignette"></div>
+
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-icon">✈</div>
+        <div>
+          <h1>GetFly</h1>
+          <p>Mission Planner</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="hud glass">
+      <div class="hud-row">
+        <div class="gauge">
+          <div class="gauge-ring">
+            <svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="30" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/><circle id="altRing" cx="36" cy="36" r="30" fill="none" stroke="#00c0ff" stroke-width="5" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="160"/></svg>
+            <div class="gauge-val"><b id="altVal">12</b><span>m</span></div>
+          </div>
+          <div class="gauge-lbl">ALT</div>
+        </div>
+        <div style="text-align:center">
+          <div class="link-pill glass"><span class="link-dot"></span>LINK OK</div>
+          <div class="link-pill glass" id="navPill" style="opacity:0;font-size:11px;color:#33e68a">✈ En route WP 1</div>
+        </div>
+        <div class="gauge">
+          <div class="gauge-ring">
+            <svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="30" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/><circle cx="36" cy="36" r="30" fill="none" stroke="#33e68a" stroke-width="5" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="24"/></svg>
+            <div class="gauge-val"><b>87</b><span>%</span></div>
+          </div>
+          <div class="gauge-lbl">BAT</div>
+        </div>
+      </div>
+      <div class="mode-row"><span class="lbl">MODE</span><span class="val" id="modeVal">MISSION</span></div>
+    </div>
+
+    <div class="progress-ring glass" id="progressRing">
+      <div class="ring">
+        <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="4"/><circle id="progArc" cx="22" cy="22" r="18" fill="none" stroke="#33e68a" stroke-width="4" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="113"/></svg>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px">✈</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#fff" id="progLabel">Flying to waypoint 1</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.62);font-family:monospace" id="progPct">0% complete</div>
+      </div>
+    </div>
+
+    <div class="fab-col">
+      <button class="fab gray">⚙</button>
+      <button class="fab blue">＋</button>
+      <button class="fab green">◎</button>
+    </div>
+
+    <div class="tap-hint glass" id="tapHint">👆 Tap map to plan mission</div>
+    <div class="caption" id="caption"></div>
+
+    <div class="panel" id="panel" style="height:52%">
+      <div class="handle"></div>
+      <div class="mode-tabs">
+        <div class="mode-tab active" data-mode="plan">Plan</div>
+        <div class="mode-tab" data-mode="target">Target</div>
+        <div class="mode-tab" data-mode="fly">Fly</div>
+      </div>
+
+      <div class="panel-section active" id="sec-plan">
+        <div class="wp-strip glass">
+          <div class="wp-strip-head">Mission Path <span id="wpCount">3 WP</span></div>
+          <div class="wp-scroll">
+            <div class="wp-add">＋<br>Add</div>
+            <div class="wp-chip" id="chip1"><div class="wp-chip-top"><div class="wp-num">1</div></div><div class="wp-coord">1.0, 0.0 m</div><div class="wp-alt">Alt 1.5m</div></div>
+            <div class="wp-chip" id="chip2"><div class="wp-chip-top"><div class="wp-num">2</div></div><div class="wp-coord">2.0, 1.5 m</div><div class="wp-alt">Alt 1.5m</div></div>
+            <div class="wp-chip" id="chip3"><div class="wp-chip-top"><div class="wp-num">3</div></div><div class="wp-coord">1.2, 2.0 m</div><div class="wp-alt">Alt 1.5m</div></div>
+          </div>
+        </div>
+        <button class="cta" id="execBtn">▶ Execute Mission</button>
+      </div>
+
+      <div class="panel-section" id="sec-target">
+        <div class="slider-block glass">
+          <div class="slider-row"><div class="slider-head">EAST (X) <b>2.0 m</b></div><div class="slider-track"><div class="slider-fill" style="width:55%"></div></div></div>
+          <div class="slider-row"><div class="slider-head">NORTH (Y) <b>1.5 m</b></div><div class="slider-track"><div class="slider-fill" style="width:48%"></div></div></div>
+          <div class="slider-row"><div class="slider-head">ALTITUDE <b>1.5 m</b></div><div class="slider-track"><div class="slider-fill" style="width:30%"></div></div></div>
+        </div>
+        <button class="cta">➤ Go To Target</button>
+      </div>
+
+      <div class="panel-section" id="sec-fly">
+        <div class="fly-grid">
+          <div class="fly-btn"><div class="ico" style="background:#262a33;color:#00c0ff">🔓</div><div class="lbl">Arm</div></div>
+          <div class="fly-btn"><div class="ico" style="background:#262a33;color:#00c0ff">🔒</div><div class="lbl">Disarm</div></div>
+          <div class="fly-btn primary"><div class="ico">↑</div><div class="lbl">Takeoff</div></div>
+          <div class="fly-btn primary"><div class="ico">↓</div><div class="lbl">Land</div></div>
+          <div class="fly-btn"><div class="ico" style="background:#262a33;color:#00c0ff">⏸</div><div class="lbl">Hover</div></div>
+          <div class="fly-btn"><div class="ico" style="background:#262a33;color:#00c0ff">🏠</div><div class="lbl">Home</div></div>
+        </div>
+        <button class="cta danger">⛔ Emergency Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const drone = document.getElementById('drone');
+    const caption = document.getElementById('caption');
+    const panel = document.getElementById('panel');
+    const progressRing = document.getElementById('progressRing');
+    const progArc = document.getElementById('progArc');
+    const progLabel = document.getElementById('progLabel');
+    const progPct = document.getElementById('progPct');
+    const navPill = document.getElementById('navPill');
+    const tapHint = document.getElementById('tapHint');
+    const altVal = document.getElementById('altVal');
+    const altRing = document.getElementById('altRing');
+    const modeVal = document.getElementById('modeVal');
+    const execBtn = document.getElementById('execBtn');
+    const trailSvg = document.getElementById('trailSvg');
+    const missionSvg = document.getElementById('missionSvg');
+
+    const wps = [
+      { id: 'wp1', chip: 'chip1', l: 60, t: 38 },
+      { id: 'wp2', chip: 'chip2', l: 70, t: 50 },
+      { id: 'wp3', chip: 'chip3', l: 58, t: 64 },
+    ];
+
+    let trail = [{ x: 48, y: 54 }];
+
+    missionSvg.innerHTML = '<path d="M 48% 54% L 60% 38% L 70% 50% L 58% 64%" fill="none" stroke="rgba(0,192,255,.55)" stroke-width="2.5" stroke-dasharray="6 4"/>';
+
+    function cap(text, ms = 2400) {
+      caption.textContent = text;
+      caption.classList.add('show');
+      setTimeout(() => caption.classList.remove('show'), ms);
+    }
+
+    function setMode(name) {
+      document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === name));
+      document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + name).classList.add('active');
+    }
+
+    function setPanelHeight(pct) { panel.style.height = pct + '%'; }
+
+    function setActive(i) {
+      wps.forEach((wp, idx) => {
+        const el = document.getElementById(wp.id);
+        const chip = document.getElementById(wp.chip);
+        el.classList.toggle('active', idx === i);
+        el.classList.toggle('done', idx < i);
+        chip.classList.toggle('active', idx === i);
+        chip.classList.toggle('done', idx < i);
+        if (idx < i) chip.querySelector('.wp-num').textContent = '✓';
+      });
+    }
+
+    function setProgress(p, label) {
+      progArc.style.strokeDashoffset = 113 - (113 * p);
+      progPct.textContent = Math.round(p * 100) + '% complete';
+      if (label) progLabel.textContent = label;
+    }
+
+    function drawTrail() {
+      if (trail.length < 2) return;
+      let d = `M ${trail[0].x}% ${trail[0].y}%`;
+      for (let i = 1; i < trail.length; i++) d += ` L ${trail[i].x}% ${trail[i].y}%`;
+      trailSvg.innerHTML = `<path d="${d}" fill="none" stroke="#33e68a" stroke-width="3" stroke-linecap="round"/>`;
+    }
+
+    function moveDrone(l, t, alt, dur = 2000) {
+      return new Promise(resolve => {
+        const sL = parseFloat(drone.style.left), sT = parseFloat(drone.style.top);
+        const steps = 45; let step = 0;
+        const iv = setInterval(() => {
+          step++;
+          const ease = step / steps;
+          const e = ease < .5 ? 2*ease*ease : 1 - Math.pow(-2*ease+2,2)/2;
+          const cl = sL + (l - sL) * e, ct = sT + (t - sT) * e;
+          drone.style.left = cl + '%'; drone.style.top = ct + '%';
+          altVal.textContent = Math.round(alt);
+          altRing.style.strokeDashoffset = 188.5 - (188.5 * (alt / 120));
+          if (step % 2 === 0) { trail.push({ x: cl, y: ct }); drawTrail(); }
+          if (step >= steps) { clearInterval(iv); resolve(); }
+        }, dur / steps);
+      });
+    }
+
+    const timeline = [
+      { t: 400, fn: () => cap('🗺 Pro map-first mission planner — full-screen OSM') },
+      { t: 2800, fn: () => cap('✨ Glass HUD with animated altitude & battery gauges') },
+      { t: 5200, fn: () => { cap('📋 Plan tab — horizontal waypoint strip'); setMode('plan'); setPanelHeight(52); } },
+      { t: 7600, fn: () => { cap('🎯 Target tab — coordinate sliders & Go To'); setMode('target'); } },
+      { t: 9800, fn: () => { cap('🎛 Fly tab — arm, takeoff, land, emergency stop'); setMode('fly'); } },
+      { t: 12000, fn: () => {
+          cap('🚀 Execute mission — live drone animation');
+          setMode('plan');
+          setPanelHeight(38);
+          tapHint.style.opacity = '0';
+          execBtn.textContent = '✈ Mission In Progress…';
+          progressRing.classList.add('show');
+          navPill.style.opacity = '1';
+          modeVal.textContent = 'NAVIGATING';
+          setActive(0);
+          setProgress(0, 'Flying to waypoint 1');
+          navPill.textContent = '✈ En route WP 1';
+        }
+      },
+      { t: 13200, fn: async () => { await moveDrone(60, 38, 15); setProgress(.33, 'Flying to waypoint 2'); setActive(1); navPill.textContent = '✈ En route WP 2'; } },
+      { t: 15800, fn: async () => { await moveDrone(70, 50, 15); setProgress(.66, 'Flying to waypoint 3'); setActive(2); navPill.textContent = '✈ En route WP 3'; } },
+      { t: 18400, fn: async () => {
+          await moveDrone(58, 64, 12);
+          setActive(3);
+          setProgress(1, 'Mission complete');
+          navPill.textContent = '✓ Mission complete';
+          cap('✅ Animated flight trail + progress ring on map');
+        }
+      },
+    ];
+
+    timeline.forEach(({ t, fn }) => setTimeout(fn, t));
+    window.demoDuration = 21000;
+  </script>
+</body>
+</html>
