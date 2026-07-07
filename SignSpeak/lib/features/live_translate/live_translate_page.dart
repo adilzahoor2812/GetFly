@@ -1,21 +1,25 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 import '../../core/models/glove_packet.dart';
 import '../../core/services/ble_service.dart';
+import '../../core/services/mock_prediction_service.dart';
 import '../../core/services/tts_service.dart';
 
 class LiveTranslatePage extends StatefulWidget {
   const LiveTranslatePage({
-    required this.device,
+    required this.title,
     required this.bleService,
+    this.deviceId,
+    this.useMock = false,
     super.key,
   });
 
-  final DiscoveredDevice device;
+  final String title;
   final BleService bleService;
+  final String? deviceId;
+  final bool useMock;
 
   @override
   State<LiveTranslatePage> createState() => _LiveTranslatePageState();
@@ -23,7 +27,8 @@ class LiveTranslatePage extends StatefulWidget {
 
 class _LiveTranslatePageState extends State<LiveTranslatePage> {
   final TtsService _ttsService = TtsService();
-  StreamSubscription<ConnectionStateUpdate>? _connectionSub;
+  final MockPredictionService _mockPredictionService = MockPredictionService();
+  StreamSubscription<dynamic>? _connectionSub;
   StreamSubscription<GlovePacket>? _predictionSub;
 
   String _connectionText = 'Connecting...';
@@ -36,7 +41,11 @@ class _LiveTranslatePageState extends State<LiveTranslatePage> {
   void initState() {
     super.initState();
     _ttsService.init();
-    _connectAndListen();
+    if (widget.useMock) {
+      _startMockStream();
+    } else {
+      _connectAndListen();
+    }
   }
 
   @override
@@ -47,15 +56,36 @@ class _LiveTranslatePageState extends State<LiveTranslatePage> {
     super.dispose();
   }
 
+  void _startMockStream() {
+    setState(() {
+      _connectionText = 'mock_connected';
+    });
+    _predictionSub = _mockPredictionService.stream().listen((packet) {
+      setState(() {
+        _currentLetter = packet.letter.isEmpty ? '-' : packet.letter;
+        _confidence = packet.confidence;
+        _battery = packet.battery;
+      });
+    });
+  }
+
   void _connectAndListen() {
-    _connectionSub = widget.bleService.connect(widget.device.id).listen((update) {
+    final deviceId = widget.deviceId;
+    if (deviceId == null) {
+      setState(() {
+        _connectionText = 'No device selected';
+      });
+      return;
+    }
+
+    _connectionSub = widget.bleService.connect(deviceId).listen((update) {
       setState(() {
         _connectionText = update.connectionState.name;
       });
 
-      if (update.connectionState == DeviceConnectionState.connected) {
+      if (update.connectionState.name == 'connected') {
         _predictionSub?.cancel();
-        _predictionSub = widget.bleService.subscribePredictions(widget.device.id).listen((packet) {
+        _predictionSub = widget.bleService.subscribePredictions(deviceId).listen((packet) {
           setState(() {
             _currentLetter = packet.letter.isEmpty ? '-' : packet.letter;
             _confidence = packet.confidence;
@@ -103,7 +133,7 @@ class _LiveTranslatePageState extends State<LiveTranslatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Live: ${widget.device.name}')),
+      appBar: AppBar(title: Text('Live: ${widget.title}')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

@@ -51,7 +51,23 @@ class _PairingPageState extends State<PairingPage> {
   void _openLivePage(DiscoveredDevice device) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => LiveTranslatePage(device: device, bleService: _bleService),
+        builder: (_) => LiveTranslatePage(
+          title: device.name.isEmpty ? 'Unknown Device' : device.name,
+          deviceId: device.id,
+          bleService: _bleService,
+        ),
+      ),
+    );
+  }
+
+  void _openMockDemo() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => LiveTranslatePage(
+          title: 'Mock Demo',
+          bleService: _bleService,
+          useMock: true,
+        ),
       ),
     );
   }
@@ -69,6 +85,12 @@ class _PairingPageState extends State<PairingPage> {
               onPressed: _isScanning ? null : _startScan,
               icon: const Icon(Icons.bluetooth_searching),
               label: Text(_isScanning ? 'Scanning...' : 'Scan for Glove'),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: _openMockDemo,
+              icon: const Icon(Icons.smart_toy_outlined),
+              label: const Text('Use Mock Demo Mode'),
             ),
             const SizedBox(height: 16),
             const Text('Devices', style: TextStyle(fontWeight: FontWeight.w600)),
