@@ -1,0 +1,675 @@
+(kicad_sch
+	(version 20231120)
+	(generator "esp32s3-wearable-generator")
+	(uuid "5de3b4dd-722b-4fa4-8a9a-10702bd17716")
+	(paper "A3")
+	(title_block
+		(title "Power - Battery & Regulation")
+		(date "2026-07-06")
+		(rev "A")
+		(company "Field Device Prototype")
+		(comment 1 "ESP32-S3 + Sharp Memory LCD + 6-Key Keypad")
+		(comment 2 "Low-power wearable / field terminal")
+	)
+	(lib_symbols
+	)
+
+	(text "POWER SHEET\nVBAT -> DW01+8205A protection -> MCP73831 charger\nVSYS -> AP2112K-3.3 -> +3V3 rail\nR1=2k sets ~500mA charge (MCP73831 PROG)\nR2/R3=100k battery divider -> VBAT_ADC"
+		(exclude_from_sim no)
+		(at 25.4 25.4 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "5cd97ad5-83aa-4257-99ce-1b4b1ee8148c")
+	)
+
+	(symbol
+		(lib_id "Connector_JST:JST_PH_B2B-PH-K-S_Leads")
+		(at 50.8 76.2 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2690df27-4fe7-468f-b90b-149d008887ee")
+		(property "Reference" "J1"
+			(at 50.8 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "BAT_CONN"
+			(at 50.8 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Connector_JST:JST_PH_B2B-PH-K-S_Leads"
+			(at 50.8 83.82000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "4b3324a9-8faf-4322-97fe-e02afe092ea1"))
+	)
+
+	(symbol
+		(lib_id "Power_Protection:DW01")
+		(at 101.6 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "30b9a41c-46da-4c91-8b46-5f93e88b2e78")
+		(property "Reference" "U4"
+			(at 101.6 46.989999999999995 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "DW01A"
+			(at 101.6 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
+			(at 101.6 58.419999999999995 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "32f592d9-f323-4ad8-a10b-c6290e85bec9"))
+	)
+
+	(symbol
+		(lib_id "Battery_Management:MCP73831-2-AC")
+		(at 152.4 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3ac6cda5-6338-481a-be34-a6a58dd04f4a")
+		(property "Reference" "U2"
+			(at 152.4 46.989999999999995 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "MCP73831"
+			(at 152.4 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
+			(at 152.4 58.419999999999995 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "9b521d5f-146a-48b3-9343-dccd9327b207"))
+	)
+
+	(symbol
+		(lib_id "Regulator_Linear:AP2112K-3.3")
+		(at 203.2 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "562526ab-eec0-4d34-b392-3e7eb8590e5f")
+		(property "Reference" "U3"
+			(at 203.2 46.989999999999995 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "AP2112K-3.3"
+			(at 203.2 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
+			(at 203.2 58.419999999999995 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "f2434a71-0be1-4ecd-8702-3c0f0252aae4"))
+	)
+
+	(symbol
+		(lib_id "Device:R")
+		(at 127.0 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c502cbba-6d27-45a7-adc2-e6cd8b1badf5")
+		(property "Reference" "R1"
+			(at 127.0 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "2k"
+			(at 127.0 92.71000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 127.0 96.52000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "5122ff13-636f-42f9-8554-bc3be0f35a86"))
+	)
+
+	(symbol
+		(lib_id "Device:R")
+		(at 177.8 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2f0fc799-93e9-44ce-8aac-31241e30767d")
+		(property "Reference" "R2"
+			(at 177.8 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "100k"
+			(at 177.8 92.71000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 177.8 96.52000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "377dda4e-f14e-4ebf-819a-651837e86cb8"))
+	)
+
+	(symbol
+		(lib_id "Device:R")
+		(at 190.5 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "10f4f0f4-4fa1-45a3-a150-e385244b9220")
+		(property "Reference" "R3"
+			(at 190.5 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "100k"
+			(at 190.5 92.71000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 190.5 96.52000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "4d41dbbd-ed89-49b5-a6e9-9538fb0c2dc4"))
+	)
+
+	(symbol
+		(lib_id "Device:C")
+		(at 228.6 76.2 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "45bc200c-6cea-49dc-b7ec-0aedc6a38df3")
+		(property "Reference" "C1"
+			(at 228.6 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "10uF"
+			(at 228.6 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 228.6 83.82000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "4ec1584e-c700-40cd-9e54-ade3d17291f6"))
+	)
+
+	(symbol
+		(lib_id "Device:C")
+		(at 241.3 76.2 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ebcb5d52-c1da-4ef2-8eea-c3a110042256")
+		(property "Reference" "C2"
+			(at 241.3 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "10uF"
+			(at 241.3 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 241.3 83.82000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "bf26d678-f3b1-4fbe-b704-0708b99f0b48"))
+	)
+
+	(symbol
+		(lib_id "Device:C")
+		(at 254.0 76.2 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7cc3a1d6-49aa-44cd-8bb1-883f7c483d81")
+		(property "Reference" "C3"
+			(at 254.0 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "100nF"
+			(at 254.0 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 254.0 83.82000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "62d60d90-378e-46e0-9c65-1585eef23fda"))
+	)
+
+	(symbol
+		(lib_id "Device:LED")
+		(at 139.7 88.9 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2e2f3790-ba94-4fa9-ae43-996a4393f3b1")
+		(property "Reference" "D1"
+			(at 139.7 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "CHG_LED"
+			(at 139.7 92.71000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+			(at 139.7 96.52000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "6bb9b4ad-fe8f-4f60-a9b4-68030807c735"))
+	)
+
+	(symbol
+		(lib_id "Device:R")
+		(at 139.7 76.2 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "de9e2f02-722c-4d3e-8538-02b4664ed199")
+		(property "Reference" "R4"
+			(at 139.7 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "1k"
+			(at 139.7 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 139.7 83.82000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "1e7339dc-6b20-4dbe-9de7-6ee2ad2544fe"))
+	)
+
+	(global_label "VBUS"
+		(shape input)
+		(at 279.4 50.8 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "96877fdc-1f00-4659-a771-508225561fd0")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 279.4 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "+3V3"
+		(shape input)
+		(at 279.4 63.5 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6a2b484e-0b74-462c-b949-8e688e5b7a40")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 279.4 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "VBAT+"
+		(shape input)
+		(at 279.4 76.19999999999999 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "ba65110b-b255-4a1c-b144-54babe8a37c1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 279.4 76.19999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "GND"
+		(shape input)
+		(at 279.4 88.89999999999999 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "fbdab90c-229f-442a-889d-4a66abdc8bad")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 279.4 88.89999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "VBAT_ADC"
+		(shape input)
+		(at 279.4 101.6 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "441bcc4d-944a-4977-acea-769254ee702e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 279.4 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(power "GND"
+		(at 50.8 101.6 0)
+		(uuid "90c6eb18-7d20-4ce6-8c50-bca0e47d651f")
+	)
+
+	(power "+3V3"
+		(at 228.6 50.8 0)
+		(uuid "c225d099-6379-49f5-b2f0-f8d4e9b96039")
+	)
+	(sheet_instances
+		(path "/power"
+			(page "2")
+		)
+	)
+	(embedded_fonts no)
+)

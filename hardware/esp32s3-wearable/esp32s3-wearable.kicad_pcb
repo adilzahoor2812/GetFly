@@ -1,0 +1,878 @@
+(kicad_pcb
+  (version 20240108)
+  (generator "esp32s3-wearable-generator")
+  (general
+    (thickness 1.6)
+    (legacy_teardrops no)
+  )
+  (paper "A4")
+  (layers
+    (0 "F.Cu" signal)
+    (31 "B.Cu" signal)
+    (32 "B.Adhes" user "B.Adhesive")
+    (33 "F.Adhes" user "F.Adhesive")
+    (34 "B.Paste" user)
+    (35 "F.Paste" user)
+    (36 "B.SilkS" user "B.Silkscreen")
+    (37 "F.SilkS" user "F.Silkscreen")
+    (38 "B.Mask" user)
+    (39 "F.Mask" user)
+    (40 "Dwgs.User" user "User.Drawings")
+    (41 "Cmts.User" user "User.Comments")
+    (42 "Eco1.User" user "User.Eco1")
+    (43 "Eco2.User" user "User.Eco2")
+    (44 "Edge.Cuts" user)
+    (45 "Margin" user)
+    (46 "B.CrtYd" user "B.Courtyard")
+    (47 "F.CrtYd" user "F.Courtyard")
+    (48 "B.Fab" user)
+    (49 "F.Fab" user)
+  )
+  (setup
+    (pad_to_mask_clearance 0)
+    (allow_soldermask_bridges_in_footprints no)
+    (pcbplotparams
+      (layerselection 0x00010fc_ffffffff)
+      (plot_on_all_layers_selection 0x0000000_00000000)
+      (disableapertmacros no)
+      (usegerberextensions no)
+      (usegerberattributes yes)
+      (usegerberadvancedattributes yes)
+      (creategerberjobfile yes)
+      (dashed_line_dash_ratio 12.000000)
+      (dashed_line_gap_ratio 3.000000)
+      (svgprecision 4)
+      (plotframeref no)
+      (viasonmask no)
+      (mode 1)
+      (useauxorigin no)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (pdf_front_fp_property_popups yes)
+      (pdf_back_fp_property_popups yes)
+      (dxfpolygonmode yes)
+      (dxfimperialunits yes)
+      (dxfusepcbnewfont yes)
+      (psnegative no)
+      (psa4output no)
+      (plotreference yes)
+      (plotvalue yes)
+      (plotfingerprint no)
+      (plotinvisibletext no)
+      (sketchpadsonfab no)
+      (subtractmaskfromsilk no)
+      (outputformat 1)
+      (mirror no)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory "exports/gerbers")
+    )
+  )
+  (net 0 "")
+  (net 1 "+3V3")
+  (net 2 "GND")
+  (net 3 "VBAT+")
+  (net 4 "VBUS")
+  (net 5 "USB_D+")
+  (net 6 "USB_D-")
+  (net 7 "LCD_SCK")
+  (net 8 "LCD_MOSI")
+  (net 9 "LCD_CS")
+  (net 10 "LCD_DISP")
+  (net 11 "LCD_EXTCOM")
+  (net 12 "KEY_UP")
+  (net 13 "KEY_DOWN")
+  (net 14 "KEY_LEFT")
+  (net 15 "KEY_RIGHT")
+  (net 16 "KEY_ENTER")
+  (net 17 "KEY_BACK")
+  (net 18 "VBAT_ADC")
+
+  (gr_rect
+    (start 0 0)
+    (end 42.0 34.0)
+    (stroke
+      (width 0.1)
+      (type default)
+    )
+    (fill none)
+    (layer "Edge.Cuts")
+    (uuid "498cbd40-47a5-4421-a03a-f68703314954")
+  )
+
+
+  (gr_rect
+    (start 22 0)
+    (end 42.0 12)
+    (stroke
+      (width 0.12)
+      (type dash)
+    )
+    (fill none)
+    (layer "Cmts.User")
+    (uuid "af339b54-9104-4dfe-8889-a91b9f476225")
+  )
+  (gr_text "ANTENNA KEEP-OUT"
+    (at 32 6 0)
+    (layer "Cmts.User")
+    (uuid "941be167-1ff6-4482-9d2b-1d797624fb82")
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.15)
+      )
+    )
+  )
+
+
+  (gr_text "REV A"
+    (at 2 32 0)
+    (layer "F.SilkS")
+    (uuid "382fd35e-620d-4340-a0b4-6b45190c8f0e")
+    (effects
+      (font
+        (size 0.8 0.8)
+        (thickness 0.12)
+      )
+    )
+  )
+  (gr_text "BAT +"
+    (at 36 26 90)
+    (layer "F.SilkS")
+    (uuid "c64fcbf4-6b6f-42cc-9cc0-ae98dac563d5")
+    (effects
+      (font
+        (size 0.8 0.8)
+        (thickness 0.12)
+      )
+    )
+  )
+  (gr_text "USB"
+    (at 1 16 90)
+    (layer "F.SilkS")
+    (uuid "9d05b58d-da40-4927-89b4-a2178f182a04")
+    (effects
+      (font
+        (size 0.8 0.8)
+        (thickness 0.12)
+      )
+    )
+  )
+
+
+  (footprint "RF_Module:ESP32-S3-WROOM-1"
+    (layer "F.Cu")
+    (uuid "c6016022-8b79-4315-b67e-f7dad6545c66")
+    (at 30.0 17.0 0)
+    (property "Reference" "U1"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "2d1ecc3c-263f-48f0-aecf-a9b45eb5ca28")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "U1"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "12077407-2875-4642-bd46-35adf9cde94c")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "RF_Module:ESP32-S3-WROOM-1"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "23983711-1723-4ab4-b675-52a5fd044fbb")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/68fe21a2-10c5-4051-a3ac-e103d15b44f9")
+    (attr smd)
+  )
+
+  (footprint "Connector_USB:USB_C_Receptacle_USB2.0"
+    (layer "F.Cu")
+    (uuid "bf05604a-f404-4428-9ee5-3a5345cceced")
+    (at 3.0 12.0 270)
+    (property "Reference" "J4"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "9af611aa-110e-468b-9032-ccdd9ec1662a")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "J4"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "f584e697-88eb-45b9-9dc4-c9877fcf5174")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Connector_USB:USB_C_Receptacle_USB2.0"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "fa465bf6-3b61-4eae-bcf5-7a7abc79746a")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/79182016-1e27-47eb-a102-ee927f432438")
+    (attr smd)
+  )
+
+  (footprint "Connector_JST:JST_PH_B2B-PH-K-S_Leads"
+    (layer "F.Cu")
+    (uuid "e982bdce-1ffd-4ace-8106-b4d2385d19db")
+    (at 39.0 28.0 90)
+    (property "Reference" "J1"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "249a2c0b-9ae4-4e1e-9192-ce62ca256f6f")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "J1"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "81576f2d-2a55-4bf8-9aab-b3f72490eaa3")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Connector_JST:JST_PH_B2B-PH-K-S_Leads"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "1aa90713-e474-4343-9ffd-4386c9565373")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/c88a5e34-482c-48e9-b202-cd3699b25b4d")
+    (attr smd)
+  )
+
+  (footprint "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical"
+    (layer "F.Cu")
+    (uuid "f35d5354-9772-4e5b-952f-6613a9bff566")
+    (at 21.0 3.0 0)
+    (property "Reference" "J3"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "62871b95-6740-4b8b-acb5-1d7eba516a34")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "J3"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "263061ac-5426-4d3e-9469-e341d1cf1403")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "50bb24c6-e9e5-4261-a2d7-7abe9c0bc5f4")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/aecd192a-a6c7-4683-8621-eddf4de3af44")
+    (attr smd)
+  )
+
+  (footprint "Package_TO_SOT_SMD:SOT-23-5"
+    (layer "F.Cu")
+    (uuid "5d671174-f3ed-48ed-a3c3-95a65a19fc50")
+    (at 12.0 28.0 0)
+    (property "Reference" "U2"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "f2fd8647-8fbb-43ea-984b-15688f77ce3d")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "U2"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "1eb4c2f2-1c9f-4e19-ad89-a84acd71bcf7")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "1b134804-b8fe-4515-84b7-bc10ea7fdf04")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/7d810a6b-b6ea-4b15-a080-7730b4573db2")
+    (attr smd)
+  )
+
+  (footprint "Package_TO_SOT_SMD:SOT-23-5"
+    (layer "F.Cu")
+    (uuid "e0c0d0bd-163e-45da-9409-2b72d28d6017")
+    (at 18.0 28.0 0)
+    (property "Reference" "U3"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "6ad04c4b-cb35-4c31-b842-6431f14ad229")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "U3"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "e0117f80-d27c-4958-af5e-710f6f020d4b")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "4ded6e46-c831-4636-93c3-2ad9d0ee45ca")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/0da21e85-9740-4040-aefe-994db0221d5a")
+    (attr smd)
+  )
+
+  (footprint "Package_TO_SOT_SMD:SOT-23-6"
+    (layer "F.Cu")
+    (uuid "6d78e272-8a9b-4802-ada9-05eaf88b3e48")
+    (at 8.0 20.0 0)
+    (property "Reference" "U5"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "7d2dd2bd-6c7f-4482-8133-4a6f6b13b3ab")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "U5"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "93aeef21-2a32-47f1-8ac6-47d9d03e2b38")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "0fcc0ef4-8c91-4ec6-9f45-94749b205cb2")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/7b2b924c-442c-4f9d-9b12-d2db6b798de3")
+    (attr smd)
+  )
+
+  (footprint "Button_Switch_SMD:SW_SPST_TL3342"
+    (layer "F.Cu")
+    (uuid "a66c93c4-3d7e-4035-b3fa-59679bbbb4eb")
+    (at 8.0 8.0 0)
+    (property "Reference" "SW1"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "99203ed0-a2ff-4aaf-9960-7085493a3da9")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "SW1"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "7d705ea4-f359-4e9e-92a0-bcb4359de31a")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "f5bb9cba-18a5-4ebd-84f0-b6727497cde4")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/f73983ee-4d5f-467a-ab62-b03b1ccdb209")
+    (attr smd)
+  )
+
+  (footprint "Button_Switch_SMD:SW_SPST_TL3342"
+    (layer "F.Cu")
+    (uuid "959d8242-8f96-4b9d-8a17-427a72b4b38c")
+    (at 13.0 8.0 0)
+    (property "Reference" "SW2"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "4f9261d0-c1db-4e31-8eb6-a70dc1f65b29")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "SW2"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "58206376-829b-4db9-a856-c45573e7f89b")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "9dee2dda-c7b5-4c4a-96f8-79b6289b1b6e")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/14734b9e-da4a-45a0-bd82-fa87b2dd368b")
+    (attr smd)
+  )
+
+  (footprint "Button_Switch_SMD:SW_SPST_TL3342"
+    (layer "F.Cu")
+    (uuid "04e67012-18ae-4891-8854-7ca993331656")
+    (at 18.0 8.0 0)
+    (property "Reference" "SW3"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "969015d6-5b32-4b8c-a649-baa58db6a888")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "SW3"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "b0595dda-8e8f-41ad-baf7-61a6cd5a7bcf")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "b512adc1-b657-4baa-ac5f-ea56d9fc3e0f")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/3b36b904-e981-45b0-b96d-357307110fca")
+    (attr smd)
+  )
+
+  (footprint "Button_Switch_SMD:SW_SPST_TL3342"
+    (layer "F.Cu")
+    (uuid "ed8ee614-9c1d-4de7-bee1-46cc809b25fc")
+    (at 23.0 8.0 0)
+    (property "Reference" "SW4"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "3bbf2bb9-c019-42e2-874b-6012f71fcc47")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "SW4"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "96ad5b23-fff6-49d8-96fa-ad0a1f0e85d5")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "0bdf91e8-aaba-4e07-8375-d4f3ace31ebc")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/3b16c6e7-472d-4d79-8e11-22e1a4b5e71c")
+    (attr smd)
+  )
+
+  (footprint "Button_Switch_SMD:SW_SPST_TL3342"
+    (layer "F.Cu")
+    (uuid "515e9cfc-6f67-47ba-a3eb-85ffbee4dc71")
+    (at 28.0 8.0 0)
+    (property "Reference" "SW5"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "7f2dfc5f-2f54-4eef-97c1-4d4dcaeab591")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "SW5"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "8ce15c52-ae3b-434b-a4ca-26532cd83279")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "54a88e01-630f-4e83-91a9-094065407fa8")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/0591cfd4-668f-438d-a2bc-69aa7762820e")
+    (attr smd)
+  )
+
+  (footprint "Button_Switch_SMD:SW_SPST_TL3342"
+    (layer "F.Cu")
+    (uuid "1844df0b-fe1a-467f-9196-ca3e5ae134d2")
+    (at 33.0 8.0 0)
+    (property "Reference" "SW6"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "ee794e74-f6cb-4b2f-95d1-0c51e9d06509")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "SW6"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "d173691a-c89e-42e1-b539-a830e8fccdcd")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "bee3939f-ff8d-4ca6-917d-ce7d162c5954")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/2ae3965f-b9dd-439c-9836-4a83856c2c60")
+    (attr smd)
+  )
+
+  (footprint "MountingHole:MountingHole_2.2mm_M2"
+    (layer "F.Cu")
+    (uuid "8c1031c7-5478-4591-879f-50f688b97c44")
+    (at 2.5 2.5 0)
+    (property "Reference" "H1"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "e3e4b6f4-9c3d-41ef-8199-f1e3b5f0fe1f")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "H1"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "c49ca55b-6d6b-4bf2-b252-86af470a1b18")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "MountingHole:MountingHole_2.2mm_M2"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "363b9144-11a9-414a-86a0-5616751ca5dd")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/137ca45c-d2f1-4aa0-8d1e-50c294ab8e46")
+    (attr smd)
+  )
+
+  (footprint "MountingHole:MountingHole_2.2mm_M2"
+    (layer "F.Cu")
+    (uuid "a23a4051-a416-450c-981b-00ccf4b05950")
+    (at 39.5 2.5 0)
+    (property "Reference" "H2"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "d47e86e9-1da9-4c4e-a972-66a38d71e00c")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "H2"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "36cfeaa3-9038-40e4-a9ab-332c13c08bb7")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "MountingHole:MountingHole_2.2mm_M2"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "59fd37b9-ba7b-403e-a2cb-ee7d7a56e6db")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/10012b64-812a-4094-8199-a8771ef4e9c3")
+    (attr smd)
+  )
+
+  (footprint "MountingHole:MountingHole_2.2mm_M2"
+    (layer "F.Cu")
+    (uuid "ee9c7205-2a1b-406b-b688-409270921871")
+    (at 2.5 31.5 0)
+    (property "Reference" "H3"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "1f90199f-21e1-4e4b-9d06-b76047a4f118")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "H3"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "43f3a61b-c042-4285-bc91-f7a13e00b311")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "MountingHole:MountingHole_2.2mm_M2"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "3d051797-7a49-4459-9552-86713fcc1cd7")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/17f5d904-d2f9-4338-909b-953de862ff9d")
+    (attr smd)
+  )
+
+  (footprint "MountingHole:MountingHole_2.2mm_M2"
+    (layer "F.Cu")
+    (uuid "b0a4ebc5-a7ef-4bac-bd65-1db514da8d56")
+    (at 39.5 31.5 0)
+    (property "Reference" "H4"
+      (at 0 -2 0)
+      (layer "F.SilkS")
+      (uuid "cded32b2-6d0a-404b-9079-22a797b302a5")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Value" "H4"
+      (at 0 2 0)
+      (layer "F.Fab")
+      (uuid "58e3ce77-8a07-41d3-ac3a-9119fb5b4ade")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (property "Footprint" "MountingHole:MountingHole_2.2mm_M2"
+      (at 0 0 0)
+      (layer "F.Fab")
+      (hide yes)
+      (uuid "9e4e9146-7042-437b-84bc-614afeb86634")
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15)
+        )
+      )
+    )
+    (path "/e9aed1f3-698b-46b7-8715-b548511b7eb4")
+    (attr smd)
+  )
+
+)
