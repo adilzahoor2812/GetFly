@@ -1,0 +1,298 @@
+(kicad_sch
+	(version 20231120)
+	(generator "esp32s3-wearable-generator")
+	(uuid "b1f61ac1-ad05-455b-a214-9bef9648c54f")
+	(paper "A3")
+	(title_block
+		(title "USB - USB-C Receptacle")
+		(date "2026-07-06")
+		(rev "A")
+		(company "Field Device Prototype")
+		(comment 1 "ESP32-S3 + Sharp Memory LCD + 6-Key Keypad")
+		(comment 2 "Low-power wearable / field terminal")
+	)
+	(lib_symbols
+	)
+
+	(text "USB SHEET\nUSB-C UFP 5.1k CC\nESD on D+/D-"
+		(exclude_from_sim no)
+		(at 25.4 25.4 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "9c1b7bca-7a0b-4588-90dd-e5a20aeb83a3")
+	)
+
+	(symbol
+		(lib_id "Connector_USB:USB_C_Receptacle_USB2.0")
+		(at 101.6 76.2 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "10215c49-1748-4f49-85ae-75353e6442cc")
+		(property "Reference" "J4"
+			(at 101.6 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "USB-C"
+			(at 101.6 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Connector_USB:USB_C_Receptacle_USB2.0"
+			(at 101.6 83.82000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "4eb5c579-8f10-4e21-b197-b9f767c2e13b"))
+	)
+
+	(symbol
+		(lib_id "Device:R")
+		(at 127.0 101.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "4966ef96-3c79-41f2-8719-0c24a369d0a4")
+		(property "Reference" "R20"
+			(at 127.0 97.78999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "5.1k"
+			(at 127.0 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 127.0 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "cc75d852-39e7-4613-9562-7f1bd56c5fab"))
+	)
+
+	(symbol
+		(lib_id "Device:R")
+		(at 139.7 101.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "386bbd1f-b014-46ec-9967-d1c8b1b9973e")
+		(property "Reference" "R21"
+			(at 139.7 97.78999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "5.1k"
+			(at 139.7 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 139.7 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "40f3ab9f-71c6-4e7e-91dc-06a82c4b85b5"))
+	)
+
+	(symbol
+		(lib_id "Device:USBLC6-2SC6")
+		(at 165.1 76.2 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "5011f168-0478-4d36-ac07-0275373b68ee")
+		(property "Reference" "U5"
+			(at 165.1 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "USBLC6-2"
+			(at 165.1 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
+			(at 165.1 83.82000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "07d864b8-fcb7-469e-8dd5-fd9f47e3e948"))
+	)
+
+	(global_label "VBUS"
+		(shape input)
+		(at 203.2 63.5 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "45d7a7f3-b964-456d-813e-9802385afa64")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 203.2 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "GND"
+		(shape input)
+		(at 203.2 76.2 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "60cee584-aaf0-46f9-a076-1f82ee0e7b21")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 203.2 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "USB_D+"
+		(shape input)
+		(at 203.2 88.9 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "3e12be41-f74d-4e9c-b152-915b930c3026")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 203.2 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "USB_D-"
+		(shape input)
+		(at 203.2 101.6 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5239385a-4679-470e-b4b4-d4285de2b27e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 203.2 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/usb"
+			(page "4")
+		)
+	)
+	(embedded_fonts no)
+)

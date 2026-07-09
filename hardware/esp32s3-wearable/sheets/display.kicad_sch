@@ -1,0 +1,324 @@
+(kicad_sch
+	(version 20231120)
+	(generator "esp32s3-wearable-generator")
+	(uuid "5b65eca4-49b7-44a5-8343-cf68817f946f")
+	(paper "A3")
+	(title_block
+		(title "Display - Sharp LS013B7DH03 Memory LCD")
+		(date "2026-07-06")
+		(rev "A")
+		(company "Field Device Prototype")
+		(comment 1 "ESP32-S3 + Sharp Memory LCD + 6-Key Keypad")
+		(comment 2 "Low-power wearable / field terminal")
+	)
+	(lib_symbols
+	)
+
+	(text "DISPLAY SHEET\nSharp LS013B7DH03 (128x128 memory LCD)\nSPI + EXTCOMIN (GPIO13 PWM ~1Hz)\nVerify FPC pinout against datasheet"
+		(exclude_from_sim no)
+		(at 25.4 25.4 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "e0c9c818-c73f-4dae-8965-02c31a5f794b")
+	)
+
+	(symbol
+		(lib_id "Connector:Conn_01x08")
+		(at 127.0 76.2 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a8c1ce95-6a16-499b-aff3-42be3f01bdf4")
+		(property "Reference" "J3"
+			(at 127.0 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "LCD_FPC"
+			(at 127.0 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical"
+			(at 127.0 83.82000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "c97cdca0-7652-46c2-acc2-b7e2431a85c6"))
+	)
+
+	(symbol
+		(lib_id "Device:R")
+		(at 152.4 101.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "6ee33862-5304-4737-9723-d65098d3667a")
+		(property "Reference" "R40"
+			(at 152.4 97.78999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "10k"
+			(at 152.4 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 152.4 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "7b03329b-8d35-4a3b-8cf9-f8a13561b985"))
+	)
+
+	(symbol
+		(lib_id "Device:C")
+		(at 165.1 101.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a5593bbd-5e49-4dee-9a9d-41442351ecfe")
+		(property "Reference" "C40"
+			(at 165.1 97.78999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Reference" 1)
+		(property "Value" "100nF"
+			(at 165.1 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Value" 1)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 165.1 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(show "Footprint" 0)
+
+		(pin "1" (uuid "3cf1c7c1-170a-4832-b9f9-2fc6d4a1d961"))
+	)
+
+	(global_label "LCD_SCK"
+		(shape input)
+		(at 50.8 50.8 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "67769c06-92e2-4d8d-9335-0367318b08a3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 50.8 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_MOSI"
+		(shape input)
+		(at 50.8 63.5 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "06ad6fa2-fd77-454c-82fa-58aa91bf90cb")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 50.8 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_CS"
+		(shape input)
+		(at 50.8 76.19999999999999 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "85e4e19c-68b8-4333-b5b4-1270c083e599")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 50.8 76.19999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_DISP"
+		(shape input)
+		(at 50.8 88.89999999999999 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "341988ae-b744-466d-9e07-4e3203a616a1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 50.8 88.89999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_EXTCOM"
+		(shape input)
+		(at 50.8 101.6 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "245ac9dc-78c2-4035-9828-96ced7940485")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 50.8 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "+3V3"
+		(shape input)
+		(at 50.8 114.3 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9e85fdbf-00e9-4b90-adf6-ddd71c70cf47")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 50.8 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "GND"
+		(shape input)
+		(at 50.8 126.99999999999999 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "4291a814-c3cb-4282-9b73-d650605accc4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 50.8 126.99999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/display"
+			(page "5")
+		)
+	)
+	(embedded_fonts no)
+)

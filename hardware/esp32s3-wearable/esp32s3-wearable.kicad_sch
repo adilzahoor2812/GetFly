@@ -1,0 +1,813 @@
+(kicad_sch
+	(version 20231120)
+	(generator "esp32s3-wearable-generator")
+	(uuid "b9208bc5-6ac3-4cb3-a7c4-755261dcce41")
+	(paper "A3")
+	(title_block
+		(title "ESP32-S3 Wearable - Root")
+		(date "2026-07-06")
+		(rev "A")
+		(company "Field Device Prototype")
+		(comment 1 "ESP32-S3 + Sharp Memory LCD + 6-Key Keypad")
+		(comment 2 "Low-power wearable / field terminal")
+	)
+	(lib_symbols
+	)
+
+	(text "ROOT SHEET\nOpen each sub-sheet by double-clicking.\nAfter edits: Tools > Update PCB from Schematic (F8)"
+		(exclude_from_sim no)
+		(at 25.4 25.4 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "2c5eefff-3c0e-4f71-8c7b-4378f2728175")
+	)
+
+	(sheet
+		(at 30 40)
+		(size 40 30)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "6665a859-dcad-4e2d-8b04-12b816c34f7d")
+		(property "Sheetname" "Power"
+			(at 30 37.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "sheets/power.kicad_sch"
+			(at 30 72.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+
+	(pin "VBUS" input
+		(at 30 45.0 0)
+		(uuid "32fe438a-83a8-4450-8fad-d987752292cf")
+	)
+
+	(pin "+3V3" output
+		(at 30 47.5 0)
+		(uuid "866040b3-2925-4898-ac39-fd5a24730026")
+	)
+
+	(pin "VBAT+" bidirectional
+		(at 30 50.0 0)
+		(uuid "c4c6f6ce-1dd7-4bd7-9e6d-86e0f2b3fd41")
+	)
+
+	(pin "GND" passive
+		(at 30 52.5 0)
+		(uuid "28d3e306-f930-4510-ba22-86cb828741dd")
+	)
+
+	(pin "VBAT_ADC" output
+		(at 30 55.0 0)
+		(uuid "354e4bca-d910-4fce-9364-a835d90dbb64")
+	)
+
+	)
+
+	(sheet
+		(at 90 40)
+		(size 50 35)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "f4c067a1-e907-4bd0-af15-85edbc5c4e24")
+		(property "Sheetname" "MCU"
+			(at 90 37.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "sheets/mcu.kicad_sch"
+			(at 90 77.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+
+	(pin "+3V3" input
+		(at 90 45.0 0)
+		(uuid "85d2a51d-e58b-40fd-b328-4449ac6ebbba")
+	)
+
+	(pin "GND" passive
+		(at 90 47.5 0)
+		(uuid "9d15a985-66b6-489f-9442-6cc43924692c")
+	)
+
+	(pin "LCD_SCK" output
+		(at 90 50.0 0)
+		(uuid "9cf01c6c-1046-4203-960d-d2eef97d4370")
+	)
+
+	(pin "LCD_MOSI" output
+		(at 90 52.5 0)
+		(uuid "b0155ae1-80b2-45c1-af56-3504f517c3f4")
+	)
+
+	(pin "LCD_CS" output
+		(at 90 55.0 0)
+		(uuid "dbd3af57-460d-4c04-9a53-5d9e43f0c6ab")
+	)
+
+	(pin "LCD_DISP" output
+		(at 90 57.5 0)
+		(uuid "0d51f04a-b539-4004-b13c-cf65e78e5b9c")
+	)
+
+	(pin "LCD_EXTCOM" output
+		(at 90 60.0 0)
+		(uuid "e7be98a9-d0df-489f-90f6-037ea695dd7e")
+	)
+
+	(pin "KEY_UP" input
+		(at 90 62.5 0)
+		(uuid "65f7d016-171f-4bbc-aa81-d79294c6558d")
+	)
+
+	(pin "KEY_DOWN" input
+		(at 90 65.0 0)
+		(uuid "5652e0e3-e1ed-4584-b7e1-aa89c0912e82")
+	)
+
+	(pin "KEY_LEFT" input
+		(at 90 67.5 0)
+		(uuid "e220be30-f453-4514-ab12-573364c690bd")
+	)
+
+	(pin "KEY_RIGHT" input
+		(at 90 70.0 0)
+		(uuid "67f38c97-268a-4d21-aaee-54b956c5bd0b")
+	)
+
+	(pin "KEY_ENTER" input
+		(at 90 72.5 0)
+		(uuid "eec9ae7c-e445-497b-a804-7f1949e4b46d")
+	)
+
+	(pin "KEY_BACK" input
+		(at 90 75.0 0)
+		(uuid "530d88b1-fa1a-464b-bd68-3def4b962bea")
+	)
+
+	(pin "VBAT_ADC" input
+		(at 90 77.5 0)
+		(uuid "b98e7079-e581-4eb5-b536-40b1eaa80867")
+	)
+
+	(pin "USB_D+" bidirectional
+		(at 90 80.0 0)
+		(uuid "08ff34e5-5574-4941-bb33-af58e346c948")
+	)
+
+	(pin "USB_D-" bidirectional
+		(at 90 82.5 0)
+		(uuid "72edca35-82a9-485a-a1d1-45bdafa4cca6")
+	)
+
+	)
+
+	(sheet
+		(at 30 90)
+		(size 35 25)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "670fb10f-151a-46ed-8ed8-6dd6839d7387")
+		(property "Sheetname" "USB"
+			(at 30 87.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "sheets/usb.kicad_sch"
+			(at 30 117.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+
+	(pin "VBUS" output
+		(at 30 95.0 0)
+		(uuid "918aace6-ee74-4920-863a-31c3d6f51943")
+	)
+
+	(pin "GND" passive
+		(at 30 97.5 0)
+		(uuid "48342d49-d9c7-42a9-bbfa-968b4e36336d")
+	)
+
+	(pin "USB_D+" bidirectional
+		(at 30 100.0 0)
+		(uuid "bb85a034-ad15-4b48-9d51-58b43ccd9789")
+	)
+
+	(pin "USB_D-" bidirectional
+		(at 30 102.5 0)
+		(uuid "2e38ba57-942d-4956-8327-0e3780dfbe06")
+	)
+
+	)
+
+	(sheet
+		(at 90 90)
+		(size 35 25)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "c72e7d9b-6aaa-4357-8c49-ce025dec5b7c")
+		(property "Sheetname" "Display"
+			(at 90 87.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "sheets/display.kicad_sch"
+			(at 90 117.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+
+	(pin "LCD_SCK" input
+		(at 90 95.0 0)
+		(uuid "156f9cac-7673-4810-8203-13f15c020db0")
+	)
+
+	(pin "LCD_MOSI" input
+		(at 90 97.5 0)
+		(uuid "5b271edc-e49f-444c-a758-623fad34c7d1")
+	)
+
+	(pin "LCD_CS" input
+		(at 90 100.0 0)
+		(uuid "d2c464d0-c6dd-42eb-b990-ca5ec537e52b")
+	)
+
+	(pin "LCD_DISP" input
+		(at 90 102.5 0)
+		(uuid "62ae98a2-b304-43c1-8cdb-d81b1cfe1051")
+	)
+
+	(pin "LCD_EXTCOM" input
+		(at 90 105.0 0)
+		(uuid "72dd5b11-5c7a-486b-ae32-0db3ac2e184a")
+	)
+
+	(pin "+3V3" input
+		(at 90 107.5 0)
+		(uuid "db426d8e-79cb-44cb-ab12-44ffe1023ad6")
+	)
+
+	(pin "GND" passive
+		(at 90 110.0 0)
+		(uuid "ed9bd9db-3c8b-41eb-a7d2-9416fbfb9a1d")
+	)
+
+	)
+
+	(sheet
+		(at 150 90)
+		(size 35 30)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "b9c51509-1b2b-4f64-b0fd-860fa536dd49")
+		(property "Sheetname" "Keypad"
+			(at 150 87.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "sheets/keypad.kicad_sch"
+			(at 150 122.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+
+	(pin "KEY_UP" output
+		(at 150 95.0 0)
+		(uuid "299abced-82cc-45e0-aed4-5fbbc1e0c01c")
+	)
+
+	(pin "KEY_DOWN" output
+		(at 150 97.5 0)
+		(uuid "683c0149-dd67-46b0-89b6-55eeaff5f63a")
+	)
+
+	(pin "KEY_LEFT" output
+		(at 150 100.0 0)
+		(uuid "2439f476-89ed-4fec-8185-39d2a92d09ec")
+	)
+
+	(pin "KEY_RIGHT" output
+		(at 150 102.5 0)
+		(uuid "36d8a4f6-7fe4-49ad-8f83-e8f709e5c70c")
+	)
+
+	(pin "KEY_ENTER" output
+		(at 150 105.0 0)
+		(uuid "869413c9-25dd-49d1-a5ef-892c3c9044c1")
+	)
+
+	(pin "KEY_BACK" output
+		(at 150 107.5 0)
+		(uuid "04c6e718-177e-42b6-ba7d-3966730e6400")
+	)
+
+	(pin "+3V3" input
+		(at 150 110.0 0)
+		(uuid "ea54d426-0fa4-4586-9b8b-7de2ca81a597")
+	)
+
+	(pin "GND" passive
+		(at 150 112.5 0)
+		(uuid "dccaffb4-8de7-4efb-a5a1-5c97400eded7")
+	)
+
+	)
+
+	(global_label "VBUS"
+		(shape input)
+		(at 220 40 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "cbfa43f1-110f-4260-847e-766fe3e0373d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 220 40 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "+3V3"
+		(shape input)
+		(at 235 40 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "4b9f9893-743a-4885-bb40-8919018c2039")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 235 40 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "GND"
+		(shape input)
+		(at 250 40 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f66907d5-2820-431f-b30d-60ba1cd1323c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 250 40 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "VBAT+"
+		(shape input)
+		(at 220 50 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "ccf664ea-e675-493f-953f-c2359f1088e6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 220 50 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "VBAT_ADC"
+		(shape input)
+		(at 235 50 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "07e118c0-f1df-4b5f-910b-1aaa26e69f91")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 235 50 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_SCK"
+		(shape input)
+		(at 250 50 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "97e8f323-801a-4465-8e1f-bfd95b2d12cd")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 250 50 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_MOSI"
+		(shape input)
+		(at 220 60 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e8055f47-9a26-41db-823d-415ca9f4f092")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 220 60 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_CS"
+		(shape input)
+		(at 235 60 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "ffb7c272-f7c1-4dbc-92ab-86020f42191b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 235 60 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_DISP"
+		(shape input)
+		(at 250 60 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "da9e43c3-518f-4c3b-895c-f101928aae4f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 250 60 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "LCD_EXTCOM"
+		(shape input)
+		(at 220 70 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6239f87d-c45d-4b44-90d9-9cdfd84cd3db")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 220 70 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "KEY_UP"
+		(shape input)
+		(at 235 70 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "84ff95a2-6c53-49a3-9374-8978b61154f9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 235 70 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "KEY_DOWN"
+		(shape input)
+		(at 250 70 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "b861ba3b-e6d3-4c43-ba63-9199178bc01a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 250 70 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "KEY_LEFT"
+		(shape input)
+		(at 220 80 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "beb35be2-021e-4312-aa13-d028fcc0f874")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 220 80 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "KEY_RIGHT"
+		(shape input)
+		(at 235 80 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e183fc93-cecb-4e44-a65a-fd1afb08403e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 235 80 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "KEY_ENTER"
+		(shape input)
+		(at 250 80 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "78985298-c329-46de-814b-eb2c252dffb9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 250 80 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "KEY_BACK"
+		(shape input)
+		(at 220 90 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "33f5d1c4-83b0-49c6-9b64-867d00614e4f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 220 90 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "USB_D+"
+		(shape input)
+		(at 235 90 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "3343cf3e-1158-4de6-9598-235e9faaa2d9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 235 90 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+
+	(global_label "USB_D-"
+		(shape input)
+		(at 250 90 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2e16529a-d404-49f0-a90b-e7b64b73028f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 250 90 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
