@@ -1,0 +1,27 @@
+{
+  "board": {
+    "design_settings": {
+      "defaults": {
+        "board_outline_line_width": 0.1,
+        "copper_line_width": 0.2,
+        "copper_text_size_h": 1.5,
+        "copper_text_size_v": 1.5,
+        "copper_text_thickness": 0.3
+      },
+      "rules": {
+        "min_copper_edge_clearance": 0.3,
+        "min_hole_clearance": 0.25,
+        "min_via_diameter": 0.6,
+        "min_track_width": 0.2
+      }
+    }
+  },
+  "meta": {
+    "filename": "smart-glove.kicad_pro",
+    "version": 1
+  },
+  "sheets": [
+    ["smart-glove.kicad_sch", "Root"]
+  ],
+  "text_variables": {}
+}

@@ -1,0 +1,37 @@
+(kicad_sch
+  (version 20231120)
+  (generator "eeschema")
+  (generator_version "8.0")
+  (uuid "a1000001-0000-4000-8000-000000000001")
+  (paper "A3")
+  (title_block
+    (title "Smart Glove Controller")
+    (date "2026-07-18")
+    (rev "A")
+    (company "GetFly / Smart Glove")
+    (comment 1 "ESP32 + 4 flex channels + MPU6050 + TP4056")
+    (comment 2 "Reconstructed from project collage; photo labels illegible")
+  )
+  (lib_symbols)
+  (text "Smart Glove Schematic — see docs/smart_glove_schematic.png for annotated diagram"
+    (exclude_from_sim no) (exclude_from_bom no) (exclude_from_board no)
+    (at 50 20 0)
+    (effects (font (size 2 2)) (justify left))
+    (uuid "a1000001-0000-4000-8000-000000000010")
+  )
+  (text "NETS: +5V +BAT 3V3 GND | FLEX1..4 | SDA SCL | USB_D+ USB_D-"
+    (exclude_from_sim no) (exclude_from_bom no) (exclude_from_board no)
+    (at 50 30 0)
+    (effects (font (size 1.5 1.5)) (justify left))
+    (uuid "a1000001-0000-4000-8000-000000000011")
+  )
+  (text "U1 ESP32-WROOM-32E | U2 TP4056 | U3 AMS1117-3.3 | U4 MPU-6050 | J1 USB-C | J2 1x6 flex | BT1 LiPo"
+    (exclude_from_sim no) (exclude_from_bom no) (exclude_from_board no)
+    (at 50 40 0)
+    (effects (font (size 1.5 1.5)) (justify left))
+    (uuid "a1000001-0000-4000-8000-000000000012")
+  )
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
