@@ -10,7 +10,7 @@ Company: **Man Who Embed**
 
 ## Board
 - Name: SignSpeak Smart Glove
-- Size: **60 × 45 mm** (compact glove-back) · 2-layer · 1.6 mm FR4
+- Size: **60 × 45 mm** (compact glove-back) · 2-layer · **1.55 mm** FR4
 - Note: 40×30 mm is not possible with ESP32-WROOM-32E (~25.5 mm) + USB-C (~9.5 mm) + charger/IMU; 60×45 is the compact production size
 - Orientation: top/finger = antenna · bottom/wrist = USB-C + LiPo + UART + flex
 - Finish: ENIG or HASL (JLCPCB)

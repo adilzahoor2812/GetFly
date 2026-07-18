@@ -559,7 +559,7 @@ def collect_pads_by_net(board):
 def build_board():
     board = pcbnew.CreateEmptyBoard()
     ds = board.GetDesignSettings()
-    ds.SetBoardThickness(mm(1.6))
+    ds.SetBoardThickness(mm(1.55))
     ds.m_TrackMinWidth = mm(0.15)
     ds.m_ViasMinSize = mm(0.45)
     ds.m_ViasMinDrill = mm(0.2)
@@ -1028,7 +1028,7 @@ Company: **Man Who Embed**
 
 ## Board
 - Name: SignSpeak Smart Glove
-- Size: **{BOARD_W:.0f} × {BOARD_H:.0f} mm** (compact glove-back) · 2-layer · 1.6 mm FR4
+- Size: **{BOARD_W:.0f} × {BOARD_H:.0f} mm** (compact glove-back) · 2-layer · **1.55 mm** FR4
 - Note: 40×30 mm is not possible with ESP32-WROOM-32E (~25.5 mm) + USB-C (~9.5 mm) + charger/IMU; 60×45 is the compact production size
 - Orientation: top/finger = antenna · bottom/wrist = USB-C + LiPo + UART + flex
 - Finish: ENIG or HASL (JLCPCB)
