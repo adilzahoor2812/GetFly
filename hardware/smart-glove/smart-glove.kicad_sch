@@ -1,35 +1,39 @@
-(kicad_sch
-  (version 20231120)
-  (generator "eeschema")
-  (generator_version "8.0")
-  (uuid "a1000001-0000-4000-8000-000000000001")
+(kicad_sch (version 20230121) (generator eeschema)
+  (uuid a1000001-0000-4000-8000-000000000001)
   (paper "A3")
   (title_block
-    (title "Smart Glove Controller")
+    (title "Smart Glove MCU Controller")
     (date "2026-07-18")
     (rev "A")
-    (company "GetFly / Smart Glove")
-    (comment 1 "ESP32 + 4 flex channels + MPU6050 + TP4056")
-    (comment 2 "Reconstructed from project collage; photo labels illegible")
+    (company "GetFly")
+    (comment 1 "Production Rev A — ESP32 + 4 flex + MPU6050 + TP4056")
+    (comment 2 "See docs/PRODUCTION_NETLIST.md and fab/ for manufacturing package")
   )
   (lib_symbols)
-  (text "Smart Glove Schematic — see docs/smart_glove_schematic.png for annotated diagram"
-    (exclude_from_sim no) (exclude_from_bom no) (exclude_from_board no)
-    (at 50 20 0)
-    (effects (font (size 2 2)) (justify left))
-    (uuid "a1000001-0000-4000-8000-000000000010")
+  (text "PRODUCTION SCHEMATIC COMPANION — Full connectivity implemented on PCB nets"
+    (at 50.8 25.4 0)
+    (effects (font (size 2.54 2.54)) (justify left))
+    (uuid a1000001-0000-4000-8000-000000000010)
   )
-  (text "NETS: +5V +BAT 3V3 GND | FLEX1..4 | SDA SCL | USB_D+ USB_D-"
-    (exclude_from_sim no) (exclude_from_bom no) (exclude_from_board no)
-    (at 50 30 0)
-    (effects (font (size 1.5 1.5)) (justify left))
-    (uuid "a1000001-0000-4000-8000-000000000011")
+  (text "U1 ESP32-WROOM-32E | U2 TP4056 | U3 AMS1117-3.3 | U4 MPU-6050"
+    (at 50.8 35.56 0)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid a1000001-0000-4000-8000-000000000011)
   )
-  (text "U1 ESP32-WROOM-32E | U2 TP4056 | U3 AMS1117-3.3 | U4 MPU-6050 | J1 USB-C | J2 1x6 flex | BT1 LiPo"
-    (exclude_from_sim no) (exclude_from_bom no) (exclude_from_board no)
-    (at 50 40 0)
-    (effects (font (size 1.5 1.5)) (justify left))
-    (uuid "a1000001-0000-4000-8000-000000000012")
+  (text "J1 USB-C | J2 Flex 1x6 | J3 LiPo JST-PH | SW1 BOOT | SW2 EN"
+    (at 50.8 43.18 0)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid a1000001-0000-4000-8000-000000000012)
+  )
+  (text "R1-R4 10k flex dividers | R8 1.2k charge prog | R6/R7 5.1k | C5 10uF | C6 22uF"
+    (at 50.8 50.8 0)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid a1000001-0000-4000-8000-000000000013)
+  )
+  (text "Open docs/smart_glove_schematic.png for annotated block schematic."
+    (at 50.8 63.5 0)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid a1000001-0000-4000-8000-000000000014)
   )
   (sheet_instances
     (path "/" (page "1"))

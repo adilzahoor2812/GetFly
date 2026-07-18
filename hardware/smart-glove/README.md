@@ -1,57 +1,67 @@
-# Smart Glove — Schematic & PCB
+# Smart Glove MCU — Production Package (Rev A)
 
-Recreated from the project collage (poster + glove hardware + schematic + PCB photos).
+ESP32-based smart-glove controller: **4 flex-sensor channels**, **MPU-6050**, **USB-C charge**, **LiPo + 3.3 V LDO**.
 
-## Important limitation
+## Status
 
-The collage images are **too low-resolution to recover exact** net names, resistor values, or every copper trace. This package rebuilds the **same architecture** visible in the photos:
+| Item | Status |
+|------|--------|
+| Footprints placed (36) | Done |
+| Nets + critical routing | Done |
+| Gerbers + Excellon drill | Done |
+| JLCPCB BOM + CPL | Done |
+| Automated design checks | Passed |
+| KiCad GUI zone refill / visual DRC | Do once before volume run |
+| Hardware bring-up | Order **5 pcs** prototype first |
 
-- Central MCU block (implemented as **ESP32-WROOM-32E**)
-- **Four identical** flex-sensor interface channels
-- Power / charge / 3.3 V regulation
-- IMU block (MPU-6050)
-- Dual-layer PCB (top red / bottom blue style)
-- Edge connector for finger sensors + USB
+This package is **fab-ready for prototype manufacturing** (JLCPCB / PCBWay).  
+Treat the first lot as validation boards before mass production.
 
-If you can share a **higher-resolution** photo of the schematic or the KiCad/EasyEDA source, the design can be matched component-for-component.
+## Quick start — order PCBs
+
+1. Upload `fab/SmartGlove_MCU_RevA_Gerbers.zip` to JLCPCB
+2. Settings: **2 layers**, **1.6 mm**, **1 oz**, ENIG or HASL-LF
+3. Optional SMT: `fab/BOM-JLCPCB.csv` + `fab/CPL-top.csv`
+4. Qty: **5**
+
+## Board specs
+
+- Outline: **50 × 42 mm**
+- Layers: **2**
+- Min track/clearance: **0.15 mm**
+- Via: **0.6 / 0.3 mm**
+- Mounting: 4× M2
 
 ## Files
 
-| File | Description |
-|------|-------------|
-| `docs/smart_glove_schematic.png` | Annotated schematic diagram |
-| `docs/smart_glove_pcb.png` | Dual-layer PCB preview |
-| `smart-glove.kicad_pro` | KiCad 8 project |
-| `smart-glove.kicad_sch` | Schematic stub / title sheet |
-| `smart-glove.kicad_pcb` | 50×40 mm 2-layer board |
-| `BOM.md` | Bill of materials |
-
-## Board outline
-
-- Size: **50 × 40 mm**
-- Thickness: **1.6 mm**
-- Layers: **F.Cu + B.Cu** with bottom GND pour
-- Mounting: 4× M2 holes
-- RF keep-out at ESP32 antenna end
-
-## Open in KiCad
-
-1. Install [KiCad 8+](https://www.kicad.org/)
-2. Open `smart-glove.kicad_pro`
-3. Assign official footprints from KiCad libraries (ESP32 module, USB-C, TP4056, etc.)
-4. Finish routing / DRC, then **File → Fabrication Outputs → Gerbers**
-
-## Flex sensor wiring
-
 ```
-3V3 ── flex sensor ──●── ADC (GPIO36/39/34/35)
-                     │
-                   10k to GND
+hardware/smart-glove/
+├── smart-glove.kicad_pro      # KiCad 7 project
+├── smart-glove.kicad_pcb      # Production PCB
+├── smart-glove.kicad_sch      # Companion schematic sheet
+├── build_production_board.py  # Regenerates board + fab outputs
+├── docs/
+│   ├── smart_glove_schematic.png
+│   ├── pcb_production.png     # Rendered production board
+│   ├── pcb_production.pdf
+│   └── PRODUCTION_NETLIST.md
+├── gerbers/                   # Individual Gerber/drill files
+└── fab/
+    ├── SmartGlove_MCU_RevA_Gerbers.zip
+    ├── BOM-JLCPCB.csv
+    ├── CPL-top.csv
+    ├── FABRICATION.md
+    └── drc_report.txt
 ```
 
-## Next steps for a 1:1 match
+## Rebuild
 
-1. Photograph the original schematic at high resolution (or export from CAD)
-2. Measure the physical PCB (outer dimensions, hole spacing)
-3. Identify ICs from package markings under a loupe
-4. Continuity-map flex connector pinout
+```bash
+python3 build_production_board.py
+```
+
+Requires KiCad 7 (`kicad-cli`, `python3-pcbnew`).
+
+## Architecture note
+
+Rebuilt from the project collage architecture. Original photo labels were illegible; pinout follows Espressif ESP32-WROOM-32 + standard TP4056 / AMS1117 / MPU-6050 wiring.

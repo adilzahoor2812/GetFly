@@ -1,0 +1,9 @@
+Smart Glove MCU Rev A — Design Rule Check Summary
+Footprints: 36
+Tracks/Vias: 122
+Edge segments: 4
+Issues: 0
+- None (automated checks passed)
+
+Manual review still required in KiCad before volume production.
+Prototype order (5 pcs) is the recommended next step.

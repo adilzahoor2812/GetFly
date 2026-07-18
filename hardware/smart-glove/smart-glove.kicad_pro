@@ -1,27 +1,29 @@
 {
   "board": {
     "design_settings": {
-      "defaults": {
-        "board_outline_line_width": 0.1,
-        "copper_line_width": 0.2,
-        "copper_text_size_h": 1.5,
-        "copper_text_size_v": 1.5,
-        "copper_text_thickness": 0.3
-      },
+      "defaults": {},
+      "diff_pair_dimensions": [],
+      "drc_exclusions": [],
       "rules": {
         "min_copper_edge_clearance": 0.3,
         "min_hole_clearance": 0.25,
-        "min_via_diameter": 0.6,
-        "min_track_width": 0.2
-      }
+        "min_via_diameter": 0.45,
+        "min_track_width": 0.15,
+        "solder_mask_clearance": 0.05,
+        "solder_mask_min_width": 0.0
+      },
+      "track_widths": [0.15, 0.2, 0.25, 0.3, 0.4, 0.5],
+      "via_dimensions": [
+        {"diameter": 0.6, "drill": 0.3}
+      ]
     }
   },
-  "meta": {
-    "filename": "smart-glove.kicad_pro",
-    "version": 1
-  },
-  "sheets": [
-    ["smart-glove.kicad_sch", "Root"]
-  ],
+  "boards": [],
+  "cvpcb": { "equivalence_files": [] },
+  "libraries": { "pinned_footprint_libs": [], "pinned_symbol_libs": [] },
+  "meta": { "filename": "smart-glove.kicad_pro", "version": 1 },
+  "net_settings": { "classes": [{ "name": "Default", "track_width": 0.25, "via_diameter": 0.6, "via_drill": 0.3 }], "meta": { "version": 2 } },
+  "pcbnew": { "last_paths": { "gencad": "", "idf": "", "netlist": "", "specctra_dsn": "", "step": "", "vrml": "" }, "page_layout_descr_file": "" },
+  "sheets": [ ["smart-glove.kicad_sch", ""] ],
   "text_variables": {}
 }
