@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-SignSpeak Smart Glove — Production Rev F (Man Who Embed)
+SignSpeak Smart Glove — Production Rev G (Man Who Embed)
 ==================================
-Compact glove-back MCU (75×52 mm) · 2-layer · ERC schematic + fab package.
+Compact glove-back MCU (55×40 mm) · UART prog header · 2-layer · fab package.
+Note: 40×30 mm is not possible with ESP32-WROOM-32E (~25.5 mm) + USB-C (~9.5 mm).
 
 Production routing rules (learned from Rev C shorts):
   • GND only via filled copper zones (no GND trunks)
@@ -39,14 +40,15 @@ OUT_SCH = ROOT / "smart-glove.kicad_sch"
 OUT_PRO = ROOT / "smart-glove.kicad_pro"
 
 # Compact dorsal-glove outline (finger edge = top / y=0, wrist = bottom)
-# 75×52 mm ≈ 57% of old 95×72 — fits upper glove; open lane band for clean routing
-BOARD_W, BOARD_H = 75.0, 52.0
+# 60×45 mm — smallest reliably routable with WROOM-32E + USB-C + charger + IMU + UART
+# (40×30 requested but physically too small for this module set)
+BOARD_W, BOARD_H = 60.0, 45.0
 # Antenna keepout strip at finger edge (ESP32 antenna faces +top)
-KEEP_Y = 8.0
-# Approximate module body (no through-routing) — U1 at (38, 18)
-MOD = dict(x0=28.0, x1=48.0, y0=6.0, y1=30.0)
+KEEP_Y = 6.0
+# Approximate module body (no through-routing) — U1 at (30, 15)
+MOD = dict(x0=20.0, x1=40.0, y0=4.0, y1=28.0)
 # Keep y∈[LANE] empty of footprints (helps autorouter)
-LANE_Y0, LANE_Y1 = 31.0, 38.0
+LANE_Y0, LANE_Y1 = 28.5, 33.0
 
 TRACK_SIG = 0.25
 TRACK_PWR = 0.40
@@ -571,9 +573,10 @@ def build_board():
 
     add_edge(board)
     # Compact silk (glove-back board)
-    add_text(board, "SignSpeak Smart Glove", 12.0, 3.2, 0.9)
-    add_text(board, "Man Who Embed  Rev F", 12.0, 5.0, 0.85)
-    add_text(board, "ANT KEEP OUT", 52.0, 5.0, 0.85)
+    add_text(board, "SignSpeak", 10.0, 2.8, 0.8)
+    add_text(board, "Man Who Embed Rev G", 10.0, 4.4, 0.7)
+    add_text(board, "ANT", 46.0, 2.8, 0.7)
+    add_text(board, "UART", 24.0, 43.5, 0.65)
 
     nets = {
         n: ensure_net(board, n)
@@ -583,7 +586,7 @@ def build_board():
             "SDA", "SCL", "EN", "BOOT",
             "STAT_LED", "CHRG", "IMU_INT",
             "TP_PROG", "PWR_LED", "CC1", "CC2",
-            "REGOUT",
+            "REGOUT", "UART_TX", "UART_RX",
         ]
     }
 
@@ -606,59 +609,61 @@ def build_board():
         parts[ref] = fp
         return fp
 
-    # ---- Placement (75×52 mm glove-back) ----
-    # Parts only above y=31 and below y=38 (open lane band for routing).
+    # ---- Placement (60×45 mm glove-back + UART prog) ----
     u1 = add(
         "RF_Module.pretty", "ESP32-WROOM-32", "U1", "ESP32-WROOM-32E",
-        38.0, 18.0, 0, strip_keepout=True, tight_crt=(19.0, 26.0),
+        30.0, 15.0, 0, strip_keepout=True, tight_crt=(19.0, 26.0),
     )
 
-    # Flex dividers (upper-left, above lane)
+    # Flex dividers (upper-left)
     for i, ref in enumerate(("R1", "R2", "R3", "R4", "R11")):
-        add("Resistor_SMD.pretty", "R_0603_1608Metric", ref, "10k", 12.0, 10.0 + i * 3.6, 0)
-    # Flex header along wrist/finger edge (rotated 90° so 7 pins fit in 75 mm width)
-    j2 = add(
-        "Connector_PinHeader_2.54mm.pretty", "PinHeader_1x07_P2.54mm_Vertical",
-        "J2", "FLEX", 10.0, 48.5, 90,
-    )
+        add("Resistor_SMD.pretty", "R_0603_1608Metric", ref, "10k", 8.0, 8.0 + i * 3.4, 0)
 
-    # Power (upper-right, above lane)
-    u2 = add("Package_SO.pretty", "SOIC-8_3.9x4.9mm_P1.27mm", "U2", "TP4056", 64.0, 12.0, 0)
-    u3 = add("Package_TO_SOT_SMD.pretty", "SOT-223", "U3", "AMS1117-3.3", 64.0, 22.0, 270)
-    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C5", "10uF", 54.0, 12.0, 0)
-    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C6", "22uF", 54.0, 16.5, 0)
-    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C7", "100nF", 54.0, 20.5, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R8", "1.2k", 54.0, 8.0, 0)
-    add("LED_SMD.pretty", "LED_0603_1608Metric", "D2", "LED-CHRG", 58.5, 8.0, 0)
+    # Power (upper-right) — keep ≥1.5 mm from ESP32 right pad column (~x=38.75)
+    u2 = add("Package_SO.pretty", "SOIC-8_3.9x4.9mm_P1.27mm", "U2", "TP4056", 51.0, 10.0, 0)
+    u3 = add("Package_TO_SOT_SMD.pretty", "SOT-223", "U3", "AMS1117-3.3", 51.0, 20.0, 270)
+    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C5", "10uF", 44.5, 9.0, 0)
+    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C6", "22uF", 44.5, 13.5, 0)
+    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C7", "100nF", 44.5, 17.5, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R8", "1.2k", 44.5, 6.0, 0)
+    add("LED_SMD.pretty", "LED_0603_1608Metric", "D2", "LED-CHRG", 48.5, 6.0, 0)
 
-    # Below lane band: IMU, USB, LiPo, controls (keep clear of J2 header row at y=48.5)
+    # Below lane: IMU clear of USB shell pads
     u4 = add(
         "Sensor_Motion.pretty", "InvenSense_QFN-24_4x4mm_P0.5mm", "U4", "MPU-6050",
-        58.0, 40.0, 0, strip_keepout=True,
+        52.0, 32.0, 0, strip_keepout=True,
     )
-    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C10", "2.2uF", 48.5, 38.5, 0)
-    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C9", "100nF", 54.0, 45.0, 0)
+    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C10", "2.2uF", 44.0, 30.5, 0)
+    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C9", "100nF", 44.0, 34.0, 0)
 
-    # USB slightly inset so shell silk clears board edge
-    j1 = add("Connector_USB.pretty", "USB_C_Receptacle_HRO_TYPE-C-31-M-12", "J1", "USB-C", 42.0, 47.8, 0)
-    # Keep J3 clear of H4 (hole-to-hole ≥ 0.25 mm) and board edge
-    j3 = add("Connector_JST.pretty", "JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical", "J3", "LiPo", 65.0, 48.0, 90)
+    # Wrist edge connectors — USB clear of C9/U4
+    j2 = add(
+        "Connector_PinHeader_2.54mm.pretty", "PinHeader_1x07_P2.54mm_Vertical",
+        "J2", "FLEX", 7.0, 42.0, 90,
+    )
+    # J4 UART prog for USB-UART dongle: 3V3 · TX · RX · GND
+    j4 = add(
+        "Connector_PinHeader_2.54mm.pretty", "PinHeader_1x04_P2.54mm_Vertical",
+        "J4", "UART", 28.0, 42.0, 90,
+    )
+    j1 = add("Connector_USB.pretty", "USB_C_Receptacle_HRO_TYPE-C-31-M-12", "J1", "USB-C", 42.0, 41.5, 0)
+    j3 = add("Connector_JST.pretty", "JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical", "J3", "LiPo", 55.5, 41.5, 90)
 
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R6", "5.1k", 32.0, 42.0, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R7", "5.1k", 44.0, 40.0, 0)
-    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C1", "100nF", 36.0, 40.0, 0)
-    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C2", "100nF", 39.5, 40.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R6", "5.1k", 18.0, 35.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R7", "5.1k", 22.5, 35.0, 0)
+    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C1", "100nF", 34.0, 34.5, 0)
+    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C2", "100nF", 37.5, 34.5, 0)
 
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R5", "1k", 14.0, 38.5, 0)
-    add("LED_SMD.pretty", "LED_0603_1608Metric", "D1", "LED-PWR", 14.0, 40.5, 0)
-    add("LED_SMD.pretty", "LED_0603_1608Metric", "D3", "LED-STAT", 17.5, 40.5, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R9", "10k", 14.0, 43.0, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R10", "10k", 17.5, 43.0, 0)
-    add("Button_Switch_SMD.pretty", "SW_SPST_B3U-1000P", "SW1", "BOOT", 22.0, 43.0, 0)
-    add("Button_Switch_SMD.pretty", "SW_SPST_B3U-1000P", "SW2", "EN", 27.0, 43.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R5", "1k", 8.0, 34.0, 0)
+    add("LED_SMD.pretty", "LED_0603_1608Metric", "D1", "LED-PWR", 8.0, 36.5, 0)
+    add("LED_SMD.pretty", "LED_0603_1608Metric", "D3", "LED-STAT", 11.5, 36.5, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R9", "10k", 8.0, 39.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R10", "10k", 11.5, 39.0, 0)
+    add("Button_Switch_SMD.pretty", "SW_SPST_B3U-1000P", "SW1", "BOOT", 16.0, 38.0, 0)
+    add("Button_Switch_SMD.pretty", "SW_SPST_B3U-1000P", "SW2", "EN", 21.0, 38.0, 0)
 
-    # H4 bottom-right: away from J3 pads (was colliding at 71.5,45)
-    for i, (x, y) in enumerate([(3.5, 3.5), (71.5, 3.5), (3.5, 48.5), (71.5, 40.0)], 1):
+    # Two corner mounting holes (compact board)
+    for i, (x, y) in enumerate([(3.0, 3.0), (57.0, 3.0)], 1):
         fp = add("MountingHole.pretty", "MountingHole_2.2mm_M2", f"H{i}", "M2", x, y, 0)
         clear_layer_graphics(fp, pcbnew.F_CrtYd)
         try:
@@ -667,18 +672,21 @@ def build_board():
             pass
 
     # ---- Net assignment ----
-    # ESP32-WROOM-32E: IO22=pin36=SCL; IO32=pin8=FLEX5; pin37 NC
+    # ESP32: pin35=TXD0/GPIO1, pin34=RXD0/GPIO3, pin8=FLEX5/GPIO32, pin36=SCL/IO22
     for n, netn in {
         "1": "GND", "2": "3V3", "3": "EN",
         "4": "FLEX1", "5": "FLEX2", "6": "FLEX3", "7": "FLEX4", "8": "FLEX5",
         "15": "GND", "24": "STAT_LED", "25": "BOOT",
-        "31": "IMU_INT", "33": "SDA", "36": "SCL",
+        "31": "IMU_INT", "33": "SDA", "34": "UART_RX", "35": "UART_TX", "36": "SCL",
         "38": "GND", "39": "GND",
     }.items():
         connect(u1, n, nets[netn])
 
     for i, netn in enumerate(["3V3", "FLEX1", "FLEX2", "FLEX3", "FLEX4", "FLEX5", "GND"], 1):
         connect(j2, str(i), nets[netn])
+    # J4 UART: 1=3V3, 2=TX (ESP TXD0), 3=RX (ESP RXD0), 4=GND
+    for i, netn in enumerate(["3V3", "UART_TX", "UART_RX", "GND"], 1):
+        connect(j4, str(i), nets[netn])
     connect(j3, "1", nets["+BAT"])
     connect(j3, "2", nets["GND"])
 
@@ -762,7 +770,7 @@ def build_board():
             ("SDA", TRACK_SIG), ("SCL", TRACK_SIG), ("EN", TRACK_SIG), ("BOOT", TRACK_SIG),
             ("STAT_LED", TRACK_SIG), ("CHRG", TRACK_SIG), ("IMU_INT", TRACK_SIG),
             ("TP_PROG", TRACK_SIG), ("PWR_LED", TRACK_SIG), ("CC1", TRACK_SIG), ("CC2", TRACK_SIG),
-            ("REGOUT", TRACK_SIG),
+            ("REGOUT", TRACK_SIG), ("UART_TX", TRACK_SIG), ("UART_RX", TRACK_SIG),
         ]
         router = Router(board, net_names=[n for n, _ in order])
         for name, w in order:
@@ -882,7 +890,7 @@ def export_gerbers():
          "--format", "excellon", "--excellon-units", "mm", str(OUT_PCB)],
         check=True,
     )
-    zpath = FAB / "SignSpeak_SmartGlove_RevF_Gerbers.zip"
+    zpath = FAB / "SignSpeak_SmartGlove_RevG_Gerbers.zip"
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as zf:
         for p in sorted(GERBER.iterdir()):
             zf.write(p, p.name)
@@ -917,7 +925,7 @@ def summarize(path: Path, kind: str) -> str:
     for line in text.splitlines():
         if line.startswith("[") and "]:" in line:
             types[line[1 : line.index("]")]] += 1
-    lines = [f"# {kind} Summary — SignSpeak Rev F", f"File: `{path.name}`", ""]
+    lines = [f"# {kind} Summary — SignSpeak Rev G", f"File: `{path.name}`", ""]
     m = re.search(r"Found (\d+) DRC", text)
     m2 = re.search(r"ERC messages:\s*(\d+)\s*Errors\s*(\d+)\s*Warnings\s*(\d+)", text)
     if m:
@@ -1008,7 +1016,7 @@ def write_fab_docs(drc_text, erc_text):
         pass
     ready = err_n == 0 and unc_n == 0
     (FAB / "FABRICATION.md").write_text(
-        f"""# SignSpeak Smart Glove — Fabrication (Rev F)
+        f"""# SignSpeak Smart Glove — Fabrication (Rev G)
 
 Company: **Man Who Embed**
 
@@ -1021,35 +1029,40 @@ Company: **Man Who Embed**
 ## Board
 - Name: SignSpeak Smart Glove
 - Size: **{BOARD_W:.0f} × {BOARD_H:.0f} mm** (compact glove-back) · 2-layer · 1.6 mm FR4
-- Orientation: top/finger edge = flex + antenna · bottom/wrist = USB-C + LiPo
+- Note: 40×30 mm is not possible with ESP32-WROOM-32E (~25.5 mm) + USB-C (~9.5 mm) + charger/IMU; 60×45 is the compact production size
+- Orientation: top/finger = antenna · bottom/wrist = USB-C + LiPo + UART + flex
 - Finish: ENIG or HASL (JLCPCB)
 - Min track/clearance: 0.15 mm · Min drill: 0.20 mm
-- 5× flex on J2 (1×7): 3V3, FLEX1…FLEX5, GND
+- 5× flex on J2 (1×7) · UART prog on J4 (1×4)
 - Rebuild: `python3 build_production_v2.py`
 
 ## Files
-- `SignSpeak_SmartGlove_RevF_Gerbers.zip`
+- `SignSpeak_SmartGlove_RevG_Gerbers.zip`
 - `BOM-JLCPCB.csv` / `CPL-top.csv`
 
 ## Flex connector J2
 1=3V3 · 2=FLEX1 · 3=FLEX2 · 4=FLEX3 · 5=FLEX4 · 6=FLEX5 · 7=GND
 
+## UART programming J4 (USB–UART dongle)
+1=3V3 · 2=TX (ESP TXD0) · 3=RX (ESP RXD0) · 4=GND  
+Dongle RX→board TX, dongle TX→board RX. Hold BOOT, tap EN, then upload.
+
 ## Bring-up
 1. Continuity: no shorts on GND / 3V3 / +5V / +BAT
-2. USB → TP4056 → battery → AMS1117 → 3V3
-3. Flash ESP32 via USB-UART (BOOT/EN)
+2. USB-C → TP4056 → battery → AMS1117 → 3V3 (power only)
+3. Flash via **J4 UART** + BOOT/EN
 4. 5× flex ADC + MPU-6050 I2C
 
 USB-C is power/charge oriented (CC 5.1k). Keep metal clear of antenna keep-out band.
 """
     )
     (FAB / "ERC_DRC_COMPILE_REPORT.md").write_text(
-        f"# ERC / DRC Compile — SignSpeak Rev F\n\n## ERC\n```\n{erc_text[:2000]}\n```\n\n## DRC\n```\n{drc_text[:4000]}\n```\n"
+        f"# ERC / DRC Compile — SignSpeak Rev G\n\n## ERC\n```\n{erc_text[:2000]}\n```\n\n## DRC\n```\n{drc_text[:4000]}\n```\n"
     )
     (ROOT / "README.md").write_text(
-        f"""# SignSpeak Smart Glove — MCU PCB (Rev F)
+        f"""# SignSpeak Smart Glove — MCU PCB (Rev G)
 
-**Man Who Embed** · **{BOARD_W:.0f}×{BOARD_H:.0f} mm** glove-back · ESP32 · **5× flex** · MPU-6050 · TP4056 · AMS1117 · USB-C
+**Man Who Embed** · **{BOARD_W:.0f}×{BOARD_H:.0f} mm** glove-back · ESP32 · **5× flex** · MPU-6050 · TP4056 · AMS1117 · USB-C · **UART prog**
 
 ## Rebuild
 
@@ -1058,14 +1071,17 @@ python3 build_complete_schematic.py
 python3 build_production_v2.py
 ```
 
-Fab: [`fab/SignSpeak_SmartGlove_RevF_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevF_Gerbers.zip)
+Fab: [`fab/SignSpeak_SmartGlove_RevG_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevG_Gerbers.zip)
 
 ### Mounting
-- Top edge → toward fingers (flex cable + antenna keep-out)
-- Bottom edge → toward wrist (USB-C + LiPo JST)
+- Top edge → toward fingers (antenna keep-out)
+- Bottom edge → toward wrist (USB-C + LiPo + UART + flex)
 
 ### Flex J2 (1×7)
 `3V3 · FLEX1 · FLEX2 · FLEX3 · FLEX4 · FLEX5 · GND`
+
+### UART J4 (1×4) — code upload
+`3V3 · TX · RX · GND` → USB–UART dongle (cross TX/RX)
 """
     )
 
@@ -1094,10 +1110,20 @@ def route_with_freerouting(pcb_path: Path = OUT_PCB) -> bool:
         "-mp", "400", "-mt", "1", "-dct", "0", "-oit", "0.15",
     ]
     print("Freerouting…")
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=480)
+    # Drop stale SES so a failed run cannot look like success
+    if ses.exists():
+        ses.unlink()
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
+    except subprocess.TimeoutExpired as e:
+        (FAB / "freerouting_run.log").write_text(
+            (e.stdout or "") + "\n" + (e.stderr or "") + "\nTIMEOUT\n"
+        )
+        print("Freerouting timed out")
+        return False
     (FAB / "freerouting_run.log").write_text((r.stdout or "") + "\n" + (r.stderr or ""))
     print((r.stdout or "")[-600:])
-    if not ses.exists():
+    if not ses.exists() or ses.stat().st_size < 500:
         print("SES not produced")
         return False
     board = pcbnew.LoadBoard(str(pcb_path))
@@ -1113,8 +1139,8 @@ def add_gnd_stitch_vias(pcb_path: Path = OUT_PCB):
     gnd = ensure_net(board, "GND")
     # Only a few vias in the empty lane band / board margins — never near signals
     pts = [
-        (6.0, 34.5), (52.0, 34.5), (66.0, 34.5),
-        (6.0, 44.0), (72.0, 36.0), (72.0, 44.0),
+        (5.0, 30.5), (45.0, 30.5), (55.0, 30.5),
+        (5.0, 38.0), (55.0, 25.0),
     ]
     obstacles = []  # (x, y, r)
     for t in board.GetTracks():
@@ -1249,7 +1275,7 @@ def remove_dangling_vias(pcb_path: Path = OUT_PCB):
 
 
 def main():
-    print("Building SignSpeak Smart Glove Rev F (75×52 mm)…")
+    print("Building SignSpeak Smart Glove Rev G (60×45 mm + UART)…")
     build_board.USE_BUILTIN_ROUTER = False
     board = build_board()
     pcbnew.SaveBoard(str(OUT_PCB), board)
@@ -1262,10 +1288,9 @@ def main():
         cwd=str(ROOT),
     ).returncode == 0
     if not routed:
-        print("Freerouting failed — falling back to builtin router")
-        build_board.USE_BUILTIN_ROUTER = True
-        board = build_board()
-        pcbnew.SaveBoard(str(OUT_PCB), board)
+        # Builtin HV router creates dense shorts on compact boards — do not fall back
+        print("Freerouting failed — leaving board unrouted (no builtin fallback)")
+        raise SystemExit(2)
     print("Adding GND stitch vias + zones…")
     subprocess.run([sys.executable, "-c",
                     "from build_production_v2 import add_gnd_stitch_vias, OUT_PCB; "

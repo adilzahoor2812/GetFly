@@ -202,6 +202,7 @@ def build() -> str:
         libs.append(extract_symbol(SYM / "Device.kicad_sym", name))
     libs.append(extract_symbol(SYM / "Switch.kicad_sym", "SW_Push"))
     libs.append(extract_symbol(SYM / "Connector_Generic.kicad_sym", "Conn_01x07"))
+    libs.append(extract_symbol(SYM / "Connector_Generic.kicad_sym", "Conn_01x04"))
     libs.append(extract_symbol(SYM / "Connector_Generic.kicad_sym", "Conn_01x02"))
     libs.append(extract_symbol(SYM / "Connector.kicad_sym", "USB_C_Receptacle"))
     libs.append(extract_symbol(SYM / "RF_Module.kicad_sym", "ESP32-WROOM-32E"))
@@ -216,8 +217,8 @@ def build() -> str:
     libs.append(tp4056_symbol().replace("GetFly:TP4056", "Device:TP4056"))
 
     s = Sch()
-    s.text("SignSpeak Smart Glove — Complete Schematic (Rev F)", 25.4, 12.7, 2.54)
-    s.text("Man Who Embed · USB-C · TP4056 · AMS1117 · ESP32 · MPU-6050 · 5× Flex", 25.4, 16.51, 1.27)
+    s.text("SignSpeak Smart Glove — Complete Schematic (Rev G)", 25.4, 12.7, 2.54)
+    s.text("Man Who Embed · USB-C · UART · TP4056 · AMS1117 · ESP32 · MPU-6050 · 5× Flex", 25.4, 16.51, 1.27)
 
     # ---- USB-C ----
     s.text("1) USB-C Power/CC", 25.4, 25.4, 1.8)
@@ -282,13 +283,24 @@ def build() -> str:
         "1": "GND", "2": "3V3", "3": "EN",
         "4": "FLEX1", "5": "FLEX2", "6": "FLEX3", "7": "FLEX4", "8": "FLEX5",
         "15": "GND", "24": "STAT_LED", "25": "BOOT",
-        "31": "IMU_INT", "33": "SDA", "36": "SCL", "38": "GND", "39": "GND",
+        "31": "IMU_INT", "33": "SDA", "34": "UART_RX", "35": "UART_TX",
+        "36": "SCL", "38": "GND", "39": "GND",
     })
     # Only flag unused pins that are NOT already electrical type no_connect
     s.nc_pins(esp, [
         "9", "10", "11", "12", "13", "14", "16", "23",
-        "26", "27", "28", "29", "30", "34", "35", "37",
+        "26", "27", "28", "29", "30", "37",
     ])
+
+    # UART programming header for USB–UART dongle
+    s.text("4b) UART Program Header J4", 230.0, 110.0, 1.8)
+    j4x, j4y = g(255.0), g(145.0)
+    s.inst("Connector_Generic:Conn_01x04", "J4", "UART", j4x, j4y,
+           "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
+    j4 = pin_map(SYM / "Connector_Generic.kicad_sym", "Conn_01x04", j4x, j4y)
+    s.glabel_on_pins(j4, {
+        "1": "3V3", "2": "UART_TX", "3": "UART_RX", "4": "GND",
+    })
     s.cap_to_gnd("C1", "100nF", 230.0, 120.0, "3V3")
     s.cap_to_gnd("C2", "100nF", 245.0, 120.0, "3V3")
 
@@ -371,9 +383,9 @@ def build() -> str:
   (title_block
     (title "SignSpeak Smart Glove")
     (date "2026-07-18")
-    (rev "F")
+    (rev "G")
     (company "Man Who Embed")
-    (comment 1 "5× flex · ESP32 · TP4056 · AMS1117 · MPU-6050 · USB-C")
+    (comment 1 "5× flex · ESP32 · UART prog · TP4056 · AMS1117 · MPU-6050 · USB-C")
   )
   (lib_symbols
 {lib_block}

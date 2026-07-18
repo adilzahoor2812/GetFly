@@ -1,7 +1,9 @@
-# DRC Summary — SignSpeak Rev F
+# DRC Summary — SignSpeak Rev G
 File: `DRC_report.txt`
 
-Found: 1 DRC violations
+Found: 9 DRC violations
 
 ## By type
-- silk_over_copper: 1
+- silk_edge_clearance: 4
+- text_height: 3
+- silk_overlap: 2

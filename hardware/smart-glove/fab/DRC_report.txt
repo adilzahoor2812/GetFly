@@ -1,10 +1,40 @@
 ** Drc report for smart-glove.kicad_pcb **
-** Created on 2026-07-18T22:23:40+0000 **
+** Created on 2026-07-18T22:44:59+0000 **
 
-** Found 1 DRC violations **
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; warning
-    @(12.0000 mm, 3.2000 mm): PCB Text 'SignSpeak Smart Glove' on F.Silkscreen
+** Found 9 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(24.0000 mm, 43.5000 mm): PCB Text 'UART' on F.Silkscreen
+    @(8.2700 mm, 43.3300 mm): Segment on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(24.0000 mm, 43.5000 mm): PCB Text 'UART' on F.Silkscreen
+    @(23.5700 mm, 43.3300 mm): Segment on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.6500 mm)
+    Rule: board setup constraints silk text height; warning
+    @(24.0000 mm, 43.5000 mm): PCB Text 'UART' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7000 mm)
+    Rule: board setup constraints silk text height; warning
+    @(10.0000 mm, 4.4000 mm): PCB Text 'Man Who Embed Rev G' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7000 mm)
+    Rule: board setup constraints silk text height; warning
+    @(46.0000 mm, 2.8000 mm): PCB Text 'ANT' on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(60.0000 mm, 45.0000 mm): Segment on Edge.Cuts
+    @(37.3000 mm, 43.5000 mm): Segment on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(60.0000 mm, 45.0000 mm): Segment on Edge.Cuts
+    @(46.7000 mm, 43.5000 mm): Segment on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(0.0000 mm, 0.0000 mm): Segment on Edge.Cuts
+    @(20.8800 mm, -0.8600 mm): Segment on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(0.0000 mm, 0.0000 mm): Segment on Edge.Cuts
+    @(39.1200 mm, -0.8600 mm): Segment on F.Silkscreen
 
 ** Found 0 unconnected pads **
 

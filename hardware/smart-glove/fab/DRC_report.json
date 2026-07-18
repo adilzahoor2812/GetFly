@@ -1,26 +1,194 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-07-18T22:23:41+0000",
+    "date": "2026-07-18T22:45:00+0000",
     "kicad_version": "8.0.9",
     "schematic_parity": [],
     "source": "smart-glove.kicad_pcb",
     "unconnected_items": [],
     "violations": [
         {
-            "description": "Silkscreen clipped by solder mask",
+            "description": "Silkscreen overlap",
             "items": [
                 {
-                    "description": "PCB Text 'SignSpeak Smart Glove' on F.Silkscreen",
+                    "description": "PCB Text 'UART' on F.Silkscreen",
                     "pos": {
-                        "x": 12.0,
-                        "y": 3.2
+                        "x": 24.0,
+                        "y": 43.5
                     },
-                    "uuid": "3dade446-0493-4b2e-b7b9-d8b63768b890"
+                    "uuid": "287d1f06-3568-40b8-94e5-09ea751bbcc5"
+                },
+                {
+                    "description": "Segment on F.Silkscreen",
+                    "pos": {
+                        "x": 8.27,
+                        "y": 43.33
+                    },
+                    "uuid": "79f1857b-f575-4450-afa7-528f1b7be183"
                 }
             ],
             "severity": "warning",
-            "type": "silk_over_copper"
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB Text 'UART' on F.Silkscreen",
+                    "pos": {
+                        "x": 24.0,
+                        "y": 43.5
+                    },
+                    "uuid": "287d1f06-3568-40b8-94e5-09ea751bbcc5"
+                },
+                {
+                    "description": "Segment on F.Silkscreen",
+                    "pos": {
+                        "x": 23.57,
+                        "y": 43.33
+                    },
+                    "uuid": "09fe927e-b087-4d6b-9222-c730d40ed376"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.6500 mm)",
+            "items": [
+                {
+                    "description": "PCB Text 'UART' on F.Silkscreen",
+                    "pos": {
+                        "x": 24.0,
+                        "y": 43.5
+                    },
+                    "uuid": "287d1f06-3568-40b8-94e5-09ea751bbcc5"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7000 mm)",
+            "items": [
+                {
+                    "description": "PCB Text 'Man Who Embed Rev G' on F.Silkscreen",
+                    "pos": {
+                        "x": 10.0,
+                        "y": 4.4
+                    },
+                    "uuid": "6725b990-013e-4016-9e78-31cc084f53c6"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7000 mm)",
+            "items": [
+                {
+                    "description": "PCB Text 'ANT' on F.Silkscreen",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 2.8
+                    },
+                    "uuid": "b64f6778-fd03-4915-9450-4dfb62278fa3"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 60.0,
+                        "y": 45.0
+                    },
+                    "uuid": "83782d2c-9e10-4e44-bcb2-86d137a4b375"
+                },
+                {
+                    "description": "Segment on F.Silkscreen",
+                    "pos": {
+                        "x": 37.3,
+                        "y": 43.5
+                    },
+                    "uuid": "8cf19f65-e07d-4fbe-b3a6-43c4f634f858"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 60.0,
+                        "y": 45.0
+                    },
+                    "uuid": "83782d2c-9e10-4e44-bcb2-86d137a4b375"
+                },
+                {
+                    "description": "Segment on F.Silkscreen",
+                    "pos": {
+                        "x": 46.7,
+                        "y": 43.5
+                    },
+                    "uuid": "f3aa6803-3089-41ff-b918-fc646baeead1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "4bfb2f97-87a2-40a2-b6a9-aa35eb624972"
+                },
+                {
+                    "description": "Segment on F.Silkscreen",
+                    "pos": {
+                        "x": 20.88,
+                        "y": -0.86
+                    },
+                    "uuid": "2d3cfafb-293e-4a36-869a-b4f245669df3"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "4bfb2f97-87a2-40a2-b6a9-aa35eb624972"
+                },
+                {
+                    "description": "Segment on F.Silkscreen",
+                    "pos": {
+                        "x": 39.12,
+                        "y": -0.86
+                    },
+                    "uuid": "540e1c7e-32fb-4565-bc72-7b7da54ef1a8"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
         }
     ]
 }
