@@ -216,7 +216,7 @@ def build() -> str:
     libs.append(tp4056_symbol().replace("GetFly:TP4056", "Device:TP4056"))
 
     s = Sch()
-    s.text("SignSpeak Smart Glove — Complete Schematic (Rev E)", 25.4, 12.7, 2.54)
+    s.text("SignSpeak Smart Glove — Complete Schematic (Rev F)", 25.4, 12.7, 2.54)
     s.text("Man Who Embed · USB-C · TP4056 · AMS1117 · ESP32 · MPU-6050 · 5× Flex", 25.4, 16.51, 1.27)
 
     # ---- USB-C ----
@@ -371,7 +371,7 @@ def build() -> str:
   (title_block
     (title "SignSpeak Smart Glove")
     (date "2026-07-18")
-    (rev "E")
+    (rev "F")
     (company "Man Who Embed")
     (comment 1 "5× flex · ESP32 · TP4056 · AMS1117 · MPU-6050 · USB-C")
   )

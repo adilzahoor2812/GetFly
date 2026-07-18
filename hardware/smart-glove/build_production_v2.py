@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-SignSpeak Smart Glove — Production Rev E (Man Who Embed)
+SignSpeak Smart Glove — Production Rev F (Man Who Embed)
 ==================================
-JLCPCB-oriented 2-layer board + ERC schematic + fab package.
+Compact glove-back MCU (56×38 mm) · 2-layer · ERC schematic + fab package.
 
 Production routing rules (learned from Rev C shorts):
   • GND only via filled copper zones (no GND trunks)
@@ -38,13 +38,14 @@ OUT_PCB = ROOT / "smart-glove.kicad_pcb"
 OUT_SCH = ROOT / "smart-glove.kicad_sch"
 OUT_PRO = ROOT / "smart-glove.kicad_pro"
 
-BOARD_W, BOARD_H = 95.0, 72.0
-# Antenna keepout: no copper above this Y near module (top of board)
-KEEP_Y = 12.0
-# Approximate module body (no through-routing) — U1 at (48, 24)
-MOD = dict(x0=38.5, x1=57.5, y0=12.0, y1=35.5)
-# F.Cu lane band must stay free of footprints (escape vias live outside it)
-LANE_Y0, LANE_Y1 = 37.0, 50.0
+# Compact dorsal-glove outline (finger edge = top / y=0, wrist = bottom)
+BOARD_W, BOARD_H = 56.0, 38.0
+# Antenna keepout strip at finger edge (ESP32 antenna faces +top)
+KEEP_Y = 5.5
+# Approximate module body (no through-routing) — U1 at (30, 14)
+MOD = dict(x0=20.0, x1=40.0, y0=4.0, y1=25.0)
+# Narrow corridor for builtin-router fallback (Freerouting is primary)
+LANE_Y0, LANE_Y1 = 26.0, 30.0
 
 TRACK_SIG = 0.25
 TRACK_PWR = 0.40
@@ -567,10 +568,10 @@ def build_board():
     ds.m_SolderMaskMinWidth = mm(0.0)
 
     add_edge(board)
-    # Silk away from edges / antenna graphic
-    add_text(board, "SignSpeak Smart Glove", 12, 9.2, 0.9)
-    add_text(board, "Man Who Embed  Rev E", 12, 11.2, 0.85)
-    add_text(board, "ANT KEEP OUT", 62, 9.0, 0.85)
+    # Compact silk (glove-back board)
+    add_text(board, "SignSpeak", 3.5, 3.2, 0.85)
+    add_text(board, "Man Who Embed  F", 3.5, 5.0, 0.7)
+    add_text(board, "ANT", 42.0, 3.2, 0.7)
 
     nets = {
         n: ensure_net(board, n)
@@ -603,54 +604,57 @@ def build_board():
         parts[ref] = fp
         return fp
 
-    # ---- Placement ----
-    # Keep y∈[37,50] EMPTY for F.Cu signal lanes. Parts only above/below that band.
-    # U1 at (48, 24): pads left≈39.25, right≈56.75, bottom≈33.5
+    # ---- Placement (56×38 mm glove-back) ----
+    # Top/finger edge: antenna keepout + flex cable. Bottom/wrist: USB-C + LiPo.
     u1 = add(
         "RF_Module.pretty", "ESP32-WROOM-32", "U1", "ESP32-WROOM-32E",
-        48.0, 24.0, 0, strip_keepout=True, tight_crt=(20.0, 28.0),
+        30.0, 14.0, 0, strip_keepout=True, tight_crt=(19.0, 26.0),
     )
 
-    # Flex dividers (upper-left) + 1x7 connector for 5 sensors (below lane band)
+    # Flex 1×7 on left edge (cable toward fingers/side)
+    j2 = add(
+        "Connector_PinHeader_2.54mm.pretty", "PinHeader_1x07_P2.54mm_Vertical",
+        "J2", "FLEX", 4.5, 9.0, 0,
+    )
     for i, ref in enumerate(("R1", "R2", "R3", "R4", "R11")):
-        add("Resistor_SMD.pretty", "R_0603_1608Metric", ref, "10k", 16.0, 16.0 + i * 4.0, 0)
-    # Pin1 at y=50 → pin7 at y=65.24 (keeps edge clearance on 72 mm board)
-    j2 = add("Connector_PinHeader_2.54mm.pretty", "PinHeader_1x07_P2.54mm_Vertical", "J2", "FLEX", 8.0, 50.0, 0)
+        add("Resistor_SMD.pretty", "R_0603_1608Metric", ref, "10k", 9.5, 8.5 + i * 3.2, 0)
 
-    # Power (upper-right, above lane band) / IMU (below lane band)
-    u2 = add("Package_SO.pretty", "SOIC-8_3.9x4.9mm_P1.27mm", "U2", "TP4056", 80.0, 18.0, 0)
-    u3 = add("Package_TO_SOT_SMD.pretty", "SOT-223", "U3", "AMS1117-3.3", 80.0, 30.0, 270)
-    u4 = add("Sensor_Motion.pretty", "InvenSense_QFN-24_4x4mm_P0.5mm", "U4", "MPU-6050", 80.0, 56.0, 0, strip_keepout=True)
-    j3 = add("Connector_JST.pretty", "JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical", "J3", "LiPo", 78.0, 64.0, 90)
+    # Power chain right of ESP
+    u2 = add("Package_SO.pretty", "SOIC-8_3.9x4.9mm_P1.27mm", "U2", "TP4056", 48.0, 10.0, 0)
+    u3 = add("Package_TO_SOT_SMD.pretty", "SOT-223", "U3", "AMS1117-3.3", 48.0, 18.5, 270)
+    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C5", "10uF", 40.5, 10.0, 0)
+    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C6", "22uF", 40.5, 14.0, 0)
+    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C7", "100nF", 40.5, 17.5, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R8", "1.2k", 40.5, 7.0, 0)
+    add("LED_SMD.pretty", "LED_0603_1608Metric", "D2", "LED-CHRG", 44.5, 7.0, 0)
 
-    j1 = add("Connector_USB.pretty", "USB_C_Receptacle_HRO_TYPE-C-31-M-12", "J1", "USB-C", 48.0, 66.0, 0)
+    # IMU + bypass near mid-right
+    u4 = add(
+        "Sensor_Motion.pretty", "InvenSense_QFN-24_4x4mm_P0.5mm", "U4", "MPU-6050",
+        48.0, 26.5, 0, strip_keepout=True,
+    )
+    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C10", "2.2uF", 40.5, 26.5, 0)
+    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C9", "100nF", 40.5, 29.5, 0)
 
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R5", "1k", 18.0, 54.0, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R6", "5.1k", 34.0, 54.0, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R7", "5.1k", 62.0, 54.0, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R8", "1.2k", 66.0, 14.0, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R9", "10k", 18.0, 58.0, 0)
-    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R10", "10k", 24.0, 58.0, 0)
+    # Wrist edge: USB-C + LiPo + controls
+    j1 = add("Connector_USB.pretty", "USB_C_Receptacle_HRO_TYPE-C-31-M-12", "J1", "USB-C", 28.0, 35.5, 0)
+    j3 = add("Connector_JST.pretty", "JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical", "J3", "LiPo", 48.0, 34.5, 90)
 
-    # Below lane band, clear of ESP pads and LED row
-    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C1", "100nF", 52.0, 54.0, 0)
-    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C2", "100nF", 56.0, 54.0, 0)
-    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C5", "10uF", 70.0, 24.0, 0)
-    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C6", "22uF", 70.0, 30.0, 0)
-    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C7", "100nF", 70.0, 34.0, 0)
-    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C9", "100nF", 70.0, 56.0, 0)
-    # MPU REGOUT bypass (datasheet: 2.2uF on REGOUT → GND)
-    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C10", "2.2uF", 70.0, 50.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R6", "5.1k", 18.0, 31.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R7", "5.1k", 38.0, 31.0, 0)
+    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C1", "100nF", 22.0, 27.5, 0)
+    add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C2", "100nF", 25.5, 27.5, 0)
 
-    add("LED_SMD.pretty", "LED_0603_1608Metric", "D1", "LED-PWR", 18.0, 52.5, 0)
-    add("LED_SMD.pretty", "LED_0603_1608Metric", "D2", "LED-CHRG", 72.0, 14.0, 0)
-    add("LED_SMD.pretty", "LED_0603_1608Metric", "D3", "LED-STAT", 24.0, 52.5, 0)
-    add("Button_Switch_SMD.pretty", "SW_SPST_B3U-1000P", "SW1", "BOOT", 30.0, 58.0, 0)
-    add("Button_Switch_SMD.pretty", "SW_SPST_B3U-1000P", "SW2", "EN", 36.0, 58.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R5", "1k", 10.0, 28.0, 0)
+    add("LED_SMD.pretty", "LED_0603_1608Metric", "D1", "LED-PWR", 10.0, 31.0, 0)
+    add("LED_SMD.pretty", "LED_0603_1608Metric", "D3", "LED-STAT", 13.5, 31.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R9", "10k", 10.0, 34.0, 0)
+    add("Resistor_SMD.pretty", "R_0603_1608Metric", "R10", "10k", 13.5, 34.0, 0)
+    add("Button_Switch_SMD.pretty", "SW_SPST_B3U-1000P", "SW1", "BOOT", 18.0, 34.0, 0)
+    add("Button_Switch_SMD.pretty", "SW_SPST_B3U-1000P", "SW2", "EN", 22.5, 34.0, 0)
 
-    for i, (x, y) in enumerate([(3.5, 3.5), (91.5, 3.5), (3.5, 68.5), (91.5, 68.5)], 1):
+    for i, (x, y) in enumerate([(2.8, 2.8), (53.2, 2.8), (2.8, 35.2), (53.2, 35.2)], 1):
         fp = add("MountingHole.pretty", "MountingHole_2.2mm_M2", f"H{i}", "M2", x, y, 0)
-        # Mounting holes: no courtyard (avoids false global overlaps)
         clear_layer_graphics(fp, pcbnew.F_CrtYd)
         try:
             clear_layer_graphics(fp, pcbnew.B_CrtYd)
@@ -865,7 +869,7 @@ def export_gerbers():
          "--format", "excellon", "--excellon-units", "mm", str(OUT_PCB)],
         check=True,
     )
-    zpath = FAB / "SignSpeak_SmartGlove_RevE_Gerbers.zip"
+    zpath = FAB / "SignSpeak_SmartGlove_RevF_Gerbers.zip"
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as zf:
         for p in sorted(GERBER.iterdir()):
             zf.write(p, p.name)
@@ -900,7 +904,7 @@ def summarize(path: Path, kind: str) -> str:
     for line in text.splitlines():
         if line.startswith("[") and "]:" in line:
             types[line[1 : line.index("]")]] += 1
-    lines = [f"# {kind} Summary — SignSpeak Rev E", f"File: `{path.name}`", ""]
+    lines = [f"# {kind} Summary — SignSpeak Rev F", f"File: `{path.name}`", ""]
     m = re.search(r"Found (\d+) DRC", text)
     m2 = re.search(r"ERC messages:\s*(\d+)\s*Errors\s*(\d+)\s*Warnings\s*(\d+)", text)
     if m:
@@ -967,7 +971,7 @@ def write_fab_docs(drc_text, erc_text):
         pass
     ready = err_n == 0 and unc_n == 0
     (FAB / "FABRICATION.md").write_text(
-        f"""# SignSpeak Smart Glove — Fabrication (Rev E)
+        f"""# SignSpeak Smart Glove — Fabrication (Rev F)
 
 Company: **Man Who Embed**
 
@@ -979,15 +983,15 @@ Company: **Man Who Embed**
 
 ## Board
 - Name: SignSpeak Smart Glove
-- Size: {BOARD_W:.0f} × {BOARD_H:.0f} mm · 2-layer · 1.6 mm FR4
+- Size: **{BOARD_W:.0f} × {BOARD_H:.0f} mm** (compact glove-back) · 2-layer · 1.6 mm FR4
+- Orientation: top/finger edge = flex + antenna · bottom/wrist = USB-C + LiPo
 - Finish: ENIG or HASL (JLCPCB)
 - Min track/clearance: 0.15 mm · Min drill: 0.20 mm
-- 5× flex sensors on J2 (1×7): 3V3, FLEX1…FLEX5, GND
-- GND zones filled on F.Cu / B.Cu
+- 5× flex on J2 (1×7): 3V3, FLEX1…FLEX5, GND
 - Rebuild: `python3 build_production_v2.py`
 
 ## Files
-- `SignSpeak_SmartGlove_RevE_Gerbers.zip`
+- `SignSpeak_SmartGlove_RevF_Gerbers.zip`
 - `BOM-JLCPCB.csv` / `CPL-top.csv`
 
 ## Flex connector J2
@@ -1003,31 +1007,28 @@ USB-C is power/charge oriented (CC 5.1k). Keep metal clear of antenna keep-out b
 """
     )
     (FAB / "ERC_DRC_COMPILE_REPORT.md").write_text(
-        f"# ERC / DRC Compile — SignSpeak Rev E\n\n## ERC\n```\n{erc_text[:2000]}\n```\n\n## DRC\n```\n{drc_text[:4000]}\n```\n"
+        f"# ERC / DRC Compile — SignSpeak Rev F\n\n## ERC\n```\n{erc_text[:2000]}\n```\n\n## DRC\n```\n{drc_text[:4000]}\n```\n"
     )
     (ROOT / "README.md").write_text(
-        f"""# SignSpeak Smart Glove — MCU PCB (Rev E)
+        f"""# SignSpeak Smart Glove — MCU PCB (Rev F)
 
-**Man Who Embed** · ESP32-WROOM-32E · **5× flex** · MPU-6050 · TP4056 · AMS1117-3.3 · USB-C
+**Man Who Embed** · **{BOARD_W:.0f}×{BOARD_H:.0f} mm** glove-back · ESP32 · **5× flex** · MPU-6050 · TP4056 · AMS1117 · USB-C
 
-## Schematic (complete)
+## Rebuild
 
 ```bash
 python3 build_complete_schematic.py
-```
-
-## Rebuild PCB + fab package
-
-```bash
 python3 build_production_v2.py
 ```
 
-Fab: [`fab/SignSpeak_SmartGlove_RevE_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevE_Gerbers.zip)  
-({BOARD_W:.0f}×{BOARD_H:.0f} mm, 2-layer). See [`fab/FABRICATION.md`](fab/FABRICATION.md).
+Fab: [`fab/SignSpeak_SmartGlove_RevF_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevF_Gerbers.zip)
+
+### Mounting
+- Top edge → toward fingers (flex cable + antenna keep-out)
+- Bottom edge → toward wrist (USB-C + LiPo JST)
 
 ### Flex J2 (1×7)
-`3V3 · FLEX1 · FLEX2 · FLEX3 · FLEX4 · FLEX5 · GND`  
-ESP32: FLEX1–4 → pins 4–7 (GPIO36/39/34/35), FLEX5 → pin 8 (GPIO32).
+`3V3 · FLEX1 · FLEX2 · FLEX3 · FLEX4 · FLEX5 · GND`
 """
     )
 
@@ -1053,7 +1054,7 @@ def route_with_freerouting(pcb_path: Path = OUT_PCB) -> bool:
     cmd = [
         "java", "-jar", str(jar),
         "-de", str(dsn), "-do", str(ses),
-        "-mp", "400", "-mt", "1", "-dct", "0",
+        "-mp", "600", "-mt", "1", "-dct", "0",
     ]
     print("Freerouting…")
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
@@ -1123,7 +1124,7 @@ def fix_tight_clearances(pcb_path: Path = OUT_PCB, min_clr: float = 0.20):
 
 
 def main():
-    print("Building SignSpeak Smart Glove Rev E…")
+    print("Building SignSpeak Smart Glove Rev F (56×38 mm)…")
     build_board.USE_BUILTIN_ROUTER = False
     board = build_board()
     pcbnew.SaveBoard(str(OUT_PCB), board)
