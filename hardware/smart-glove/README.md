@@ -1,6 +1,6 @@
-# SignSpeak Smart Glove — MCU PCB (Rev G)
+# SignSpeak Smart Glove — MCU PCB (Rev H)
 
-**Man Who Embed** · **60×45 mm** glove-back · ESP32 · **5× flex** · MPU-6050 · TP4056 · AMS1117 · USB-C · **UART prog**
+**Man Who Embed** · **72×52 mm** · ESP32 · **USB-C+CH340** · **DW01 protect** · 5× flex · MPU-6050 · 1.55 mm FR4
 
 ## Rebuild
 
@@ -9,14 +9,13 @@ python3 build_complete_schematic.py
 python3 build_production_v2.py
 ```
 
-Fab: [`fab/SignSpeak_SmartGlove_RevG_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevG_Gerbers.zip)
+Fab: [`fab/SignSpeak_SmartGlove_RevH_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevH_Gerbers.zip)
 
-### Mounting
-- Top edge → toward fingers (antenna keep-out)
-- Bottom edge → toward wrist (USB-C + LiPo + UART + flex)
+Firmware: [`../../firmware/signspeak_glove/`](../../firmware/signspeak_glove/)
 
-### Flex J2 (1×7)
-`3V3 · FLEX1 · FLEX2 · FLEX3 · FLEX4 · FLEX5 · GND`
+### Docs
+- [COMPLIANCE](docs/COMPLIANCE.md) · [ASSEMBLY](docs/ASSEMBLY.md) · [RF_MOUNTING](docs/RF_MOUNTING.md)
 
-### UART J4 (1×4) — code upload
-`3V3 · TX · RX · GND` → USB–UART dongle (cross TX/RX)
+### Upload
+Laptop → **USB-C** (CH340) → Arduino upload + Serial Monitor @ 115200  
+Backup: **J4** UART header

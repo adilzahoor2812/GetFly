@@ -82,6 +82,48 @@ def pin_map(lib_file: Path, name: str, ox: float, oy: float) -> dict[str, tuple[
     return pins
 
 
+def dw01_symbol() -> str:
+    return '''(symbol "Device:DW01A" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
+    (property "Reference" "U" (at -5.08 6.35 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "DW01A" (at -5.08 3.81 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-6" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+    (symbol "DW01A_0_1"
+      (rectangle (start -5.08 3.81) (end 5.08 -3.81)
+        (stroke (width 0.254) (type default)) (fill (type background)))
+    )
+    (symbol "DW01A_1_1"
+      (pin passive line (at -7.62 2.54 0) (length 2.54) (name "OD" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at -7.62 0 0) (length 2.54) (name "CS" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at -7.62 -2.54 0) (length 2.54) (name "OC" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 7.62 -2.54 180) (length 2.54) (name "TD" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 7.62 0 180) (length 2.54) (name "VCC" (effects (font (size 1.27 1.27)))) (number "5" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 7.62 2.54 180) (length 2.54) (name "GND" (effects (font (size 1.27 1.27)))) (number "6" (effects (font (size 1.27 1.27)))))
+    )
+  )'''
+
+
+def fs8205_symbol() -> str:
+    return '''(symbol "Device:FS8205A" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
+    (property "Reference" "U" (at -5.08 7.62 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "FS8205A" (at -5.08 5.08 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:TSSOP-8_3x3mm_P0.65mm" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+    (symbol "FS8205A_0_1"
+      (rectangle (start -5.08 5.08) (end 5.08 -5.08)
+        (stroke (width 0.254) (type default)) (fill (type background)))
+    )
+    (symbol "FS8205A_1_1"
+      (pin passive line (at -7.62 3.81 0) (length 2.54) (name "S1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at -7.62 1.27 0) (length 2.54) (name "G1" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at -7.62 -1.27 0) (length 2.54) (name "D1" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at -7.62 -3.81 0) (length 2.54) (name "D2" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 7.62 -3.81 180) (length 2.54) (name "D2" (effects (font (size 1.27 1.27)))) (number "5" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 7.62 -1.27 180) (length 2.54) (name "D1" (effects (font (size 1.27 1.27)))) (number "6" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 7.62 1.27 180) (length 2.54) (name "G2" (effects (font (size 1.27 1.27)))) (number "7" (effects (font (size 1.27 1.27)))))
+      (pin passive line (at 7.62 3.81 180) (length 2.54) (name "S2" (effects (font (size 1.27 1.27)))) (number "8" (effects (font (size 1.27 1.27)))))
+    )
+  )'''
+
+
 def tp4056_symbol() -> str:
     return '''(symbol "GetFly:TP4056" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
     (property "Reference" "U" (at -7.62 8.89 0) (effects (font (size 1.27 1.27))))
@@ -206,6 +248,7 @@ def build() -> str:
     libs.append(extract_symbol(SYM / "Connector_Generic.kicad_sym", "Conn_01x02"))
     libs.append(extract_symbol(SYM / "Connector.kicad_sym", "USB_C_Receptacle"))
     libs.append(extract_symbol(SYM / "RF_Module.kicad_sym", "ESP32-WROOM-32E"))
+    libs.append(extract_symbol(SYM / "Interface_USB.kicad_sym", "CH340C"))
     # Embed under Device: to avoid "modified in library" warnings against Regulator_Linear
     ams = extract_symbol(SYM / "Regulator_Linear.kicad_sym", "AP1117-15")
     ams = ams.replace("Regulator_Linear:AP1117-15", "Device:AMS1117-3.3")
@@ -215,13 +258,15 @@ def build() -> str:
     libs.append(extract_symbol(SYM / "Sensor_Motion.kicad_sym", "MPU-6050"))
     # Avoid missing-lib warning: embed as Device:TP4056
     libs.append(tp4056_symbol().replace("GetFly:TP4056", "Device:TP4056"))
+    libs.append(dw01_symbol())
+    libs.append(fs8205_symbol())
 
     s = Sch()
-    s.text("SignSpeak Smart Glove — Complete Schematic (Rev G)", 25.4, 12.7, 2.54)
-    s.text("Man Who Embed · USB-C · UART · TP4056 · AMS1117 · ESP32 · MPU-6050 · 5× Flex", 25.4, 16.51, 1.27)
+    s.text("SignSpeak Smart Glove — Complete Schematic (Rev H)", 25.4, 12.7, 2.54)
+    s.text("Man Who Embed · USB-C+CH340 · DW01 protect · ESP32 · MPU-6050 · 5× Flex", 25.4, 16.51, 1.27)
 
     # ---- USB-C ----
-    s.text("1) USB-C Power/CC", 25.4, 25.4, 1.8)
+    s.text("1) USB-C Power/CC + Data", 25.4, 25.4, 1.8)
     j1x, j1y = g(55.88), g(60.96)
     s.inst("Connector:USB_C_Receptacle", "J1", "USB-C", j1x, j1y,
            "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12")
@@ -229,20 +274,43 @@ def build() -> str:
     s.glabel_on_pins(usb, {
         "A4": "+5V", "A9": "+5V", "B4": "+5V", "B9": "+5V",
         "A5": "CC1", "B5": "CC2",
+        "A6": "USB_DP", "B6": "USB_DP",
+        "A7": "USB_DM", "B7": "USB_DM",
         "A1": "GND", "A12": "GND", "B1": "GND", "B12": "GND",
         "S1": "GND",
     })
-    # Leave SBU (A8/B8) and unused USB data/SSTX/SSRX pins unconnected
+    # Leave SBU / SS unused
     s.nc_pins(usb, [
-        "A2", "A3", "A6", "A7", "A8", "A10", "A11",
-        "B2", "B3", "B6", "B7", "B8", "B10", "B11",
+        "A2", "A3", "A8", "A10", "A11",
+        "B2", "B3", "B8", "B10", "B11",
     ])
 
     s.resistor_to_gnd("R6", "5.1k", 95.25, 40.64, "CC1")
     s.resistor_to_gnd("R7", "5.1k", 106.68, 40.64, "CC2")
 
+    # ---- CH340C USB-UART ----
+    s.text("1b) CH340C USB-UART (laptop flash/serial)", 25.4, 85.0, 1.8)
+    u5x, u5y = g(55.88), g(100.0)
+    s.inst("Interface_USB:CH340C", "U5", "CH340C", u5x, u5y,
+           "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm")
+    ch = pin_map(SYM / "Interface_USB.kicad_sym", "CH340C", u5x, u5y)
+    s.glabel_on_pins(ch, {
+        "1": "GND", "2": "UART_RX", "3": "UART_TX", "4": "CH340_3V3",
+        "5": "USB_DP", "6": "USB_DM", "13": "DTR", "14": "RTS", "16": "+5V",
+    })
+    s.nc_pins(ch, ["7", "8", "9", "10", "11", "12", "15"])
+    s.cap_to_gnd("C13", "100nF", 90.0, 95.0, "CH340_3V3")
+    s.cap_to_gnd("C14", "100nF", 105.0, 95.0, "+5V")
+    # Auto-program: DTR/RTS AC-coupled into EN/BOOT
+    x, y = s.inst("Device:C", "C11", "100nF", 90.0, 110.0, "Capacitor_SMD:C_0603_1608Metric")
+    s.label("DTR", x, y - 3.81, 90)
+    s.label("EN", x, y + 3.81, 270)
+    x, y = s.inst("Device:C", "C12", "100nF", 105.0, 110.0, "Capacitor_SMD:C_0603_1608Metric")
+    s.label("RTS", x, y - 3.81, 90)
+    s.label("BOOT", x, y + 3.81, 270)
+
     # ---- TP4056 ----
-    s.text("2) LiPo Charger (TP4056)", 130.0, 25.4, 1.8)
+    s.text("2) LiPo Charger (TP4056) + Pack Protect", 130.0, 25.4, 1.8)
     u2x, u2y = g(152.4), g(50.8)
     s.inst("Device:TP4056", "U2", "TP4056", u2x, u2y, "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")
     # Custom symbol pins — apply same Y flip as library symbols (oy - py)
@@ -258,11 +326,36 @@ def build() -> str:
     s.resistor_to_gnd("R8", "1.2k", 180.0, 50.8, "TP_PROG")
     s.led_series("D2", "LED-CHRG", 195.58, 45.72, "+5V", "CHRG")
 
+    # DW01A + FS8205A on battery negative path
+    s.text("2b) DW01A + FS8205A protect", 230.0, 25.4, 1.5)
+    u6x, u6y = g(250.0), g(50.8)
+    s.inst("Device:DW01A", "U6", "DW01A", u6x, u6y, "Package_TO_SOT_SMD:SOT-23-6")
+    s.label("GATE_P", u6x - 7.62, u6y - 2.54, 0)  # OD
+    s.label("BAT_N", u6x - 7.62, u6y - 0.0, 0)    # CS
+    s.label("GATE_P", u6x - 7.62, u6y + 2.54, 0)  # OC
+    s.nc(u6x + 7.62, u6y + 2.54)                  # TD
+    s.label("DW01_VCC", u6x + 7.62, u6y - 0.0, 180)  # VCC via R12
+    s.label("BAT_N", u6x + 7.62, u6y - 2.54, 180)    # GND
+    x, y = s.inst("Device:R", "R12", "1k", 280.0, 45.0, "Resistor_SMD:R_0603_1608Metric")
+    s.label("+BAT", x, y - 3.81, 90)
+    s.label("DW01_VCC", x, y + 3.81, 270)
+    u7x, u7y = g(250.0), g(80.0)
+    s.inst("Device:FS8205A", "U7", "FS8205A", u7x, u7y, "Package_SO:TSSOP-8_3x3mm_P0.65mm")
+    s.label("BAT_N", u7x - 7.62, u7y - 3.81, 0)   # S1
+    s.label("GATE_P", u7x - 7.62, u7y - 1.27, 0)  # G1
+    s.label("GND", u7x - 7.62, u7y + 1.27, 0)     # D1
+    s.label("GND", u7x - 7.62, u7y + 3.81, 0)     # D2
+    s.label("GND", u7x + 7.62, u7y + 3.81, 180)   # D2
+    s.label("GND", u7x + 7.62, u7y + 1.27, 180)   # D1
+    s.label("GATE_P", u7x + 7.62, u7y - 1.27, 180)  # G2
+    s.label("BAT_N", u7x + 7.62, u7y - 3.81, 180)   # S2
+    s.cap_to_gnd("C15", "100nF", 280.0, 70.0, "DW01_VCC")
+
     j3x, j3y = g(215.9), g(55.88)
     s.inst("Connector_Generic:Conn_01x02", "J3", "LiPo", j3x, j3y,
            "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical")
-    s.label("+BAT", j3x - 5.08, j3y - 0.0, 0)          # local y=0
-    s.label("GND", j3x - 5.08, j3y - (-2.54), 0)       # local y=-2.54 → oy-py
+    s.label("+BAT", j3x - 5.08, j3y - 0.0, 0)
+    s.label("BAT_N", j3x - 5.08, j3y - (-2.54), 0)
 
     # ---- AMS1117 ----
     s.text("3) 3.3V Regulator (AMS1117)", 25.4, 110.0, 1.8)
@@ -383,9 +476,9 @@ def build() -> str:
   (title_block
     (title "SignSpeak Smart Glove")
     (date "2026-07-18")
-    (rev "G")
+    (rev "H")
     (company "Man Who Embed")
-    (comment 1 "5× flex · ESP32 · UART prog · TP4056 · AMS1117 · MPU-6050 · USB-C")
+    (comment 1 "CH340 USB · DW01 protect · 5× flex · ESP32 · MPU-6050")
   )
   (lib_symbols
 {lib_block}
