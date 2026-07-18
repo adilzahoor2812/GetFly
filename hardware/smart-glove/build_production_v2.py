@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Smart Glove MCU — Production Rev D
+SignSpeak Smart Glove — Production Rev E (Man Who Embed)
 ==================================
 JLCPCB-oriented 2-layer board + ERC schematic + fab package.
 
@@ -568,15 +568,15 @@ def build_board():
 
     add_edge(board)
     # Silk away from edges / antenna graphic
-    add_text(board, "GetFly SmartGlove", 8, 9.0, 1.0)
-    add_text(board, "MCU Rev D", 8, 11.0, 0.85)
+    add_text(board, "SignSpeak Smart Glove", 8, 8.5, 1.0)
+    add_text(board, "Man Who Embed  Rev E", 8, 10.5, 0.8)
     add_text(board, "ANT KEEP OUT", 62, 9.0, 0.85)
 
     nets = {
         n: ensure_net(board, n)
         for n in [
             "GND", "3V3", "+5V", "+BAT",
-            "FLEX1", "FLEX2", "FLEX3", "FLEX4",
+            "FLEX1", "FLEX2", "FLEX3", "FLEX4", "FLEX5",
             "SDA", "SCL", "EN", "BOOT",
             "STAT_LED", "CHRG", "IMU_INT",
             "TP_PROG", "PWR_LED", "CC1", "CC2",
@@ -611,10 +611,11 @@ def build_board():
         48.0, 24.0, 0, strip_keepout=True, tight_crt=(20.0, 28.0),
     )
 
-    # Flex dividers (upper-left) + connector (below lane band)
-    for i, ref in enumerate(("R1", "R2", "R3", "R4")):
+    # Flex dividers (upper-left) + 1x7 connector for 5 sensors (below lane band)
+    for i, ref in enumerate(("R1", "R2", "R3", "R4", "R11")):
         add("Resistor_SMD.pretty", "R_0603_1608Metric", ref, "10k", 16.0, 16.0 + i * 4.0, 0)
-    j2 = add("Connector_PinHeader_2.54mm.pretty", "PinHeader_1x06_P2.54mm_Vertical", "J2", "FLEX", 8.0, 56.0, 0)
+    # Pin1 at y=50 → pin7 at y=65.24 (keeps edge clearance on 72 mm board)
+    j2 = add("Connector_PinHeader_2.54mm.pretty", "PinHeader_1x07_P2.54mm_Vertical", "J2", "FLEX", 8.0, 50.0, 0)
 
     # Power (upper-right, above lane band) / IMU (below lane band)
     u2 = add("Package_SO.pretty", "SOIC-8_3.9x4.9mm_P1.27mm", "U2", "TP4056", 80.0, 18.0, 0)
@@ -657,17 +658,17 @@ def build_board():
             pass
 
     # ---- Net assignment ----
-    # ESP32-WROOM-32E: IO22 = pin 36 = SCL; pin 37 unused (NC)
+    # ESP32-WROOM-32E: IO22=pin36=SCL; IO32=pin8=FLEX5; pin37 NC
     for n, netn in {
         "1": "GND", "2": "3V3", "3": "EN",
-        "4": "FLEX1", "5": "FLEX2", "6": "FLEX3", "7": "FLEX4",
+        "4": "FLEX1", "5": "FLEX2", "6": "FLEX3", "7": "FLEX4", "8": "FLEX5",
         "15": "GND", "24": "STAT_LED", "25": "BOOT",
         "31": "IMU_INT", "33": "SDA", "36": "SCL",
         "38": "GND", "39": "GND",
     }.items():
         connect(u1, n, nets[netn])
 
-    for i, netn in enumerate(["3V3", "FLEX1", "FLEX2", "FLEX3", "FLEX4", "GND"], 1):
+    for i, netn in enumerate(["3V3", "FLEX1", "FLEX2", "FLEX3", "FLEX4", "FLEX5", "GND"], 1):
         connect(j2, str(i), nets[netn])
     connect(j3, "1", nets["+BAT"])
     connect(j3, "2", nets["GND"])
@@ -703,7 +704,10 @@ def build_board():
     }.items():
         connect(u4, n, nets[netn])
 
-    for ref, flex in (("R1", "FLEX1"), ("R2", "FLEX2"), ("R3", "FLEX3"), ("R4", "FLEX4")):
+    for ref, flex in (
+        ("R1", "FLEX1"), ("R2", "FLEX2"), ("R3", "FLEX3"),
+        ("R4", "FLEX4"), ("R11", "FLEX5"),
+    ):
         connect(parts[ref], "1", nets[flex])
         connect(parts[ref], "2", nets["GND"])
 
@@ -744,7 +748,8 @@ def build_board():
         by_net = collect_pads_by_net(board)
         order = [
             ("+5V", TRACK_PWR), ("+BAT", TRACK_PWR), ("3V3", TRACK_PWR),
-            ("FLEX1", TRACK_SIG), ("FLEX2", TRACK_SIG), ("FLEX3", TRACK_SIG), ("FLEX4", TRACK_SIG),
+            ("FLEX1", TRACK_SIG), ("FLEX2", TRACK_SIG), ("FLEX3", TRACK_SIG),
+            ("FLEX4", TRACK_SIG), ("FLEX5", TRACK_SIG),
             ("SDA", TRACK_SIG), ("SCL", TRACK_SIG), ("EN", TRACK_SIG), ("BOOT", TRACK_SIG),
             ("STAT_LED", TRACK_SIG), ("CHRG", TRACK_SIG), ("IMU_INT", TRACK_SIG),
             ("TP_PROG", TRACK_SIG), ("PWR_LED", TRACK_SIG), ("CC1", TRACK_SIG), ("CC2", TRACK_SIG),
@@ -860,7 +865,7 @@ def export_gerbers():
          "--format", "excellon", "--excellon-units", "mm", str(OUT_PCB)],
         check=True,
     )
-    zpath = FAB / "SmartGlove_MCU_RevD_Gerbers.zip"
+    zpath = FAB / "SignSpeak_SmartGlove_RevE_Gerbers.zip"
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as zf:
         for p in sorted(GERBER.iterdir()):
             zf.write(p, p.name)
@@ -895,7 +900,7 @@ def summarize(path: Path, kind: str) -> str:
     for line in text.splitlines():
         if line.startswith("[") and "]:" in line:
             types[line[1 : line.index("]")]] += 1
-    lines = [f"# {kind} Summary — Rev D", f"File: `{path.name}`", ""]
+    lines = [f"# {kind} Summary — SignSpeak Rev E", f"File: `{path.name}`", ""]
     m = re.search(r"Found (\d+) DRC", text)
     m2 = re.search(r"ERC messages:\s*(\d+)\s*Errors\s*(\d+)\s*Warnings\s*(\d+)", text)
     if m:
@@ -962,7 +967,9 @@ def write_fab_docs(drc_text, erc_text):
         pass
     ready = err_n == 0 and unc_n == 0
     (FAB / "FABRICATION.md").write_text(
-        f"""# Smart Glove MCU — Fabrication (Rev D)
+        f"""# SignSpeak Smart Glove — Fabrication (Rev E)
+
+Company: **Man Who Embed**
 
 ## Status
 - ERC: {erc_line.group(0) if erc_line else "see report"}
@@ -971,32 +978,37 @@ def write_fab_docs(drc_text, erc_text):
 - Production gate: {"PASS — OK to order 5 pcs prototype" if ready else "FAIL — fix DRC/unconnected before fab"}
 
 ## Board
+- Name: SignSpeak Smart Glove
 - Size: {BOARD_W:.0f} × {BOARD_H:.0f} mm · 2-layer · 1.6 mm FR4
 - Finish: ENIG or HASL (JLCPCB)
 - Min track/clearance: 0.15 mm · Min drill: 0.20 mm
+- 5× flex sensors on J2 (1×7): 3V3, FLEX1…FLEX5, GND
 - GND zones filled on F.Cu / B.Cu
-- Signals/power: Freerouting autoroute, then zone fill (`build_production_v2.py`)
+- Rebuild: `python3 build_production_v2.py`
 
 ## Files
-- `SmartGlove_MCU_RevD_Gerbers.zip`
+- `SignSpeak_SmartGlove_RevE_Gerbers.zip`
 - `BOM-JLCPCB.csv` / `CPL-top.csv`
+
+## Flex connector J2
+1=3V3 · 2=FLEX1 · 3=FLEX2 · 4=FLEX3 · 5=FLEX4 · 6=FLEX5 · 7=GND
 
 ## Bring-up
 1. Continuity: no shorts on GND / 3V3 / +5V / +BAT
 2. USB → TP4056 → battery → AMS1117 → 3V3
 3. Flash ESP32 via USB-UART (BOOT/EN)
-4. Flex ADC + MPU-6050 I2C
+4. 5× flex ADC + MPU-6050 I2C
 
 USB-C is power/charge oriented (CC 5.1k). Keep metal clear of antenna keep-out band.
 """
     )
     (FAB / "ERC_DRC_COMPILE_REPORT.md").write_text(
-        f"# ERC / DRC Compile — Rev D\n\n## ERC\n```\n{erc_text[:2000]}\n```\n\n## DRC\n```\n{drc_text[:4000]}\n```\n"
+        f"# ERC / DRC Compile — SignSpeak Rev E\n\n## ERC\n```\n{erc_text[:2000]}\n```\n\n## DRC\n```\n{drc_text[:4000]}\n```\n"
     )
     (ROOT / "README.md").write_text(
-        f"""# GetFly Smart Glove — MCU PCB (Rev D)
+        f"""# SignSpeak Smart Glove — MCU PCB (Rev E)
 
-ESP32-WROOM-32E · 4× flex · MPU-6050 · TP4056 · AMS1117-3.3 · USB-C
+**Man Who Embed** · ESP32-WROOM-32E · **5× flex** · MPU-6050 · TP4056 · AMS1117-3.3 · USB-C
 
 ## Schematic (complete)
 
@@ -1004,18 +1016,18 @@ ESP32-WROOM-32E · 4× flex · MPU-6050 · TP4056 · AMS1117-3.3 · USB-C
 python3 build_complete_schematic.py
 ```
 
-Full schematic with all production parts. ERC gate: 0 errors.
-
 ## Rebuild PCB + fab package
 
 ```bash
 python3 build_production_v2.py
 ```
 
-Fab package: [`fab/`](fab/) ({BOARD_W:.0f}×{BOARD_H:.0f} mm, 2-layer).  
-Production gate documented in [`fab/FABRICATION.md`](fab/FABRICATION.md).
+Fab: [`fab/SignSpeak_SmartGlove_RevE_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevE_Gerbers.zip)  
+({BOARD_W:.0f}×{BOARD_H:.0f} mm, 2-layer). See [`fab/FABRICATION.md`](fab/FABRICATION.md).
 
-Net parity: ESP32 pin 36 = SCL · MPU REGOUT → C10 2.2 µF · USB SBU NC.
+### Flex J2 (1×7)
+`3V3 · FLEX1 · FLEX2 · FLEX3 · FLEX4 · FLEX5 · GND`  
+ESP32: FLEX1–4 → pins 4–7 (GPIO36/39/34/35), FLEX5 → pin 8 (GPIO32).
 """
     )
 
@@ -1111,7 +1123,7 @@ def fix_tight_clearances(pcb_path: Path = OUT_PCB, min_clr: float = 0.20):
 
 
 def main():
-    print("Building Rev D…")
+    print("Building SignSpeak Smart Glove Rev E…")
     build_board.USE_BUILTIN_ROUTER = False
     board = build_board()
     pcbnew.SaveBoard(str(OUT_PCB), board)

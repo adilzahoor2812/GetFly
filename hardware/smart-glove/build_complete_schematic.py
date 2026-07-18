@@ -201,7 +201,7 @@ def build() -> str:
     for name in ("R", "C", "LED"):
         libs.append(extract_symbol(SYM / "Device.kicad_sym", name))
     libs.append(extract_symbol(SYM / "Switch.kicad_sym", "SW_Push"))
-    libs.append(extract_symbol(SYM / "Connector_Generic.kicad_sym", "Conn_01x06"))
+    libs.append(extract_symbol(SYM / "Connector_Generic.kicad_sym", "Conn_01x07"))
     libs.append(extract_symbol(SYM / "Connector_Generic.kicad_sym", "Conn_01x02"))
     libs.append(extract_symbol(SYM / "Connector.kicad_sym", "USB_C_Receptacle"))
     libs.append(extract_symbol(SYM / "RF_Module.kicad_sym", "ESP32-WROOM-32E"))
@@ -216,8 +216,8 @@ def build() -> str:
     libs.append(tp4056_symbol().replace("GetFly:TP4056", "Device:TP4056"))
 
     s = Sch()
-    s.text("GetFly Smart Glove MCU — Complete Schematic (Rev D)", 25.4, 12.7, 2.54)
-    s.text("USB-C · TP4056 · AMS1117-3.3 · ESP32-WROOM-32E · MPU-6050 · Flex", 25.4, 16.51, 1.27)
+    s.text("SignSpeak Smart Glove — Complete Schematic (Rev E)", 25.4, 12.7, 2.54)
+    s.text("Man Who Embed · USB-C · TP4056 · AMS1117 · ESP32 · MPU-6050 · 5× Flex", 25.4, 16.51, 1.27)
 
     # ---- USB-C ----
     s.text("1) USB-C Power/CC", 25.4, 25.4, 1.8)
@@ -280,13 +280,13 @@ def build() -> str:
     esp = pin_map(SYM / "RF_Module.kicad_sym", "ESP32-WROOM-32E", u1x, u1y)
     s.glabel_on_pins(esp, {
         "1": "GND", "2": "3V3", "3": "EN",
-        "4": "FLEX1", "5": "FLEX2", "6": "FLEX3", "7": "FLEX4",
+        "4": "FLEX1", "5": "FLEX2", "6": "FLEX3", "7": "FLEX4", "8": "FLEX5",
         "15": "GND", "24": "STAT_LED", "25": "BOOT",
         "31": "IMU_INT", "33": "SDA", "36": "SCL", "38": "GND", "39": "GND",
     })
     # Only flag unused pins that are NOT already electrical type no_connect
     s.nc_pins(esp, [
-        "8", "9", "10", "11", "12", "13", "14", "16", "23",
+        "9", "10", "11", "12", "13", "14", "16", "23",
         "26", "27", "28", "29", "30", "34", "35", "37",
     ])
     s.cap_to_gnd("C1", "100nF", 230.0, 120.0, "3V3")
@@ -316,14 +316,20 @@ def build() -> str:
     # D1 cathode GND via label — also need power flag path; label GND is enough with power symbols
     s.led_series("D3", "LED-STAT", 165.0, 195.58, "STAT_LED", "GND")
 
-    # ---- Flex ----
-    s.text("6) Flex Sensor Header + Dividers", 25.4, 220.0, 1.8)
+    # ---- Flex (5 sensors: thumb + 4 fingers) ----
+    s.text("6) Flex Sensor Header + Dividers (5×)", 25.4, 220.0, 1.8)
     j2x, j2y = g(50.8), g(245.0)
-    s.inst("Connector_Generic:Conn_01x06", "J2", "FLEX", j2x, j2y,
-           "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical")
-    j2 = pin_map(SYM / "Connector_Generic.kicad_sym", "Conn_01x06", j2x, j2y)
-    s.glabel_on_pins(j2, {"1": "3V3", "2": "FLEX1", "3": "FLEX2", "4": "FLEX3", "5": "FLEX4", "6": "GND"})
-    for i, (ref, net) in enumerate((("R1", "FLEX1"), ("R2", "FLEX2"), ("R3", "FLEX3"), ("R4", "FLEX4"))):
+    s.inst("Connector_Generic:Conn_01x07", "J2", "FLEX", j2x, j2y,
+           "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical")
+    j2 = pin_map(SYM / "Connector_Generic.kicad_sym", "Conn_01x07", j2x, j2y)
+    s.glabel_on_pins(j2, {
+        "1": "3V3", "2": "FLEX1", "3": "FLEX2", "4": "FLEX3",
+        "5": "FLEX4", "6": "FLEX5", "7": "GND",
+    })
+    for i, (ref, net) in enumerate((
+        ("R1", "FLEX1"), ("R2", "FLEX2"), ("R3", "FLEX3"),
+        ("R4", "FLEX4"), ("R11", "FLEX5"),
+    )):
         s.resistor_to_gnd(ref, "10k", 80.0 + i * 15.24, 245.0, net)
 
     # ---- MPU ----
@@ -363,11 +369,11 @@ def build() -> str:
   (uuid "{uid()}")
   (paper "A2")
   (title_block
-    (title "GetFly Smart Glove MCU")
+    (title "SignSpeak Smart Glove")
     (date "2026-07-18")
-    (rev "D")
-    (company "GetFly")
-    (comment 1 "Complete schematic: ESP32 / TP4056 / AMS1117 / MPU-6050 / Flex / USB-C")
+    (rev "E")
+    (company "Man Who Embed")
+    (comment 1 "5× flex · ESP32 · TP4056 · AMS1117 · MPU-6050 · USB-C")
   )
   (lib_symbols
 {lib_block}

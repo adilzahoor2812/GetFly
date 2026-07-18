@@ -1,4 +1,6 @@
-# Production Netlist — Smart Glove MCU Rev A
+# Production Netlist — SignSpeak Smart Glove Rev E
+
+Company: Man Who Embed
 
 ## Power
 
@@ -12,12 +14,16 @@ USB-C VBUS ──► U2 TP4056 VCC
 USB-C GND / LiPo- / U2 GND / U3 GND ──► GND pour
 ```
 
-## Flex channels
+## Flex channels (5 sensors)
 
 ```
-J2-1 3V3 ──► Flex sensor HI (off-board)
-Flex sense node ──► J2-2..5 (FLEX1..4) ──► ESP32 GPIO36/39/34/35
-                 └─► R1..R4 10k ──► GND
+J2-1 3V3 ──► all flex sensor HI (shared)
+J2-2 FLEX1 ──► ESP32 GPIO36 (pin 4)  + R1 10k ── GND
+J2-3 FLEX2 ──► ESP32 GPIO39 (pin 5)  + R2 10k ── GND
+J2-4 FLEX3 ──► ESP32 GPIO34 (pin 6)  + R3 10k ── GND
+J2-5 FLEX4 ──► ESP32 GPIO35 (pin 7)  + R4 10k ── GND
+J2-6 FLEX5 ──► ESP32 GPIO32 (pin 8)  + R11 10k ── GND
+J2-7 GND
 ```
 
 ## IMU
@@ -35,8 +41,8 @@ U4 MPU-6050
 ## Controls / LEDs
 
 ```
-SW1 BOOT ── IO0 to GND (momentary), R10 10k pullup to 3V3
-SW2 EN/RST ── EN to GND (momentary), R9 10k pullup to 3V3
+SW1 BOOT ── IO0 to GND, R10 10k pullup to 3V3
+SW2 EN/RST ── EN to GND, R9 10k pullup to 3V3
 D1 power LED via R5 from 3V3
 D2 CHRG from TP4056 CHRG
 D3 status on IO2
