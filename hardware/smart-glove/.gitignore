@@ -4,3 +4,7 @@ __pycache__/
 *-backups/
 *.lck
 _lib_symbols_snip.txt
+fab/logs/
+logs/
+fab/DRC_tmp.txt
+__pycache__/

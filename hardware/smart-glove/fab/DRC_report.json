@@ -1,10 +1,26 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-07-18T21:31:11+0000",
+    "date": "2026-07-18T22:23:41+0000",
     "kicad_version": "8.0.9",
     "schematic_parity": [],
     "source": "smart-glove.kicad_pcb",
     "unconnected_items": [],
-    "violations": []
+    "violations": [
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB Text 'SignSpeak Smart Glove' on F.Silkscreen",
+                    "pos": {
+                        "x": 12.0,
+                        "y": 3.2
+                    },
+                    "uuid": "3dade446-0493-4b2e-b7b9-d8b63768b890"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        }
+    ]
 }

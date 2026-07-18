@@ -1,22 +1,19 @@
-# SignSpeak Smart Glove — MCU PCB (Rev E)
+# SignSpeak Smart Glove — MCU PCB (Rev F)
 
-**Man Who Embed** · ESP32-WROOM-32E · **5× flex** · MPU-6050 · TP4056 · AMS1117-3.3 · USB-C
+**Man Who Embed** · **75×52 mm** glove-back · ESP32 · **5× flex** · MPU-6050 · TP4056 · AMS1117 · USB-C
 
-## Schematic (complete)
+## Rebuild
 
 ```bash
 python3 build_complete_schematic.py
-```
-
-## Rebuild PCB + fab package
-
-```bash
 python3 build_production_v2.py
 ```
 
-Fab: [`fab/SignSpeak_SmartGlove_RevE_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevE_Gerbers.zip)  
-(95×72 mm, 2-layer). See [`fab/FABRICATION.md`](fab/FABRICATION.md).
+Fab: [`fab/SignSpeak_SmartGlove_RevF_Gerbers.zip`](fab/SignSpeak_SmartGlove_RevF_Gerbers.zip)
+
+### Mounting
+- Top edge → toward fingers (flex cable + antenna keep-out)
+- Bottom edge → toward wrist (USB-C + LiPo JST)
 
 ### Flex J2 (1×7)
-`3V3 · FLEX1 · FLEX2 · FLEX3 · FLEX4 · FLEX5 · GND`  
-ESP32: FLEX1–4 → pins 4–7 (GPIO36/39/34/35), FLEX5 → pin 8 (GPIO32).
+`3V3 · FLEX1 · FLEX2 · FLEX3 · FLEX4 · FLEX5 · GND`

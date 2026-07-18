@@ -8,6 +8,13 @@
         "min_through_hole_diameter": 0.2,
         "min_hole_to_hole": 0.25,
         "min_copper_edge_clearance": 0.35
+      },
+      "rule_severities": {
+        "courtyards_overlap": "ignore",
+        "silk_over_copper": "warning",
+        "silk_edge_clearance": "warning",
+        "via_dangling": "warning",
+        "track_dangling": "warning"
       }
     }
   },

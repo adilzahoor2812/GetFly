@@ -1,8 +1,8 @@
-# ERC / DRC Compile — SignSpeak Rev E
+# ERC / DRC Compile — SignSpeak Rev F
 
 ## ERC
 ```
-ERC report (2026-07-18T21:31:11+0000, Encoding UTF8)
+ERC report (2026-07-18T22:23:41+0000, Encoding UTF8)
 
 ***** Sheet /
 [lib_symbol_issues]: Symbol 'TP4056' not found in symbol library 'Device'
@@ -19,9 +19,12 @@ ERC report (2026-07-18T21:31:11+0000, Encoding UTF8)
 ## DRC
 ```
 ** Drc report for smart-glove.kicad_pcb **
-** Created on 2026-07-18T21:31:10+0000 **
+** Created on 2026-07-18T22:23:40+0000 **
 
-** Found 0 DRC violations **
+** Found 1 DRC violations **
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(12.0000 mm, 3.2000 mm): PCB Text 'SignSpeak Smart Glove' on F.Silkscreen
 
 ** Found 0 unconnected pads **
 

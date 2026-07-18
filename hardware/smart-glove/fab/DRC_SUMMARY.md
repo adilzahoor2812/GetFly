@@ -1,6 +1,7 @@
-# DRC Summary — SignSpeak Rev E
+# DRC Summary — SignSpeak Rev F
 File: `DRC_report.txt`
 
-Found: 0 DRC violations
+Found: 1 DRC violations
 
 ## By type
+- silk_over_copper: 1

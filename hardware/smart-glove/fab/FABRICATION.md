@@ -1,24 +1,24 @@
-# SignSpeak Smart Glove — Fabrication (Rev E)
+# SignSpeak Smart Glove — Fabrication (Rev F)
 
 Company: **Man Who Embed**
 
 ## Status
 - ERC: ERC messages: 2  Errors 0  Warnings 2
-- DRC violations: 0 (errors: 0)
+- DRC violations: 1 (errors: 0)
 - Unconnected items: 0
 - Production gate: PASS — OK to order 5 pcs prototype
 
 ## Board
 - Name: SignSpeak Smart Glove
-- Size: 95 × 72 mm · 2-layer · 1.6 mm FR4
+- Size: **75 × 52 mm** (compact glove-back) · 2-layer · 1.6 mm FR4
+- Orientation: top/finger edge = flex + antenna · bottom/wrist = USB-C + LiPo
 - Finish: ENIG or HASL (JLCPCB)
 - Min track/clearance: 0.15 mm · Min drill: 0.20 mm
-- 5× flex sensors on J2 (1×7): 3V3, FLEX1…FLEX5, GND
-- GND zones filled on F.Cu / B.Cu
+- 5× flex on J2 (1×7): 3V3, FLEX1…FLEX5, GND
 - Rebuild: `python3 build_production_v2.py`
 
 ## Files
-- `SignSpeak_SmartGlove_RevE_Gerbers.zip`
+- `SignSpeak_SmartGlove_RevF_Gerbers.zip`
 - `BOM-JLCPCB.csv` / `CPL-top.csv`
 
 ## Flex connector J2
