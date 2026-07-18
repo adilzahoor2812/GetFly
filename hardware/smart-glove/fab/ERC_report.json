@@ -1,119 +1,13 @@
 {
     "$schema": "https://schemas.kicad.org/erc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-07-18T17:32:45+0000",
+    "date": "2026-07-18T20:07:00+0000",
     "kicad_version": "8.0.9",
     "sheets": [
         {
             "path": "/",
-            "uuid_path": "/aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
-            "violations": [
-                {
-                    "description": "Pin not connected",
-                    "items": [
-                        {
-                            "description": "Symbol #PWR03 Hidden pin 1 [+5V, Power input, Line]",
-                            "pos": {
-                                "x": 1.778,
-                                "y": 0.508
-                            },
-                            "uuid": "00001390-eeee-4eee-8eee-000000001390"
-                        }
-                    ],
-                    "severity": "error",
-                    "type": "pin_not_connected"
-                },
-                {
-                    "description": "Pin not connected",
-                    "items": [
-                        {
-                            "description": "Symbol C1 Pin 1 [Passive, Line]",
-                            "pos": {
-                                "x": 1.2065,
-                                "y": 0.508
-                            },
-                            "uuid": "000013b6-eeee-4eee-8eee-0000000013b6"
-                        }
-                    ],
-                    "severity": "error",
-                    "type": "pin_not_connected"
-                },
-                {
-                    "description": "Pin not connected",
-                    "items": [
-                        {
-                            "description": "Symbol #PWR01 Hidden pin 1 [+3V3, Power input, Line]",
-                            "pos": {
-                                "x": 0.508,
-                                "y": 0.508
-                            },
-                            "uuid": "0000138a-eeee-4eee-8eee-00000000138a"
-                        }
-                    ],
-                    "severity": "error",
-                    "type": "pin_not_connected"
-                },
-                {
-                    "description": "Label not connected to anything",
-                    "items": [
-                        {
-                            "description": "Label 'FLEX3'",
-                            "pos": {
-                                "x": 1.4097,
-                                "y": 0.9144
-                            },
-                            "uuid": "000013ab-eeee-4eee-8eee-0000000013ab"
-                        }
-                    ],
-                    "severity": "error",
-                    "type": "label_dangling"
-                },
-                {
-                    "description": "Label not connected to anything",
-                    "items": [
-                        {
-                            "description": "Label 'FLEX4'",
-                            "pos": {
-                                "x": 1.7145,
-                                "y": 0.9144
-                            },
-                            "uuid": "000013b2-eeee-4eee-8eee-0000000013b2"
-                        }
-                    ],
-                    "severity": "error",
-                    "type": "label_dangling"
-                },
-                {
-                    "description": "Label not connected to anything",
-                    "items": [
-                        {
-                            "description": "Label 'FLEX1'",
-                            "pos": {
-                                "x": 0.8001,
-                                "y": 0.9144
-                            },
-                            "uuid": "0000139d-eeee-4eee-8eee-00000000139d"
-                        }
-                    ],
-                    "severity": "error",
-                    "type": "label_dangling"
-                },
-                {
-                    "description": "Label not connected to anything",
-                    "items": [
-                        {
-                            "description": "Label 'FLEX2'",
-                            "pos": {
-                                "x": 1.1049,
-                                "y": 0.9144
-                            },
-                            "uuid": "000013a4-eeee-4eee-8eee-0000000013a4"
-                        }
-                    ],
-                    "severity": "error",
-                    "type": "label_dangling"
-                }
-            ]
+            "uuid_path": "/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+            "violations": []
         }
     ],
     "source": "smart-glove.kicad_sch"

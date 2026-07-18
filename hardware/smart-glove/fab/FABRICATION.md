@@ -1,46 +1,26 @@
-# Smart Glove MCU — Fabrication Package (Rev A)
+# Smart Glove MCU — Fabrication (Rev D)
 
-## Board specs (JLCPCB / PCBWay ready)
+## Status
+- ERC: ERC messages: 0  Errors 0  Warnings 0
+- DRC violations: 0 (errors: 0)
+- Unconnected items: 0
+- Production gate: PASS — OK to order 5 pcs prototype
 
-| Parameter | Value |
-|-----------|-------|
-| Dimensions | 50.0 × 42.0 mm |
-| Layers | 2 (F.Cu + B.Cu) |
-| Thickness | 1.6 mm |
-| Copper | 1 oz (35 µm) |
-| Min track / clearance | 0.15 mm / 0.15 mm |
-| Min via | 0.45 mm / 0.3 mm drill |
-| Surface finish | ENIG or HASL Lead-Free |
-| Solder mask | Green (or black) |
-| Silkscreen | White |
-| Edge | Contour rout from Edge.Cuts |
+## Board
+- Size: 95 × 72 mm · 2-layer · 1.6 mm FR4
+- Finish: ENIG or HASL (JLCPCB)
+- Min track/clearance: 0.15 mm · Min drill: 0.20 mm
+- GND zones filled on F.Cu / B.Cu
+- Signals/power autorouted (Freerouting) then zone-filled; rebuild via `python3 build_production_v2.py`
 
-## Upload to JLCPCB
+## Files
+- `SmartGlove_MCU_RevD_Gerbers.zip`
+- `BOM-JLCPCB.csv` / `CPL-top.csv`
 
-1. Zip contents of `gerbers/`
-2. Upload zip → confirm layer mapping
-3. Optional SMT assembly: upload `BOM-JLCPCB.csv` + `CPL-top.csv`
-4. Order **5 pcs** prototype first
+## Bring-up
+1. Continuity: no shorts on GND / 3V3 / +5V / +BAT
+2. USB → TP4056 → battery → AMS1117 → 3V3
+3. Flash ESP32 via USB-UART (BOOT/EN)
+4. Flex ADC + MPU-6050 I2C
 
-## Included manufacturing outputs
-
-- Gerbers: F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, F.SilkS, B.SilkS, Edge.Cuts
-- Excellon drill
-- Pick-and-place (CPL) for top side
-- BOM with LCSC part numbers
-
-## Bring-up checklist
-
-1. Visual inspect / shorts on 5V, BAT, 3V3
-2. USB 5V present on TP4056 VCC
-3. Battery charge LED works
-4. 3V3 rail ≈ 3.3 V with AMS1117
-5. ESP32 USB-serial boot (hold BOOT)
-6. ADC read on FLEX1–4
-7. `i2cdetect` shows MPU-6050 at 0x68
-
-## Electrical notes
-
-- Flex sensors are **off-board**, wired to J2
-- USB data nets named USB_DP/USB_DN; for native ESP32 programming use an external USB-UART or ESP32-S3 redesign if you need native USB
-- Charge current ≈ 1000 mA with Rprog 1.2 kΩ — reduce for small LiPo (e.g. 4.7k ≈ 250 mA)
+USB-C is power/charge oriented (CC 5.1k). Keep metal clear of antenna keep-out band.

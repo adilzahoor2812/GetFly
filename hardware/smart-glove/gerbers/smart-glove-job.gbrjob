@@ -3,9 +3,9 @@
     "GenerationSoftware": {
       "Vendor": "KiCad",
       "Application": "Pcbnew",
-      "Version": "7.0.11+dfsg-1build4"
+      "Version": "8.0.9-8.0.9-0~ubuntu24.04.1"
     },
-    "CreationDate": "2026-07-18T16:48:01+00:00"
+    "CreationDate": "2026-07-18T20:06:58+00:00"
   },
   "GeneralSpecs": {
     "ProjectId": {
@@ -14,8 +14,8 @@
       "Revision": "rev?"
     },
     "Size": {
-      "X": 50.1,
-      "Y": 42.1
+      "X": 95.1,
+      "Y": 72.1
     },
     "LayerNumber": 2,
     "BoardThickness": 1.6,
@@ -24,12 +24,12 @@
   "DesignRules": [
     {
       "Layers": "Outer",
-      "PadToPad": 0.0,
-      "PadToTrack": 0.0,
+      "PadToPad": 0.2,
+      "PadToTrack": 0.2,
       "TrackToTrack": 0.2,
-      "MinLineWidth": 0.2475,
-      "TrackToRegion": 0.3,
-      "RegionToRegion": 0.3
+      "MinLineWidth": 0.2,
+      "TrackToRegion": 0.22,
+      "RegionToRegion": 0.22
     }
   ],
   "FilesAttributes": [
@@ -85,24 +85,29 @@
     },
     {
       "Type": "SolderMask",
+      "Thickness": 0.01,
       "Name": "Top Solder Mask"
     },
     {
       "Type": "Copper",
+      "Thickness": 0.035,
       "Name": "F.Cu"
     },
     {
       "Type": "Dielectric",
+      "Thickness": 1.51,
       "Material": "FR4",
       "Name": "F.Cu/B.Cu",
       "Notes": "Type: dielectric layer 1 (from F.Cu to B.Cu)"
     },
     {
       "Type": "Copper",
+      "Thickness": 0.035,
       "Name": "B.Cu"
     },
     {
       "Type": "SolderMask",
+      "Thickness": 0.01,
       "Name": "Bottom Solder Mask"
     },
     {

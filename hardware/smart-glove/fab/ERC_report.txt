@@ -1,26 +1,5 @@
-ERC report (2026-07-18T17:32:44+0000, Encoding UTF8)
+ERC report (2026-07-18T20:07:00+0000, Encoding UTF8)
 
 ***** Sheet /
-[pin_not_connected]: Pin not connected
-    ; error
-    @(177.8000 mm, 50.8000 mm): Symbol #PWR03 Hidden pin 1 [+5V, Power input, Line]
-[pin_not_connected]: Pin not connected
-    ; error
-    @(120.6500 mm, 50.8000 mm): Symbol C1 Pin 1 [Passive, Line]
-[pin_not_connected]: Pin not connected
-    ; error
-    @(50.8000 mm, 50.8000 mm): Symbol #PWR01 Hidden pin 1 [+3V3, Power input, Line]
-[label_dangling]: Label not connected to anything
-    ; error
-    @(140.9700 mm, 91.4400 mm): Label 'FLEX3'
-[label_dangling]: Label not connected to anything
-    ; error
-    @(171.4500 mm, 91.4400 mm): Label 'FLEX4'
-[label_dangling]: Label not connected to anything
-    ; error
-    @(80.0100 mm, 91.4400 mm): Label 'FLEX1'
-[label_dangling]: Label not connected to anything
-    ; error
-    @(110.4900 mm, 91.4400 mm): Label 'FLEX2'
 
- ** ERC messages: 7  Errors 7  Warnings 0
+ ** ERC messages: 0  Errors 0  Warnings 0
