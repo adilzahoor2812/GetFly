@@ -20,6 +20,7 @@ import json
 import math
 import re
 import subprocess
+import sys
 import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -572,6 +573,7 @@ def build_board():
             "SDA", "SCL", "EN", "BOOT",
             "STAT_LED", "CHRG", "IMU_INT",
             "TP_PROG", "PWR_LED", "CC1", "CC2",
+            "REGOUT",
         ]
     }
 
@@ -629,6 +631,8 @@ def build_board():
     add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C6", "22uF", 70.0, 30.0, 0)
     add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C7", "100nF", 70.0, 34.0, 0)
     add("Capacitor_SMD.pretty", "C_0603_1608Metric", "C9", "100nF", 70.0, 56.0, 0)
+    # MPU REGOUT bypass (datasheet: 2.2uF on REGOUT → GND)
+    add("Capacitor_SMD.pretty", "C_0805_2012Metric", "C10", "2.2uF", 70.0, 50.0, 0)
 
     add("LED_SMD.pretty", "LED_0603_1608Metric", "D1", "LED-PWR", 18.0, 52.5, 0)
     add("LED_SMD.pretty", "LED_0603_1608Metric", "D2", "LED-CHRG", 72.0, 14.0, 0)
@@ -646,16 +650,15 @@ def build_board():
             pass
 
     # ---- Net assignment ----
+    # ESP32-WROOM-32E: IO22 = pin 36 = SCL; pin 37 unused (NC)
     for n, netn in {
         "1": "GND", "2": "3V3", "3": "EN",
         "4": "FLEX1", "5": "FLEX2", "6": "FLEX3", "7": "FLEX4",
         "15": "GND", "24": "STAT_LED", "25": "BOOT",
-        "31": "IMU_INT", "33": "SDA", "36": "GND", "37": "SCL",
+        "31": "IMU_INT", "33": "SDA", "36": "SCL",
+        "38": "GND", "39": "GND",
     }.items():
         connect(u1, n, nets[netn])
-    for p in u1.Pads():
-        if p.GetNumber() == "39":
-            p.SetNet(nets["GND"])
 
     for i, netn in enumerate(["3V3", "FLEX1", "FLEX2", "FLEX3", "FLEX4", "GND"], 1):
         connect(j2, str(i), nets[netn])
@@ -664,7 +667,7 @@ def build_board():
 
     for p in j1.Pads():
         n = p.GetNumber().upper()
-        if n in {"A1", "B1", "A12", "B12", "S1", "A8", "B8"} or n == "":
+        if n in {"A1", "B1", "A12", "B12", "S1"} or n == "":
             p.SetNet(nets["GND"])
         elif n in {"A4", "B4", "A9", "B9"}:
             p.SetNet(nets["+5V"])
@@ -672,6 +675,7 @@ def build_board():
             p.SetNet(nets["CC1"])
         elif n == "B5":
             p.SetNet(nets["CC2"])
+        # A8/B8 (SBU) left unconnected — matches schematic
 
     connect(u2, "1", nets["GND"])
     connect(u2, "2", nets["TP_PROG"])
@@ -687,7 +691,7 @@ def build_board():
     connect(u3, "4", nets["3V3"])
 
     for n, netn in {
-        "8": "3V3", "9": "GND", "10": "3V3", "12": "IMU_INT", "13": "3V3",
+        "8": "3V3", "9": "GND", "10": "REGOUT", "12": "IMU_INT", "13": "3V3",
         "18": "GND", "23": "SCL", "24": "SDA",
     }.items():
         connect(u4, n, nets[netn])
@@ -716,6 +720,8 @@ def build_board():
         connect(parts[ref], "2", nets["GND"])
     connect(parts["C5"], "1", nets["+BAT"])
     connect(parts["C5"], "2", nets["GND"])
+    connect(parts["C10"], "1", nets["REGOUT"])
+    connect(parts["C10"], "2", nets["GND"])
     connect(parts["D2"], "1", nets["CHRG"])
     connect(parts["D2"], "2", nets["+5V"])
     connect(parts["D3"], "1", nets["GND"])
@@ -735,6 +741,7 @@ def build_board():
             ("SDA", TRACK_SIG), ("SCL", TRACK_SIG), ("EN", TRACK_SIG), ("BOOT", TRACK_SIG),
             ("STAT_LED", TRACK_SIG), ("CHRG", TRACK_SIG), ("IMU_INT", TRACK_SIG),
             ("TP_PROG", TRACK_SIG), ("PWR_LED", TRACK_SIG), ("CC1", TRACK_SIG), ("CC2", TRACK_SIG),
+            ("REGOUT", TRACK_SIG),
         ]
         router = Router(board, net_names=[n for n, _ in order])
         for name, w in order:
@@ -754,11 +761,16 @@ def fill_zones(path: Path = OUT_PCB):
 
 
 def write_schematic():
+    """Refresh complete schematic from generator (preferred) or fab template."""
+    gen = ROOT / "build_complete_schematic.py"
+    if gen.exists():
+        subprocess.run([sys.executable, str(gen)], check=True, cwd=str(ROOT))
+        return
     template = FAB / "smart-glove.kicad_sch.template"
     if template.exists():
         OUT_SCH.write_text(template.read_text())
         return
-    raise RuntimeError("Missing fab/smart-glove.kicad_sch.template")
+    raise RuntimeError("Missing build_complete_schematic.py and fab template")
 
 
 def write_project():
