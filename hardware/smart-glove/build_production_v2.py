@@ -568,8 +568,8 @@ def build_board():
 
     add_edge(board)
     # Silk away from edges / antenna graphic
-    add_text(board, "SignSpeak Smart Glove", 8, 8.5, 1.0)
-    add_text(board, "Man Who Embed  Rev E", 8, 10.5, 0.8)
+    add_text(board, "SignSpeak Smart Glove", 12, 9.2, 0.9)
+    add_text(board, "Man Who Embed  Rev E", 12, 11.2, 0.85)
     add_text(board, "ANT KEEP OUT", 62, 9.0, 0.85)
 
     nets = {

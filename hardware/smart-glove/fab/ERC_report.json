@@ -1,12 +1,12 @@
 {
     "$schema": "https://schemas.kicad.org/erc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-07-18T20:59:56+0000",
+    "date": "2026-07-18T21:31:11+0000",
     "kicad_version": "8.0.9",
     "sheets": [
         {
             "path": "/",
-            "uuid_path": "/8fec285a-4a13-4e04-80f7-bd81feb66a53",
+            "uuid_path": "/0be8e38c-e14b-49c1-a588-f9791aa82fdd",
             "violations": [
                 {
                     "description": "Symbol 'TP4056' not found in symbol library 'Device'",
@@ -17,7 +17,7 @@
                                 "x": 1.524,
                                 "y": 0.508
                             },
-                            "uuid": "46c4b4e4-9dd9-4f1b-8096-0bfdab05512d"
+                            "uuid": "35d692df-6e07-49f0-8a7a-a526f4f2684f"
                         }
                     ],
                     "severity": "warning",
@@ -32,7 +32,7 @@
                                 "x": 0.508,
                                 "y": 1.2954
                             },
-                            "uuid": "b89539ae-55b2-46fb-be6e-d7d57b54b8e5"
+                            "uuid": "bab81ebb-7117-4cef-a651-a85c1ccff295"
                         }
                     ],
                     "severity": "warning",

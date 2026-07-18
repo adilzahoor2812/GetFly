@@ -1,4 +1,4 @@
-# ERC Summary — Rev D
+# ERC Summary — SignSpeak Rev E
 File: `ERC_report.txt`
 
 ERC messages: 2  Errors 0  Warnings 2
