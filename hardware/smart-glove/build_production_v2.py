@@ -142,9 +142,16 @@ def pad_xy(fp, number):
 
 
 def connect(fp, number, net):
-    p = pad(fp, number)
-    if p:
-        p.SetNet(net)
+    """Assign net to all pads with this number (ESP32 pin 39 is multi-pad)."""
+    hit = False
+    for p in fp.Pads():
+        if p.GetNumber() == str(number):
+            p.SetNet(net)
+            hit = True
+    if not hit:
+        p = pad(fp, number)
+        if p:
+            p.SetNet(net)
 
 
 def add_edge(board):
@@ -789,6 +796,19 @@ def write_project():
                         }
                     }
                 },
+                "net_settings": {
+                    "classes": [
+                        {
+                            "name": "Default",
+                            "clearance": 0.15,
+                            "track_width": 0.15,
+                            "via_diameter": 0.45,
+                            "via_drill": 0.2,
+                            "microvia_diameter": 0.3,
+                            "microvia_drill": 0.1,
+                        }
+                    ]
+                },
                 "meta": {"filename": "smart-glove.kicad_pro", "version": 1},
                 "sheets": [["smart-glove.kicad_sch", ""]],
             },
@@ -978,14 +998,24 @@ USB-C is power/charge oriented (CC 5.1k). Keep metal clear of antenna keep-out b
 
 ESP32-WROOM-32E · 4× flex · MPU-6050 · TP4056 · AMS1117-3.3 · USB-C
 
-## Rebuild
+## Schematic (complete)
+
+```bash
+python3 build_complete_schematic.py
+```
+
+Full schematic with all production parts. ERC gate: 0 errors.
+
+## Rebuild PCB + fab package
 
 ```bash
 python3 build_production_v2.py
 ```
 
-Fab package: [`fab/`](fab/) ({BOARD_W:.0f}×{BOARD_H:.0f} mm, 2-layer).
+Fab package: [`fab/`](fab/) ({BOARD_W:.0f}×{BOARD_H:.0f} mm, 2-layer).  
 Production gate documented in [`fab/FABRICATION.md`](fab/FABRICATION.md).
+
+Net parity: ESP32 pin 36 = SCL · MPU REGOUT → C10 2.2 µF · USB SBU NC.
 """
     )
 
@@ -1094,21 +1124,21 @@ def main():
         pcbnew.SaveBoard(str(OUT_PCB), board)
     print("Adding + filling GND zones…")
     add_gnd_zones(OUT_PCB)
-    board = fill_zones(OUT_PCB)
+    # Fresh process steps avoid pcbnew SWIG use-after-free after bulk track edits
+    subprocess.run([sys.executable, "-c",
+                    "from build_production_v2 import fill_zones, OUT_PCB; fill_zones(OUT_PCB)"],
+                   cwd=str(ROOT), check=True)
     print("Clearance cleanup…")
-    fix_tight_clearances(OUT_PCB)
-    board = fill_zones(OUT_PCB)
+    subprocess.run([sys.executable, "-c",
+                    "from build_production_v2 import fix_tight_clearances, OUT_PCB; "
+                    "fix_tight_clearances(OUT_PCB)"],
+                   cwd=str(ROOT), check=True)
+    subprocess.run([sys.executable, "-c",
+                    "from build_production_v2 import fill_zones, OUT_PCB; fill_zones(OUT_PCB)"],
+                   cwd=str(ROOT), check=True)
     write_schematic()
     write_project()
-    # Ensure project netclass clearance matches board rules
-    try:
-        pro = json.loads(OUT_PRO.read_text())
-        for cls in pro.get("net_settings", {}).get("classes", []):
-            if cls.get("clearance", 0) > 0.15:
-                cls["clearance"] = 0.15
-        OUT_PRO.write_text(json.dumps(pro, indent=2))
-    except Exception:
-        pass
+    board = pcbnew.LoadBoard(str(OUT_PCB))
     export_bom_cpl(board)
     print("Gerbers…")
     print(export_gerbers())

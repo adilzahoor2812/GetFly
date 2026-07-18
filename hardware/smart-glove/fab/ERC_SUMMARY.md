@@ -1,6 +1,7 @@
 # ERC Summary — Rev D
 File: `ERC_report.txt`
 
-ERC messages: 0  Errors 0  Warnings 0
+ERC messages: 2  Errors 0  Warnings 2
 
 ## By type
+- lib_symbol_issues: 2

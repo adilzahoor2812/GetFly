@@ -1,5 +1,6 @@
 Designator,Comment,Footprint,LCSC
 C1,100nF,C_0603_1608Metric,
+C10,2.2uF,C_0805_2012Metric,
 C2,100nF,C_0603_1608Metric,
 C5,10uF,C_0805_2012Metric,
 C6,22uF,C_0805_2012Metric,

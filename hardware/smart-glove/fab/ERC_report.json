@@ -1,13 +1,44 @@
 {
     "$schema": "https://schemas.kicad.org/erc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-07-18T20:07:00+0000",
+    "date": "2026-07-18T20:59:56+0000",
     "kicad_version": "8.0.9",
     "sheets": [
         {
             "path": "/",
-            "uuid_path": "/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
-            "violations": []
+            "uuid_path": "/8fec285a-4a13-4e04-80f7-bd81feb66a53",
+            "violations": [
+                {
+                    "description": "Symbol 'TP4056' not found in symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol U2 [TP4056]",
+                            "pos": {
+                                "x": 1.524,
+                                "y": 0.508
+                            },
+                            "uuid": "46c4b4e4-9dd9-4f1b-8096-0bfdab05512d"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Symbol 'AMS1117-3.3' not found in symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol U3 [AMS1117-3.3]",
+                            "pos": {
+                                "x": 0.508,
+                                "y": 1.2954
+                            },
+                            "uuid": "b89539ae-55b2-46fb-be6e-d7d57b54b8e5"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                }
+            ]
         }
     ],
     "source": "smart-glove.kicad_sch"

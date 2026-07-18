@@ -11,6 +11,19 @@
       }
     }
   },
+  "net_settings": {
+    "classes": [
+      {
+        "name": "Default",
+        "clearance": 0.15,
+        "track_width": 0.15,
+        "via_diameter": 0.45,
+        "via_drill": 0.2,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1
+      }
+    ]
+  },
   "meta": {
     "filename": "smart-glove.kicad_pro",
     "version": 1
