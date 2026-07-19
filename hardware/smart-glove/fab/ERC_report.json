@@ -1,0 +1,113 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-07-18T23:15:58+0000",
+    "kicad_version": "8.0.9",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/126eabc1-742a-4725-9e79-c1c9d4c59f10",
+            "violations": [
+                {
+                    "description": "Unconnected \"no connection\" flag",
+                    "items": [
+                        {
+                            "description": "No Connect",
+                            "pos": {
+                                "x": 0.4826,
+                                "y": 1.0541
+                            },
+                            "uuid": "2af27d34-0008-4f0e-ba29-3f89f38ee737"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "no_connect_dangling"
+                },
+                {
+                    "description": "Pin with 'no connection' type is connected",
+                    "items": [
+                        {
+                            "description": "Symbol U5 Hidden pin 7 [NC, Unconnected, Line]",
+                            "pos": {
+                                "x": 0.4826,
+                                "y": 1.0541
+                            },
+                            "uuid": "fb099970-93fa-4060-8e6a-c9417f6dfbe8"
+                        },
+                        {
+                            "description": "No Connect",
+                            "pos": {
+                                "x": 0.4826,
+                                "y": 1.0541
+                            },
+                            "uuid": "2af27d34-0008-4f0e-ba29-3f89f38ee737"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "no_connect_connected"
+                },
+                {
+                    "description": "Symbol 'AMS1117-3.3' not found in symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol U3 [AMS1117-3.3]",
+                            "pos": {
+                                "x": 0.508,
+                                "y": 1.2954
+                            },
+                            "uuid": "0d255314-8c67-4c3d-9d27-8a3b899551c2"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Symbol 'FS8205A' not found in symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol U7 [FS8205A]",
+                            "pos": {
+                                "x": 2.5019,
+                                "y": 0.8001
+                            },
+                            "uuid": "a774bdcf-91a7-4bef-891a-c9c0f96023f2"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Symbol 'DW01A' not found in symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol U6 [DW01A]",
+                            "pos": {
+                                "x": 2.5019,
+                                "y": 0.508
+                            },
+                            "uuid": "7483859c-01f0-4084-aba8-da0f626ae6ec"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Symbol 'TP4056' not found in symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol U2 [TP4056]",
+                            "pos": {
+                                "x": 1.524,
+                                "y": 0.508
+                            },
+                            "uuid": "3c93807a-2f0e-4a56-b205-866e0a21f148"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                }
+            ]
+        }
+    ],
+    "source": "smart-glove.kicad_sch"
+}

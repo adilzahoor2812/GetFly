@@ -1,0 +1,17 @@
+ERC report (2026-07-19T14:44:31+0000, Encoding UTF8)
+
+***** Sheet /
+[lib_symbol_issues]: Symbol 'TP4056' not found in symbol library 'Device'
+    ; warning
+    @(335.2800 mm, 50.8000 mm): Symbol U2 [TP4056]
+[lib_symbol_issues]: Symbol 'DW01A' not found in symbol library 'Device'
+    ; warning
+    @(335.2800 mm, 139.7000 mm): Symbol U6 [DW01A]
+[lib_symbol_issues]: Symbol 'FS8205A' not found in symbol library 'Device'
+    ; warning
+    @(335.2800 mm, 180.3400 mm): Symbol U7 [FS8205A]
+[lib_symbol_issues]: Symbol 'AMS1117-3.3' not found in symbol library 'Device'
+    ; warning
+    @(50.8000 mm, 241.3000 mm): Symbol U3 [AMS1117-3.3]
+
+ ** ERC messages: 4  Errors 0  Warnings 4

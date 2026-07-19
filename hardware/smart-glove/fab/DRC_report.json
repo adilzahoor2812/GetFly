@@ -1,0 +1,124 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-07-18T23:15:58+0000",
+    "kicad_version": "8.0.9",
+    "schematic_parity": [],
+    "source": "smart-glove.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "Segment on F.Silkscreen",
+                    "pos": {
+                        "x": 50.7,
+                        "y": 46.1
+                    },
+                    "uuid": "c8831d6e-2150-4b41-af0d-b37e2c38e042"
+                },
+                {
+                    "description": "PCB Text 'USB-C SERIAL' on F.Silkscreen",
+                    "pos": {
+                        "x": 48.0,
+                        "y": 48.5
+                    },
+                    "uuid": "45066b39-0d7b-44ce-99a9-8c416636b16f"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB Text 'SignSpeak Smart Glove' on F.Silkscreen",
+                    "pos": {
+                        "x": 10.0,
+                        "y": 3.0
+                    },
+                    "uuid": "36270a21-7522-4902-8d31-e50fbe93d993"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB Text 'USB-C SERIAL' on F.Silkscreen",
+                    "pos": {
+                        "x": 48.0,
+                        "y": 48.5
+                    },
+                    "uuid": "45066b39-0d7b-44ce-99a9-8c416636b16f"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB Text 'Man Who Embed Rev H' on F.Silkscreen",
+                    "pos": {
+                        "x": 10.0,
+                        "y": 5.0
+                    },
+                    "uuid": "ad3b25de-94e4-47b5-af83-0bdaa0141374"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.6500 mm)",
+            "items": [
+                {
+                    "description": "PCB Text 'USB-C SERIAL' on F.Silkscreen",
+                    "pos": {
+                        "x": 48.0,
+                        "y": 48.5
+                    },
+                    "uuid": "45066b39-0d7b-44ce-99a9-8c416636b16f"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)",
+            "items": [
+                {
+                    "description": "PCB Text 'ANT KEEP OUT' on F.Silkscreen",
+                    "pos": {
+                        "x": 50.0,
+                        "y": 4.0
+                    },
+                    "uuid": "67615e50-d922-4f7f-989a-fbfd985186e1"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)",
+            "items": [
+                {
+                    "description": "PCB Text 'Man Who Embed Rev H' on F.Silkscreen",
+                    "pos": {
+                        "x": 10.0,
+                        "y": 5.0
+                    },
+                    "uuid": "ad3b25de-94e4-47b5-af83-0bdaa0141374"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        }
+    ]
+}
