@@ -5,8 +5,10 @@
 | File | Use |
 |------|-----|
 | `fab/SignSpeak_SmartGlove_RevH_Gerbers.zip` | JLCPCB / PCBWay gerbers |
-| `fab/BOM-JLCPCB.csv` | BOM with **LCSC** part numbers |
+| `fab/BOM-JLCPCB.csv` | BOM with **LCSC** part numbers (incl. J2/J4 headers) |
 | `fab/CPL-top.csv` | Pick-and-place (top) |
+
+**Upload for JLCPCB PCBA:** Gerbers zip + BOM + CPL. Enable **through-hole** assembly if you want J2/J4 mounted (they are pin headers).
 
 ## Fab options (recommended prototype)
 
