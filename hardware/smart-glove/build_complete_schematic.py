@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Generate a complete KiCad 8 schematic matching Smart Glove MCU Rev D."""
+"""Generate SignSpeak Smart Glove Rev H schematic (reference-style block layout).
+
+Style inspired by professional single-sheet ESP32 boards:
+  dashed section boxes, titled zones, net labels between blocks.
+Content is SignSpeak-only (USB-C+CH340, TP4056+DW01, flex, MPU-6050).
+"""
 
 from __future__ import annotations
 
@@ -206,6 +211,23 @@ class Sch:
             f'    (uuid "{uid()}")\n  )\n'
         )
 
+    def section(self, title: str, x1: float, y1: float, x2: float, y2: float):
+        """Dashed zone box + reference-style section title (top-left)."""
+        x1, y1, x2, y2 = g(x1), g(y1), g(x2), g(y2)
+        self.add(
+            f"  (rectangle (start {x1} {y1}) (end {x2} {y2})\n"
+            f"    (stroke (width 0.254) (type dash)) (fill (type none))\n"
+            f'    (uuid "{uid()}")\n  )\n'
+        )
+        self.text(title, x1 + 2.54, y1 + 5.08, 2.032)
+
+    def pwr_flag(self, net_lib: str, net_val: str, x: float, y: float, tag: str):
+        """Power symbol + PWR_FLAG on a short wire (ERC)."""
+        x, y = g(x), g(y)
+        self.power(net_lib, f"#PWR_{tag}", net_val, x, y)
+        self.power("power:PWR_FLAG", f"#FLG_{tag}", "PWR_FLAG", x + 7.62, y)
+        self.wire(x, y, x + 7.62, y)
+
     def glabel_on_pins(self, pins: dict, mapping: dict[str, str]):
         for num, net in mapping.items():
             x, y, rot = pins[num]
@@ -262,12 +284,15 @@ def build() -> str:
     libs.append(fs8205_symbol())
 
     s = Sch()
-    s.text("SignSpeak Smart Glove — Complete Schematic (Rev H)", 25.4, 12.7, 2.54)
-    s.text("Man Who Embed · USB-C+CH340 · DW01 protect · ESP32 · MPU-6050 · 5× Flex", 25.4, 16.51, 1.27)
 
-    # ---- USB-C ----
-    s.text("1) USB-C Power/CC + Data", 25.4, 25.4, 1.8)
-    j1x, j1y = g(55.88), g(60.96)
+    # =====================================================================
+    # Reference-style layout (SignSpeak content — not a copy of the PDF)
+    # Flow: USB/power left → MCU center → charge/protect/IMU right → I/O bottom
+    # =====================================================================
+
+    # ---- USB-C Connector & CC ----
+    s.section("USB-C Connector & CC:", 12.7, 12.7, 127.0, 95.25)
+    j1x, j1y = g(50.8), g(55.88)
     s.inst("Connector:USB_C_Receptacle", "J1", "USB-C", j1x, j1y,
            "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12")
     usb = pin_map(SYM / "Connector.kicad_sym", "USB_C_Receptacle", j1x, j1y)
@@ -279,18 +304,17 @@ def build() -> str:
         "A1": "GND", "A12": "GND", "B1": "GND", "B12": "GND",
         "S1": "GND",
     })
-    # Leave SBU / SS unused
     s.nc_pins(usb, [
         "A2", "A3", "A8", "A10", "A11",
         "B2", "B3", "B8", "B10", "B11",
     ])
-
     s.resistor_to_gnd("R6", "5.1k", 95.25, 40.64, "CC1")
-    s.resistor_to_gnd("R7", "5.1k", 106.68, 40.64, "CC2")
+    s.resistor_to_gnd("R7", "5.1k", 110.49, 40.64, "CC2")
+    s.pwr_flag("power:+5V", "+5V", 88.9, 82.55, "5V")
 
-    # ---- CH340C USB-UART ----
-    s.text("1b) CH340C USB-UART (laptop flash/serial)", 25.4, 85.0, 1.8)
-    u5x, u5y = g(55.88), g(100.0)
+    # ---- USB TO UART BRIDGE ----
+    s.section("USB TO UART BRIDGE (CH340C):", 12.7, 101.6, 152.4, 203.2)
+    u5x, u5y = g(50.8), g(140.0)
     s.inst("Interface_USB:CH340C", "U5", "CH340C", u5x, u5y,
            "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm")
     ch = pin_map(SYM / "Interface_USB.kicad_sym", "CH340C", u5x, u5y)
@@ -298,78 +322,104 @@ def build() -> str:
         "1": "GND", "2": "UART_RX", "3": "UART_TX", "4": "CH340_3V3",
         "5": "USB_DP", "6": "USB_DM", "13": "DTR", "14": "RTS", "16": "+5V",
     })
-    s.nc_pins(ch, ["7", "8", "9", "10", "11", "12", "15"])
-    s.cap_to_gnd("C13", "100nF", 90.0, 95.0, "CH340_3V3")
-    s.cap_to_gnd("C14", "100nF", 105.0, 95.0, "+5V")
+    s.nc_pins(ch, ["8", "9", "10", "11", "12", "15"])
+    s.cap_to_gnd("C13", "100nF", 95.25, 127.0, "CH340_3V3")
+    s.cap_to_gnd("C14", "100nF", 110.49, 127.0, "+5V")
     # Auto-program: DTR/RTS AC-coupled into EN/BOOT
-    x, y = s.inst("Device:C", "C11", "100nF", 90.0, 110.0, "Capacitor_SMD:C_0603_1608Metric")
+    x, y = s.inst("Device:C", "C11", "100nF", 95.25, 165.1, "Capacitor_SMD:C_0603_1608Metric")
     s.label("DTR", x, y - 3.81, 90)
     s.label("EN", x, y + 3.81, 270)
-    x, y = s.inst("Device:C", "C12", "100nF", 105.0, 110.0, "Capacitor_SMD:C_0603_1608Metric")
+    x, y = s.inst("Device:C", "C12", "100nF", 110.49, 165.1, "Capacitor_SMD:C_0603_1608Metric")
     s.label("RTS", x, y - 3.81, 90)
     s.label("BOOT", x, y + 3.81, 270)
+    s.text("Auto-program caps → EN / BOOT", 88.9, 182.88, 1.27)
 
-    # ---- TP4056 ----
-    s.text("2) LiPo Charger (TP4056) + Pack Protect", 130.0, 25.4, 1.8)
-    u2x, u2y = g(152.4), g(50.8)
-    s.inst("Device:TP4056", "U2", "TP4056", u2x, u2y, "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")
-    # Custom symbol pins — apply same Y flip as library symbols (oy - py)
-    s.label("GND", u2x - 10.16, u2y - 2.54, 0)        # TEMP local y=+2.54
-    s.label("TP_PROG", u2x - 10.16, u2y - 0.0, 0)     # PROG
-    s.label("GND", u2x - 10.16, u2y + 2.54, 0)        # GND local y=-2.54
-    s.label("+5V", u2x - 10.16, u2y + 5.08, 0)        # VCC local y=-5.08
-    s.label("+BAT", u2x + 10.16, u2y + 2.54, 180)     # BAT local y=-2.54
-    s.nc(u2x + 10.16, u2y - 0.0)                       # STDBY
-    s.label("CHRG", u2x + 10.16, u2y - 2.54, 180)     # CHRG local y=+2.54
-    s.label("+5V", u2x + 10.16, u2y - 5.08, 180)      # CE local y=+5.08
-
-    s.resistor_to_gnd("R8", "1.2k", 180.0, 50.8, "TP_PROG")
-    s.led_series("D2", "LED-CHRG", 195.58, 45.72, "+5V", "CHRG")
-
-    # DW01A + FS8205A on battery negative path
-    s.text("2b) DW01A + FS8205A protect", 230.0, 25.4, 1.5)
-    u6x, u6y = g(250.0), g(50.8)
-    s.inst("Device:DW01A", "U6", "DW01A", u6x, u6y, "Package_TO_SOT_SMD:SOT-23-6")
-    s.label("GATE_P", u6x - 7.62, u6y - 2.54, 0)  # OD
-    s.label("BAT_N", u6x - 7.62, u6y - 0.0, 0)    # CS
-    s.label("GATE_P", u6x - 7.62, u6y + 2.54, 0)  # OC
-    s.nc(u6x + 7.62, u6y + 2.54)                  # TD
-    s.label("DW01_VCC", u6x + 7.62, u6y - 0.0, 180)  # VCC via R12
-    s.label("BAT_N", u6x + 7.62, u6y - 2.54, 180)    # GND
-    x, y = s.inst("Device:R", "R12", "1k", 280.0, 45.0, "Resistor_SMD:R_0603_1608Metric")
-    s.label("+BAT", x, y - 3.81, 90)
-    s.label("DW01_VCC", x, y + 3.81, 270)
-    u7x, u7y = g(250.0), g(80.0)
-    s.inst("Device:FS8205A", "U7", "FS8205A", u7x, u7y, "Package_SO:TSSOP-8_3x3mm_P0.65mm")
-    s.label("BAT_N", u7x - 7.62, u7y - 3.81, 0)   # S1
-    s.label("GATE_P", u7x - 7.62, u7y - 1.27, 0)  # G1
-    s.label("GND", u7x - 7.62, u7y + 1.27, 0)     # D1
-    s.label("GND", u7x - 7.62, u7y + 3.81, 0)     # D2
-    s.label("GND", u7x + 7.62, u7y + 3.81, 180)   # D2
-    s.label("GND", u7x + 7.62, u7y + 1.27, 180)   # D1
-    s.label("GATE_P", u7x + 7.62, u7y - 1.27, 180)  # G2
-    s.label("BAT_N", u7x + 7.62, u7y - 3.81, 180)   # S2
-    s.cap_to_gnd("C15", "100nF", 280.0, 70.0, "DW01_VCC")
-
-    j3x, j3y = g(215.9), g(55.88)
-    s.inst("Connector_Generic:Conn_01x02", "J3", "LiPo", j3x, j3y,
-           "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical")
-    s.label("+BAT", j3x - 5.08, j3y - 0.0, 0)
-    s.label("BAT_N", j3x - 5.08, j3y - (-2.54), 0)
-
-    # ---- AMS1117 ----
-    s.text("3) 3.3V Regulator (AMS1117)", 25.4, 110.0, 1.8)
-    u3x, u3y = g(50.8), g(130.0)
+    # ---- POWER SUPPLY ----
+    s.section("POWER SUPPLY (BAT to 3V3):", 12.7, 209.55, 152.4, 292.1)
+    u3x, u3y = g(50.8), g(241.3)
     s.inst("Device:AMS1117-3.3", "U3", "AMS1117-3.3", u3x, u3y, "Package_TO_SOT_SMD:SOT-223")
     amsp = pin_map(SYM / "Regulator_Linear.kicad_sym", "AP1117-15", u3x, u3y)
     s.glabel_on_pins(amsp, {"1": "GND", "2": "3V3", "3": "+BAT"})
-    s.cap_to_gnd("C5", "10uF", 75.0, 130.0, "+BAT", "Capacitor_SMD:C_0805_2012Metric")
-    s.cap_to_gnd("C6", "22uF", 90.0, 130.0, "3V3", "Capacitor_SMD:C_0805_2012Metric")
-    s.cap_to_gnd("C7", "100nF", 105.0, 130.0, "3V3")
+    s.cap_to_gnd("C5", "10uF", 88.9, 241.3, "+BAT", "Capacitor_SMD:C_0805_2012Metric")
+    s.cap_to_gnd("C6", "22uF", 106.68, 241.3, "3V3", "Capacitor_SMD:C_0805_2012Metric")
+    s.cap_to_gnd("C7", "100nF", 124.46, 241.3, "3V3")
+    # 3V3 driven by U3 power_out — only flag USB +5V and GND for ERC
+    s.pwr_flag("power:GND", "GND", 88.9, 269.24, "GND")
 
-    # ---- ESP32 ----
-    s.text("4) ESP32-WROOM-32E", 130.0, 110.0, 1.8)
-    u1x, u1y = g(180.0), g(145.0)
+    # ---- ESP32 Reset & Boot ----
+    s.section("ESP32 Reset & Boot circuit:", 160.02, 12.7, 292.1, 95.25)
+    x, y = s.inst("Device:R", "R9", "10k", 180.34, 40.64, "Resistor_SMD:R_0603_1608Metric")
+    s.label("3V3", x, y - 3.81, 90)
+    s.label("EN", x, y + 3.81, 270)
+    x, y = s.inst("Device:R", "R10", "10k", 200.66, 40.64, "Resistor_SMD:R_0603_1608Metric")
+    s.label("3V3", x, y - 3.81, 90)
+    s.label("BOOT", x, y + 3.81, 270)
+    x, y = s.inst("Switch:SW_Push", "SW2", "EN", 228.6, 40.64, "Button_Switch_SMD:SW_SPST_B3U-1000P")
+    s.label("EN", x - 5.08, y, 0)
+    s.power("power:GND", "#PWR_SW2", "GND", x + 5.08, y)
+    x, y = s.inst("Switch:SW_Push", "SW1", "BOOT", 261.62, 40.64, "Button_Switch_SMD:SW_SPST_B3U-1000P")
+    s.label("BOOT", x - 5.08, y, 0)
+    s.power("power:GND", "#PWR_SW1", "GND", x + 5.08, y)
+    s.cap_to_gnd("C1", "100nF", 180.34, 71.12, "3V3")
+    s.cap_to_gnd("C2", "100nF", 200.66, 71.12, "3V3")
+
+    # ---- POWER AND STATUS LEDs ----
+    s.section("POWER AND STATUS LED's:", 160.02, 101.6, 292.1, 165.1)
+    x, y = s.inst("Device:R", "R5", "1k", 180.34, 127.0, "Resistor_SMD:R_0603_1608Metric")
+    s.label("3V3", x, y - 3.81, 90)
+    s.label("PWR_LED", x, y + 3.81, 270)
+    s.led_series("D1", "LED-PWR", 210.82, 127.0, "PWR_LED", "GND")
+    s.led_series("D3", "LED-STAT", 248.92, 127.0, "STAT_LED", "GND")
+    s.text("D1 = power · D3 = ESP32 IO2 status", 170.18, 152.4, 1.27)
+
+    # ---- LiPo Charger ----
+    s.section("LiPo Charger (TP4056):", 300.0, 12.7, 431.8, 101.6)
+    u2x, u2y = g(335.28), g(50.8)
+    s.inst("Device:TP4056", "U2", "TP4056", u2x, u2y, "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")
+    s.label("GND", u2x - 10.16, u2y - 2.54, 0)
+    s.label("TP_PROG", u2x - 10.16, u2y - 0.0, 0)
+    s.label("GND", u2x - 10.16, u2y + 2.54, 0)
+    s.label("+5V", u2x - 10.16, u2y + 5.08, 0)
+    s.label("+BAT", u2x + 10.16, u2y + 2.54, 180)
+    s.nc(u2x + 10.16, u2y - 0.0)
+    s.label("CHRG", u2x + 10.16, u2y - 2.54, 180)
+    s.label("+5V", u2x + 10.16, u2y - 5.08, 180)
+    s.resistor_to_gnd("R8", "1.2k", 373.38, 45.72, "TP_PROG")
+    s.led_series("D2", "LED-CHRG", 398.78, 45.72, "+5V", "CHRG")
+    j3x, j3y = g(398.78), g(78.74)
+    s.inst("Connector_Generic:Conn_01x02", "J3", "LiPo", j3x, j3y,
+           "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical")
+    s.label("+BAT", j3x - 5.08, j3y - 0.0, 0)
+    s.label("BAT_N", j3x - 5.08, j3y + 2.54, 0)
+
+    # ---- Battery Protection ----
+    s.section("Battery Pack Protect (DW01A + FS8205A):", 300.0, 109.22, 431.8, 215.9)
+    u6x, u6y = g(335.28), g(140.0)
+    s.inst("Device:DW01A", "U6", "DW01A", u6x, u6y, "Package_TO_SOT_SMD:SOT-23-6")
+    s.label("GATE_P", u6x - 7.62, u6y - 2.54, 0)
+    s.label("BAT_N", u6x - 7.62, u6y - 0.0, 0)
+    s.label("GATE_P", u6x - 7.62, u6y + 2.54, 0)
+    s.nc(u6x + 7.62, u6y + 2.54)
+    s.label("DW01_VCC", u6x + 7.62, u6y - 0.0, 180)
+    s.label("BAT_N", u6x + 7.62, u6y - 2.54, 180)
+    x, y = s.inst("Device:R", "R12", "1k", 373.38, 130.0, "Resistor_SMD:R_0603_1608Metric")
+    s.label("+BAT", x, y - 3.81, 90)
+    s.label("DW01_VCC", x, y + 3.81, 270)
+    s.cap_to_gnd("C15", "100nF", 393.7, 130.0, "DW01_VCC")
+    u7x, u7y = g(335.28), g(180.0)
+    s.inst("Device:FS8205A", "U7", "FS8205A", u7x, u7y, "Package_SO:TSSOP-8_3x3mm_P0.65mm")
+    s.label("BAT_N", u7x - 7.62, u7y - 3.81, 0)
+    s.label("GATE_P", u7x - 7.62, u7y - 1.27, 0)
+    s.label("GND", u7x - 7.62, u7y + 1.27, 0)
+    s.label("GND", u7x - 7.62, u7y + 3.81, 0)
+    s.label("GND", u7x + 7.62, u7y + 3.81, 180)
+    s.label("GND", u7x + 7.62, u7y + 1.27, 180)
+    s.label("GATE_P", u7x + 7.62, u7y - 1.27, 180)
+    s.label("BAT_N", u7x + 7.62, u7y - 3.81, 180)
+
+    # ---- ESP32 MCU (center) ----
+    s.section("ESP32-WROOM-32E:", 160.02, 175.26, 292.1, 330.2)
+    u1x, u1y = g(215.9), g(250.0)
     s.inst("RF_Module:ESP32-WROOM-32E", "U1", "ESP32-WROOM-32E", u1x, u1y, "RF_Module:ESP32-WROOM-32")
     esp = pin_map(SYM / "RF_Module.kicad_sym", "ESP32-WROOM-32E", u1x, u1y)
     s.glabel_on_pins(esp, {
@@ -379,51 +429,25 @@ def build() -> str:
         "31": "IMU_INT", "33": "SDA", "34": "UART_RX", "35": "UART_TX",
         "36": "SCL", "38": "GND", "39": "GND",
     })
-    # Only flag unused pins that are NOT already electrical type no_connect
     s.nc_pins(esp, [
         "9", "10", "11", "12", "13", "14", "16", "23",
         "26", "27", "28", "29", "30", "37",
     ])
 
-    # UART programming header for USB–UART dongle
-    s.text("4b) UART Program Header J4", 230.0, 110.0, 1.8)
-    j4x, j4y = g(255.0), g(145.0)
+    # ---- UART backup header ----
+    s.section("UART Program Header:", 300.0, 221.0, 368.3, 292.1)
+    j4x, j4y = g(330.2), g(255.0)
     s.inst("Connector_Generic:Conn_01x04", "J4", "UART", j4x, j4y,
            "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
     j4 = pin_map(SYM / "Connector_Generic.kicad_sym", "Conn_01x04", j4x, j4y)
     s.glabel_on_pins(j4, {
         "1": "3V3", "2": "UART_TX", "3": "UART_RX", "4": "GND",
     })
-    s.cap_to_gnd("C1", "100nF", 230.0, 120.0, "3V3")
-    s.cap_to_gnd("C2", "100nF", 245.0, 120.0, "3V3")
+    s.text("1=3V3 2=TX 3=RX 4=GND", 307.34, 281.94, 1.27)
 
-    # ---- Controls ----
-    s.text("5) BOOT / EN / Status LEDs", 25.4, 175.0, 1.8)
-    # R9 EN pullup: top 3V3, bottom EN
-    x, y = s.inst("Device:R", "R9", "10k", 40.64, 195.58, "Resistor_SMD:R_0603_1608Metric")
-    s.label("3V3", x, y - 3.81, 90)
-    s.label("EN", x, y + 3.81, 270)
-    x, y = s.inst("Device:R", "R10", "10k", 55.88, 195.58, "Resistor_SMD:R_0603_1608Metric")
-    s.label("3V3", x, y - 3.81, 90)
-    s.label("BOOT", x, y + 3.81, 270)
-
-    x, y = s.inst("Switch:SW_Push", "SW2", "EN", 75.0, 195.58, "Button_Switch_SMD:SW_SPST_B3U-1000P")
-    s.label("EN", x - 5.08, y, 0)
-    s.power("power:GND", "#PWR_SW2", "GND", x + 5.08, y)
-    x, y = s.inst("Switch:SW_Push", "SW1", "BOOT", 100.0, 195.58, "Button_Switch_SMD:SW_SPST_B3U-1000P")
-    s.label("BOOT", x - 5.08, y, 0)
-    s.power("power:GND", "#PWR_SW1", "GND", x + 5.08, y)
-
-    x, y = s.inst("Device:R", "R5", "1k", 125.0, 195.58, "Resistor_SMD:R_0603_1608Metric")
-    s.label("3V3", x, y - 3.81, 90)
-    s.label("PWR_LED", x, y + 3.81, 270)
-    s.led_series("D1", "LED-PWR", 145.0, 195.58, "PWR_LED", "GND")
-    # D1 cathode GND via label — also need power flag path; label GND is enough with power symbols
-    s.led_series("D3", "LED-STAT", 165.0, 195.58, "STAT_LED", "GND")
-
-    # ---- Flex (5 sensors: thumb + 4 fingers) ----
-    s.text("6) Flex Sensor Header + Dividers (5×)", 25.4, 220.0, 1.8)
-    j2x, j2y = g(50.8), g(245.0)
+    # ---- Flex sensors ----
+    s.section("Flex Sensors (5×) + Dividers:", 12.7, 300.0, 203.2, 393.7)
+    j2x, j2y = g(45.72), g(340.0)
     s.inst("Connector_Generic:Conn_01x07", "J2", "FLEX", j2x, j2y,
            "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical")
     j2 = pin_map(SYM / "Connector_Generic.kicad_sym", "Conn_01x07", j2x, j2y)
@@ -435,11 +459,12 @@ def build() -> str:
         ("R1", "FLEX1"), ("R2", "FLEX2"), ("R3", "FLEX3"),
         ("R4", "FLEX4"), ("R11", "FLEX5"),
     )):
-        s.resistor_to_gnd(ref, "10k", 80.0 + i * 15.24, 245.0, net)
+        s.resistor_to_gnd(ref, "10k", 81.28 + i * 20.32, 340.0, net)
+    s.text("J2: 3V3 · FLEX1..5 · GND", 25.4, 378.46, 1.27)
 
-    # ---- MPU ----
-    s.text("7) IMU MPU-6050", 160.0, 220.0, 1.8)
-    u4x, u4y = g(210.0), g(250.0)
+    # ---- IMU ----
+    s.section("IMU (MPU-6050) I2C:", 215.9, 300.0, 368.3, 393.7)
+    u4x, u4y = g(266.7), g(345.0)
     s.inst("Sensor_Motion:MPU-6050", "U4", "MPU-6050", u4x, u4y,
            "Sensor_Motion:InvenSense_QFN-24_4x4mm_P0.5mm")
     mpu = pin_map(SYM / "Sensor_Motion.kicad_sym", "MPU-6050", u4x, u4y)
@@ -447,24 +472,10 @@ def build() -> str:
         "8": "3V3", "9": "GND", "10": "REGOUT", "12": "IMU_INT", "13": "3V3",
         "18": "GND", "23": "SCL", "24": "SDA",
     })
-    # Leave library no_connect pins alone; NC only active unused pins
     s.nc_pins(mpu, ["1", "6", "7", "11", "20"])
-    s.cap_to_gnd("C10", "2.2uF", 255.0, 245.0, "REGOUT")
-    s.cap_to_gnd("C9", "100nF", 270.0, 245.0, "3V3")
-
-    # ---- Power flags (only on nets without an IC power_out driver) ----
-    # +5V: USB receptacle pins are passive/power_in — needs PWR_FLAG
-    # +BAT: driven by U2 BAT (power_out) — no flag
-    # 3V3: driven by U3 VO (power_out) — no flag
-    # GND: needs PWR_FLAG for ERC
-    s.text("Power flags (ERC)", 25.4, 279.4, 1.8)
-    s.power("power:+5V", "#PWR5V", "+5V", 40.64, 289.56)
-    s.power("power:PWR_FLAG", "#FLG5V", "PWR_FLAG", 48.26, 289.56)
-    s.wire(40.64, 289.56, 48.26, 289.56)
-
-    s.power("power:GND", "#PWRGND", "GND", 69.85, 289.56)
-    s.power("power:PWR_FLAG", "#FLGGND", "PWR_FLAG", 77.47, 289.56)
-    s.wire(69.85, 289.56, 77.47, 289.56)
+    s.cap_to_gnd("C10", "2.2uF", 330.2, 330.2, "REGOUT", "Capacitor_SMD:C_0805_2012Metric")
+    s.cap_to_gnd("C9", "100nF", 348.0, 330.2, "3V3")
+    s.text("Addr 0x68 · SDA=IO21 · SCL=IO22", 228.6, 378.46, 1.27)
 
     lib_block = "\n".join(libs)
     return f'''(kicad_sch
@@ -475,10 +486,10 @@ def build() -> str:
   (paper "A2")
   (title_block
     (title "SignSpeak Smart Glove")
-    (date "2026-07-18")
+    (date "2026-07-19")
     (rev "H")
     (company "Man Who Embed")
-    (comment 1 "CH340 USB · DW01 protect · 5× flex · ESP32 · MPU-6050")
+    (comment 1 "USB-C+CH340 · TP4056+DW01 · ESP32 · MPU-6050 · 5× Flex")
   )
   (lib_symbols
 {lib_block}
